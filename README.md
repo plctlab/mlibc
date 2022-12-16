@@ -66,9 +66,7 @@ TODO
 
 
 
-# Thanks
 
-Software Research Institute of Chinese Academy of Sciences - Intelligent Software Research Center
 
 
 
