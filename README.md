@@ -1,52 +1,52 @@
-[English](README.md) | **中文** |
+[中文](README_zh.md) | **English** 
 
 # Embedded libc 
 
-Embedded libc，一个为嵌入式系统和裸机适配的libc库
+Embedded libc，a library which design for RTOS and Bare machines.
 
-## Mlibc特性
+## Mlibc Architecture
 
-+ 低资源占用
++ Designed for resource-constrained devices
 + OpenSource
 + Especially for RISC-V..
 
-## 目录
+## Code Catalogue
 
 
 
-## 背景
+## Background
 
 
 
 # Why we do
 
-## 我们的期望
+## Future
 
- ● mlibc可以支持到多种嵌入式工具链，能够使用gcc(arm/risc-v)、甚至LLVM等编译器
+ ● mlibc can support multiple embedded tool-chains,it can be compiled by gcc(arm/risc-v)、even though LLVM compiler.
 
-● 为小资源系统设计，完美地支持到一些嵌入式实时操作系统（RT-Thread等）和裸机
+● Designed for resource-constrained devices，it can support some RTOS (RT-Thread) and Bare machines.
 
-● 针对risc-v 32/64进行优化，能够适配主流的一些RISC-V MCU
+● It optimized for risc-v 32/64， have been specially adapted for RISC-V MCU
 
-● 采用xmake和scons构建
+● It is is built by xmake or scons
 
-● reserve
-
-
-
-## 我们的计划
+● TODO
 
 
 
-● 使用QEMU/RISC-V 32GC模拟主机方式，输出第一个hello word
-
-● 针对裸机版本的mlibc，加入最基础的crt.s，string，printf函数
-
-● 基于此环境，完善mlibc
+## Our plan
 
 
 
-# 快速上手
+● QEMU/RISC-V 32GC can be used as a computer to putout "Hello word!" at first
+
+● For Bare machines ,we push out especially mlibc sothat wecan accomplish crt.s，string and printf
+
+● Basing on this environment,we will make mlibc perfectly.
+
+
+
+# Getting Started
 
 TODO
 
@@ -54,29 +54,27 @@ TODO
 
 
 
-# 贡献代码
+# Contribution
 
 + How to
 
-  1. Fork 本仓库
+  1. Fork the repository
 
-  1. 新建 Feat_xxx 分支
-
-  1. 提交代码
-
-  1. 新建 Pull Request
+  1. Create Feat_xxx branch
+  1. Commit your code
+  1. Create Pull Request
 
 
 
-# 致谢
+# Thanks
 
-中科院软件研究所PLCT实验室
+Software Research Institute of Chinese Academy of Sciences - Intelligent Software Research Center
 
 
 
-# 许可协议
+# License
 
-mlibc完全开源，遵循MIT协议，允许商用和随意修改，可以放心使用，仅仅需要在软件中声明使用的是MIT协议，没有潜在的商业风险。
+RT-Thread follows the MIT License free software license. It's completely open-source, can be used in commercial applications for free, does not require the disclosure of code, and has no potential commercial risk.It is only necessary to declare that the MIT protocol is used in the software.
 
 
 
