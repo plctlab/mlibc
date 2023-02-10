@@ -2,7 +2,7 @@ add_rules("mode.debug", "mode.release")
 
 includes("./toolchains/*.lua")
 
-target("stdio.a")
+target("libc.a")
     set_kind("static")
     add_files("src/stdio/printf.c")
     set_toolchains("riscv64-unknown-elf")

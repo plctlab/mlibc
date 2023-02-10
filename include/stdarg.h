@@ -1,5 +1,5 @@
-#ifndef _STDARG_H_
-#define _STDARG_H_
+#ifndef __STDARG_H__
+#define __STDARG_H__
 
 typedef char * va_list;    
 #define va_start(v,l)	__builtin_va_start(v,l)
