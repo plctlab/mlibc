@@ -5,7 +5,7 @@
  *
  * Change Logs:
  * Date           Author       Notes
- * 2023/2/1      linshire     the first version
+ * 2023/2/1       linshire     the first version
  */
 
 #include <stdio.h>
@@ -16,7 +16,6 @@ extern void m_putc(char chr);
 
 void m_putc(char chr)
 {
-
     ;
 }
 
