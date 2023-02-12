@@ -159,7 +159,7 @@ int print(const char *str, ...)
                 }
                 ptr_string++;
                 continue;
-
+ 
             case 'x':
                 arg_hex_val = va_arg(ptr_args, unsigned long);
                 val_seg = arg_hex_val;

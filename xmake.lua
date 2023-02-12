@@ -1,12 +1,32 @@
 add_rules("mode.debug", "mode.release")
+--add_rules("mode.release")
+-- add toolchains
+includes("toolchains/*.lua")
 
-includes("./toolchains/*.lua")
-
-target("libc.a")
+--set target
+target("mlibc")
+    --set static lib
     set_kind("static")
-    add_files("src/stdio/printf.c")
-    set_toolchains("riscv64-unknown-elf")
+    --strip all infomation
+    set_strip("all")
+    --use cross compiler
+    set_plat("cross")
+    --set default target
+    set_default(true)
+    --set target file Extension
+    set_extension(".a")
+    --set optimize O1
+    set_optimize("fast")
+    --set languages standard
+    set_languages("c99", "cxx11")
 
+    add_cflags("-nostdlib", {force = true})
+
+    add_files("src/**.c")
+    add_includedirs("include",{public = true})
+    set_toolchains("riscv64-unknown-elf")
+    
+target_end() 
     
 --
 -- If you want to known more usage about xmake, please see https://xmake.io
