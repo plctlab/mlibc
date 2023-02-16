@@ -24,8 +24,10 @@ target("mlibc")
 
     add_files("src/**.c")
     add_includedirs("include",{public = true})
-    set_toolchains("riscv64-unknown-elf")
-    
+
+    set_toolchains("riscv-none-embed")
+
+
 target_end() 
     
 --

@@ -1,5 +1,6 @@
 
 PATH = "E:\toolchain\riscv64-unknown-elf-toolchain-10.2.0-2020.12.8-x86_64-w64-mingw32"
+PREFIX = "rm-none-eabi-"
 
 toolchain("riscv64-unknown-elf")
     set_kind("standalone")
