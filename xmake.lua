@@ -5,6 +5,8 @@ includes("toolchains/*.lua")
 
 --set target
 target("mlibc")
+    set_plat("cross")
+    set_arch("ch32")
     --set static lib
     set_kind("static")
     --strip all infomation
@@ -24,8 +26,8 @@ target("mlibc")
 
     add_files("src/**.c")
     add_includedirs("include",{public = true})
-
-    set_toolchains("riscv-none-embed")
+    set_toolchains("riscv64-unknown-elf")
+    --set_toolchains("riscv-none-embed")
 
 
 target_end() 
