@@ -3,31 +3,35 @@ add_rules("mode.debug", "mode.release")
 -- add toolchains
 includes("toolchains/*.lua")
 
+DEVICE = ' -march=rv32imac -mabi=ilp32 -DUSE_PLIC -DUSE_M_TIME -DNO_INIT -mcmodel=medany -msmall-data-limit=8 -L.  -nostartfiles  -lc '
 --set target
 target("mlibc")
-    set_plat("cross")
-    set_arch("ch32")
-    --set static lib
+
     set_kind("static")
     --strip all infomation
     set_strip("all")
-    --use cross compiler
-    set_plat("cross")
     --set default target
     set_default(true)
-    --set target file Extension
-    set_extension(".a")
+    -- set target dir
+    set_targetdir("./")
+    --set target filename
+    set_filename("mlibc.a")
     --set optimize O1
     set_optimize("fast")
     --set languages standard
     set_languages("c99", "cxx11")
 
-    add_cflags("-nostdlib", {force = true})
+    add_cflags(DEVICE, {force = true})
 
-    add_files("src/**.c")
+    add_cflags("-nostdlib","-ffreestanding", {force = true})
+
+    add_files("src/*.c")
+
+    -- add_files("include/typedef.h")
     add_includedirs("include",{public = true})
-    set_toolchains("riscv64-unknown-elf")
-    --set_toolchains("riscv-none-embed")
+   
+    -- set_toolchains("riscv64-unknown-elf")
+    set_toolchains("riscv-none-embed")
 
 
 target_end() 
