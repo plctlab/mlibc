@@ -6,7 +6,7 @@ includes("toolchains/*.lua")
 DEVICE = ' -march=rv32imac -mabi=ilp32 -DUSE_PLIC -DUSE_M_TIME -DNO_INIT -mcmodel=medany -msmall-data-limit=8 -L.  -nostartfiles  -lc '
 --set target
 target("mlibc")
-
+    -- set target file type
     set_kind("static")
     --strip all infomation
     set_strip("all")
@@ -20,20 +20,16 @@ target("mlibc")
     set_optimize("fast")
     --set languages standard
     set_languages("c99", "cxx11")
-
+    -- set compiler cflags for device
     add_cflags(DEVICE, {force = true})
-
+    -- set compiler cflags for no standard library
     add_cflags("-nostdlib","-ffreestanding", {force = true})
-
+    -- add all files
     add_files("src/*.c")
-
-    -- add_files("include/typedef.h")
+    -- add headfile dir
     add_includedirs("include",{public = true})
-   
     -- set_toolchains("riscv64-unknown-elf")
     set_toolchains("riscv-none-embed")
-
-
 target_end() 
     
 --

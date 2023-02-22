@@ -11,5 +11,3 @@ toolchain(TOOLCHAIN_NAME)
     set_bindir(BIN_DIR)
 
 toolchain_end()
-
-
