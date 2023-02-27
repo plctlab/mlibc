@@ -83,7 +83,7 @@ int print(const char *str, ...)
                 ptr_string++;
                 continue;
             case 'c':
-                arg_int_val = va_arg(ptr_args, int);
+                arg_int_val = va_arg(ptr_args, char);
                 m_putc((char)arg_int_val);
                 ret_num++;
                 ptr_string++;
