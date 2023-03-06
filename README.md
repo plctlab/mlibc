@@ -72,7 +72,7 @@ TODO
 
 # License
 
-mlibc follows the MIT License free software license. It's completely open-source, can be used in commercial applications for free, does not require the disclosure of code, and has no potential commercial risk.It is only necessary to declare that the MIT protocol is used in the software.
+RT-Thread follows the MIT License free software license. It's completely open-source, can be used in commercial applications for free, does not require the disclosure of code, and has no potential commercial risk.It is only necessary to declare that the MIT protocol is used in the software.
 
 
 
