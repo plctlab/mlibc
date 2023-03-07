@@ -1,9 +1,10 @@
 add_rules("mode.debug", "mode.release")
---add_rules("mode.release")
--- add toolchains
 includes("toolchains/*.lua")
 
-DEVICE = ' -march=rv32imac -mabi=ilp32 -DUSE_PLIC -DUSE_M_TIME -DNO_INIT -mcmodel=medany -msmall-data-limit=8 -L.  -nostartfiles  -lc '
+TARGET_DIR  = "./../../GIT/riscv-qemu/project/mlibc"
+
+DEVICE = ' -mcmodel=medany -march=rv64imafdc -mabi=lp64 '
+
 --set target
 target("mlibc")
     -- set target file type
@@ -13,9 +14,9 @@ target("mlibc")
     --set default target
     set_default(true)
     -- set target dir
-    set_targetdir("./")
-    --set target filename
-    set_filename("mlibc.a")
+    set_targetdir(TARGET_DIR)
+    -- --set target filename
+    -- set_filename("mlibc.a")
     --set optimize O1
     set_optimize("fast")
     --set languages standard
@@ -23,15 +24,39 @@ target("mlibc")
     -- set compiler cflags for device
     add_cflags(DEVICE, {force = true})
     -- set compiler cflags for no standard library
-    add_cflags("-nostdlib","-ffreestanding", {force = true})
+    add_cflags("-nostdlib","-ffreestanding","-nostdinc", "-Wl,-Map=cc.map",{force = true})
     -- add all files
     add_files("src/*.c")
     -- add headfile dir
-    add_includedirs("include",{public = true})
-    -- set_toolchains("riscv64-unknown-elf")
-    set_toolchains("riscv-none-embed")
+    add_includedirs("./include",{public = true})
+
+    add_includedirs("./arch/riscv64",{public = true})
+
+    set_toolchains("riscv64-unknown-elf")
+    
+    after_link(function (target)
+    os.cp("./include/*.h", "./../../GIT/riscv-qemu/project/mlibc")
+    os.cp("./arch/riscv64*.h", "./../../GIT/riscv-qemu/project/mlibc")
+    end)
+    
 target_end() 
     
+
+
+-- target("include")
+--     set_kind("headeronly")
+
+--     add_files("include/*.h", "./arch/riscv64",{public = true})
+--     add_files("./arch/riscv64/*.h",{public = true})
+
+--     add_cflags(DEVICE, {force = true})
+--     add_cflags("-nostdlib","-ffreestanding","-nostdinc", {force = true})
+--     set_toolchains("riscv64-unknown-elf")
+--     -- set_targetdir("./../../GIT/riscv-qemu/project/mlibc")
+--     set_targetdir("./")
+
+--     set_filename("mlibc.h")
+-- target_end()
 --
 -- If you want to known more usage about xmake, please see https://xmake.io
 --
