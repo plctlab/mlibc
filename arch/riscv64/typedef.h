@@ -2,6 +2,8 @@
 #define __TYPEDEF_H__
                                           
 #define NULL 0
+#define opt_size 8
+
 typedef unsigned long long     size_t;
 typedef unsigned char          uint8_t;                                               
 typedef unsigned short int     uint16_t;                                             
@@ -27,5 +29,6 @@ typedef long		           _fpos_t;
 
 typedef int64_t               intmax_t;
 typedef uint64_t              uintmax_t;
+
 
 #endif

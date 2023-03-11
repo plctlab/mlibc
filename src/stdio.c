@@ -54,7 +54,7 @@ int vfprintf(FILE *stream, const char *format, va_list arg)
         switch (*ptr_string)
         {
         case ' ':
-            putchar(*ptr_string);
+            putchar((char)*ptr_string);
             ret_num++;
             break;
         case '\t':
