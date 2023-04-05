@@ -1,0 +1,19 @@
+Import('rtconfig')
+from building import *
+
+cwd = GetCurrentDir()
+src = Split('''
+''')
+
+LIBPATH = [cwd ]             
+
+if rtconfig.CROSS_TOOL == 'gcc':
+    LIBS = ['mlibc']                    
+elif rtconfig.CROSS_TOOL == 'keil':
+    LIBS = ['libabc_keil']                
+else:
+    LIBS = ['libabc_iar']                
+
+group = DefineGroup('mlibc', src, depend = [''], LIBS = LIBS, LIBPATH=LIBPATH)
+
+Return('group')

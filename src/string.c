@@ -82,3 +82,58 @@ void *memset (void *dstpp, int c, size_t len)
     
     return dstpp;
 }
+
+
+void *memcpy(void *dst, const void *src, size_t n)
+{
+    #define UNALIGNED(X, Y) \
+    (((long)X & (sizeof (long) - 1)) | ((long)Y & (sizeof (long) - 1)))
+    #define BIGBLOCKSIZE    (sizeof (long) << 2)
+    #define LITTLEBLOCKSIZE (sizeof (long))
+    #define TOO_SMALL(LEN)  ((LEN) < BIGBLOCKSIZE)
+
+    char *dst_ptr = (char *)dst;
+    char *src_ptr = (char *)src;
+    long *aligned_dst = NULL;
+    long *aligned_src = NULL;
+    size_t len = n;
+
+    /* If the size is small, or either SRC or DST is unaligned,
+    then punt into the byte copy loop.  This should be rare. */
+    if (!TOO_SMALL(len) && !UNALIGNED(src_ptr, dst_ptr))
+    {
+        aligned_dst = (long *)dst_ptr;
+        aligned_src = (long *)src_ptr;
+
+        /* Copy 4X long words at a time if possible. */
+        while (len >= BIGBLOCKSIZE)
+        {
+            *aligned_dst++ = *aligned_src++;
+            *aligned_dst++ = *aligned_src++;
+            *aligned_dst++ = *aligned_src++;
+            *aligned_dst++ = *aligned_src++;
+            len -= BIGBLOCKSIZE;
+        }
+
+        /* Copy one long word at a time if possible. */
+        while (len >= LITTLEBLOCKSIZE)
+        {
+            *aligned_dst++ = *aligned_src++;
+            len -= LITTLEBLOCKSIZE;
+        }
+
+        /* Pick up any residual with a byte copier. */
+        dst_ptr = (char *)aligned_dst;
+        src_ptr = (char *)aligned_src;
+    }
+
+    while (len--)
+        *dst_ptr++ = *src_ptr++;
+
+    return dst;
+#undef UNALIGNED
+#undef BIGBLOCKSIZE
+#undef LITTLEBLOCKSIZE
+#undef TOO_SMALL
+
+}
