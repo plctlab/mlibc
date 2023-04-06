@@ -152,6 +152,7 @@ void *memccpy(void *dst, const void *src, int c, size_t n)
 
     return NULL;
 
-    return memcpy(dst_ptr, src, num +1);
+    memcpy(dst_ptr, src, num +1);
 
+    return dst + num;
 }
