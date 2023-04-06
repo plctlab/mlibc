@@ -12,6 +12,14 @@ Embedded libc，一个为嵌入式系统和裸机适配的libc库
 
 ## 目录
 
+|    目录    |          详解           |
+| :--------: | :---------------------: |
+|    arch    | 对不同cpu架构的支持文件 |
+|   figure   |  README.md中的图片存储  |
+|  include   |       头文件存放        |
+|    src     |        源码文件         |
+| toolchains |     工具链支持文件      |
+
 
 
 ## 背景
@@ -48,9 +56,33 @@ Embedded libc，一个为嵌入式系统和裸机适配的libc库
 
 # 快速上手
 
-TODO
+1. 下载安装xmake，这里给出了xmake发行版本的 [地址](https://github.com/xmake-io/xmake/releases) ,同时具有windows以及linux版本，按需安装即可
 
+   <img src="./figure/image-20230406125053802.png" alt="image-20230406125053802" style="zoom:50%;" />
 
+2. clone mlibc源码到本地，地址在[这里](https://github.com/plctlab/mlibc) ，使用如下命令，并等待clone完成
+
+    
+
+   ```
+   git clone git@github.com:plctlab/mlibc.git
+   ```
+
+   
+
+3. 在mlibc根目录下，打开toolchains文件夹并编辑配置文件，只需要调整编译器路径
+
+<img src="./figure/image-20230406125814045.png" alt="image-20230406125814045" style="zoom:50%;" />
+
+只需要更改PATH=后的路径，笔者的路径如下
+
+<img src="./figure/image-20230406130127472.png" alt="image-20230406130127472" style="zoom:50%;" />
+
+4. 在命令行输入xmake，等待编译完成
+
+   ![image-20230406130336100](.//figure/image-20230406130336100.png)
+
+5. 这时在mlibc文件夹下会有一个mlibc文件夹，即mlibc/mlibc/,里面所需要的头文件，编译好的libmlibc.a静态库文件，以及Sconscript文件（为了支持RT-Thread的scons构建系统），用户只需要将mlibc文件夹复制到自己的工程即可
 
 
 
