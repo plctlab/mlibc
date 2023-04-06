@@ -137,3 +137,21 @@ void *memcpy(void *dst, const void *src, size_t n)
 #undef TOO_SMALL
 
 }
+
+void *memccpy(void *dst, const void *src, int c, size_t n)
+{
+    char *dst_ptr = (char *)dst;
+    char *src_ptr = (char *)src;
+    size_t len = n;
+    size_t num = 0;
+    int chr = c;
+
+    for(num = 0; (num < n) && (chr != *(src_ptr + num)); num ++  );
+
+    if(!num || (chr != *(src_ptr + num)))
+
+    return NULL;
+
+    return memcpy(dst_ptr, src, num +1);
+
+}
