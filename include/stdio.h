@@ -1,3 +1,13 @@
+/*
+ * Copyright (c) 2023
+ *
+ * SPDX-License-Identifier: MIT
+ *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2023/2/1       linshire     the first version
+ */
+ 
 #ifndef __STDIO_H__
 #define __STDIO_H__
 

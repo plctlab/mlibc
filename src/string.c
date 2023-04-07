@@ -7,6 +7,7 @@
  * Date           Author       Notes
  * 2023/2/1       linshire     the first version
  * 2023/3/11      linshire     add memset
+ * 2023/4/6       linshire     add memcpy and memccpy
  */
 
 #include <string.h>

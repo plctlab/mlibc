@@ -7,13 +7,9 @@ src = Split('''
 
 LIBPATH = [cwd ]             
 
-if rtconfig.CROSS_TOOL == 'gcc':
-    LIBS = ['mlibc']                    
-elif rtconfig.CROSS_TOOL == 'keil':
-    LIBS = ['libabc_keil']                
-else:
-    LIBS = ['libabc_iar']                
+LIBS = ['mlibc']                            
 
 group = DefineGroup('mlibc', src, depend = [''], LIBS = LIBS, LIBPATH=LIBPATH)
 
 Return('group')
+
