@@ -1,7 +1,7 @@
 add_rules("mode.debug", "mode.release")
 includes("toolchains/*.lua")
 
-TARGET_DIR  = "./../../GIT/riscv-qemu/project/mlibc"
+TARGET_DIR  = "./"
 
 DEVICE = ' -mcmodel=medany -march=rv64imafdc -mabi=lp64 '
 
@@ -34,10 +34,6 @@ target("mlibc")
 
     set_toolchains("riscv64-unknown-elf")
     
-    after_link(function (target)
-    os.cp("./include/*.h", "./../../GIT/riscv-qemu/project/mlibc")
-    os.cp("./arch/riscv64*.h", "./../../GIT/riscv-qemu/project/mlibc")
-    end)
     
 target_end() 
     
