@@ -1,8 +1,6 @@
 from building import *
 Import('rtconfig')
 
-print('Using mlibc!')
-
 cwd = GetCurrentDir()
 src = Glob('*.c')
 
