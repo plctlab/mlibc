@@ -1,7 +1,16 @@
+/*
+ * Copyright (c) mlibc & plct lab
+ *
+ * SPDX-License-Identifier: MIT
+ *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2023/06/16     bernard      the first verison
+ */
+
 #ifndef __STDIO_H__
 #define __STDIO_H__
 
-#include <typedef.h>
 #include <stdarg.h>
 
 #define EOF (-1)
@@ -21,8 +30,6 @@ typedef struct _iobuf
   struct __sbuf _bf;    /* the buffer (at least 1 byte, if !NULL) */
   int   _lbfsize;       /* 0 or -_bf._size, for inline putc */
 } FILE;
-
-typedef _fpos_t     fpos_t;
 
 #define ZEROPAD     (1 << 0)    /* pad with zero */
 #define SIGN        (1 << 1)    /* unsigned/signed long */

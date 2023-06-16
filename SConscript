@@ -2,14 +2,14 @@ from building import *
 Import('rtconfig')
 
 cwd = GetCurrentDir()
-src = Glob('*.c')
+src = Glob('src/*.c')
 
-CPPPATH = [cwd]
+CPPPATH = [cwd + '/include']
 CPPDEFINES = ['RT_USING_MLIBC', 'RT_USING_LIBC']
 
 LIBS = ['gcc']
-CCFLAGS   = ' -nostdinc'
-LINKFLAGS = ' -nostdlib' 
+CCFLAGS   = "-nostdinc"
+LINKFLAGS = " -nostdlib"
 
 AddDepend(['RT_USING_MLIBC', 'RT_USING_LIBC'])
 

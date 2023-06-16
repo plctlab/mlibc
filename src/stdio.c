@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023
+ * Copyright (c) mlibc & plct lab
  *
  * SPDX-License-Identifier: MIT
  *
@@ -10,7 +10,6 @@
 
 #include <stdio.h>
 #include <stdarg.h>
-#include <typedef.h>
 #include <string.h>
 
 /* calculate m^n */
