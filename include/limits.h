@@ -11,6 +11,8 @@
 #ifndef MLIBC_LIMITES_H__
 #define MLIBC_LIMITES_H__
 
+#include "alltypes.h"
+
 #define CHAR_BIT 8
 #define SCHAR_MIN (-128)
 #define SCHAR_MAX 127

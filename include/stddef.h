@@ -5,7 +5,7 @@
  *
  * Change Logs:
  * Date           Author       Notes
- * 2023/06/16     bernard      the first verison
+ * 2021/02/17     Bernard      first version
  */
 
 #ifndef MLIBC_STDDEF_H__

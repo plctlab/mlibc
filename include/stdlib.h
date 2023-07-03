@@ -5,7 +5,7 @@
  *
  * Change Logs:
  * Date           Author       Notes
- * 2023/06/16     bernard      the first verison
+ * 2021/02/17     Bernard      first version
  */
 
 #ifndef MLIBC_STDLIB_H__
@@ -112,5 +112,4 @@ long strtol(const char *nptr, char **endptr, int base);
 llong_type strtoll(const char *nptr, char **endptr, int base);
 unsigned long strtoul(const char *nptr, char **endptr, int base);
 ullong_type strtoull(const char *nptr, char **endptr, int base);
-
 #endif /*MLIBC_STDLIB_H__*/

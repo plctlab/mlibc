@@ -5,7 +5,8 @@
  *
  * Change Logs:
  * Date           Author       Notes
- * 2023/06/16     bernard      the first verison
+ * 2021-02-17     Bernard      first version
+ * 2021-05-02     Meco Man     implement strcpy memmove5
  */
 
 #ifndef MLIBC_STRING_H__
@@ -35,5 +36,5 @@ char *strrev(char *str);
 size_t strcspn(const char* s, const char* c);
 char* strtok_r(char* s, const char* delim, char** last);
 char* strtok(char* s, const char* delim);
-void bzero(void *s, size_t n);
+
 #endif /*MLIBC_STRING_H__*/

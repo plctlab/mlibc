@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) mlibc & plct lab
+ *
+ * SPDX-License-Identifier: MIT
+ *
+ * Change Logs:
+ * Date           Author       Notes
+ */
+
 #ifndef MLIBC_SYS_TYPES_H__
 #define MLIBC_SYS_TYPES_H__
 

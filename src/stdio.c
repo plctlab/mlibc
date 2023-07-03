@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
+#include <unistd.h>
 
 /* calculate m^n */
 unsigned long m_pow_n(unsigned long m, unsigned long n)
@@ -27,7 +28,6 @@ unsigned long m_pow_n(unsigned long m, unsigned long n)
 
 int vfprintf(FILE *stream, const char *format, va_list arg)
 {
-
     va_list arg_temp;
     unsigned int ret_num = 0;       /*return printf char num*/
     char *ptr_string = (char *)format; /*point to str*/
@@ -38,7 +38,6 @@ int vfprintf(FILE *stream, const char *format, va_list arg)
     unsigned long val_seg = 0;      /* val_seg */
     unsigned long val_temp = 0;     /* val temp */
     int cnt = 0;
-    int i = 0;
 
     va_copy(arg_temp, arg);
 
@@ -293,7 +292,6 @@ int fprintf(FILE *stream, const char *format, ...)
     return res;
 }
 
-
 int vprintf(const char *str,  va_list arg)
 {
     int res;
@@ -303,8 +301,8 @@ int vprintf(const char *str,  va_list arg)
     va_copy(arg_temp, arg);
 
     res = vfprintf(stream, str, arg_temp);
-
     va_end (arg);
+
     return res;
 }
 
@@ -317,4 +315,35 @@ int printf(const char *str, ...)
   res = vprintf (str, args);
   va_end (args);
   return res;
+}
+
+static void _putchar(char ch)
+{
+    (void)write(1, &ch, 1);
+}
+
+int putchar(int c)
+{
+    _putchar((char)c);
+    return c;
+}
+
+int puts(const char* str)
+{
+    int r = 0;
+
+    for(const char* c = str; *c != 0; c++)
+    {
+        putchar((int)*c);
+        r++;
+    }
+
+    // puts adds a newline
+    if (r)
+    {
+        putchar('\n');
+        r++;
+    }
+
+    return r ? r : EOF;
 }

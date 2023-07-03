@@ -11,10 +11,11 @@
 #ifndef MLIBC_STDARG_H__
 #define MLIBC_STDARG_H__
 
-#define va_list     __builtin_va_list
-#define va_start    __builtin_va_start
-#define va_end      __builtin_va_end
-#define va_arg      __builtin_va_arg
-#define va_copy     __builtin_va_copy
+typedef __builtin_va_list va_list;
 
-#endif
+#define va_start(v,l)   __builtin_va_start(v,l)
+#define va_end(v)       __builtin_va_end(v)
+#define va_arg(v,l)     __builtin_va_arg(v,l)
+#define va_copy(d,s)    __builtin_va_copy(d,s)
+
+#endif /*MLIBC_STDARG_H__*/

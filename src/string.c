@@ -1,12 +1,10 @@
 /*
- * Copyright (c) 2023
+ * Copyright (c) mlibc & plct lab
  *
  * SPDX-License-Identifier: MIT
  *
  * Change Logs:
  * Date           Author       Notes
- * 2023/2/1       linshire     the first version
- * 2023/3/11      linshire     add memset
  */
 
 #include <string.h>
@@ -14,7 +12,6 @@
 #include <stddef.h>
 #include <ctype.h>
 #include <stdio.h>
-#include <limits.h>
 #include <sys/types.h>
 
 void *memset(void *s, int c, size_t count)
