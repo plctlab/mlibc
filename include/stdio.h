@@ -26,10 +26,6 @@ extern FILE* stdin;
 extern FILE* stdout;
 extern FILE* stderr;
 
-#define STDIN_FILENO    (0)
-#define STDOUT_FILENO   (1)
-#define STDERR_FILENO   (2)
-
 #define BUFSIZ 128
 #define EOF     (-1)
 

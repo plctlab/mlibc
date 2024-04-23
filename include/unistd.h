@@ -13,6 +13,10 @@
 
 #include <sys/types.h>
 
+#define STDIN_FILENO    (0)
+#define STDOUT_FILENO   (1)
+#define STDERR_FILENO   (2)
+
 int close(int d);
 int read(int fd, void *buf, size_t len);
 int fsync(int fildes);

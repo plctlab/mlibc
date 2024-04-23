@@ -8,6 +8,7 @@
  * 2023/6/16      bernard      first version
  */
 #include <stdio.h>
+#include <unistd.h>
 
 FILE* stdin = NULL;
 FILE* stdout = NULL;
