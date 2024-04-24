@@ -8,11 +8,19 @@
  */
 
 #include <stdlib.h>
+#include <stdint.h>
 #include <ctype.h>
 #include <string.h>
 #include <stdbool.h>
 #include <limits.h>
 #include <sys/types.h>
+
+static unsigned int __MLIBC_rand_next;
+
+int abs(int a)
+{
+    return a > 0 ? a : -a;
+}
 
 double atof(const char *str)
 {
@@ -179,6 +187,23 @@ long long llabs(long long a)
 lldiv_t lldiv(long long num, long long den)
 {
     return (lldiv_t){ num/den, num%den };
+}
+
+int rand_r(unsigned int* seed)
+{
+    return ((*seed + 1664525) * 1013904223) & INT32_MAX;
+}
+
+void srand(unsigned int seed)
+{
+    __MLIBC_rand_next = seed;
+}
+
+int rand(void)
+{
+    __MLIBC_rand_next = rand_r(&__MLIBC_rand_next);
+
+    return __MLIBC_rand_next;
 }
 
 float strtof(char *str, char **ptr)
