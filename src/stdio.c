@@ -84,7 +84,7 @@ int vfprintf(FILE *stream, const char *format, va_list arg)
                 ptr_string++;
                 continue;
             case 'c':
-                arg_int_val = va_arg(arg_temp, char);
+                arg_int_val = va_arg(arg_temp, int);
                 write_char_to_file(stream, (char)arg_int_val);
                 ret_num++;
                 ptr_string++;
