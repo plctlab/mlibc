@@ -51,7 +51,7 @@ int fputc (int character, FILE* stream);
 int putc (int character, FILE* stream);
 int puts(const char* str);
 int getc (FILE* stream);
-int getchar (void);;
+int getchar (void);
 int fgetc (FILE* stream);
 int fileno(FILE *f);
 int libc_stdio_set_console(const char* device_name, int mode);
