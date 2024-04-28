@@ -6,12 +6,33 @@
  * Change Logs:
  * Date           Author       Notes
  * 2023/2/1       linshire     the first version
+ * 2024/4/24      bitbiscuits  fix printf bug and realize snprintf
  */
 
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
 #include <unistd.h>
+
+
+int getc (FILE* stream)
+{
+    int buf = EOF;
+    return read(stream->fd, &buf, 1);
+}
+
+int fgetc (FILE* stream)
+{
+    int buf = EOF;
+    return read(stream->fd, &buf, 1);
+}
+
+int getchar(void)
+{
+    int buf = EOF;
+    return read(stdin, &buf, 1);
+}
+
 
 /* calculate m^n */
 unsigned long m_pow_n(unsigned long m, unsigned long n)
@@ -24,11 +45,6 @@ unsigned long m_pow_n(unsigned long m, unsigned long n)
         ret *= m;
     }
     return ret;
-}
-
-static int write_char_to_file(FILE* stream, char ch)
-{
-    return write(stream->fd, &ch, 1);
 }
 
 int vfprintf(FILE *stream, const char *format, va_list arg)
@@ -57,19 +73,19 @@ int vfprintf(FILE *stream, const char *format, va_list arg)
         switch (*ptr_string)
         {
         case ' ':
-            write_char_to_file(stream, (char)*ptr_string);
+            fputc((char)*ptr_string, stream);
             ret_num++;
             break;
         case '\t':
-            write_char_to_file(stream, *ptr_string);
+            fputc(*ptr_string, stream);
             ret_num += 4;
             break;
         case '\r':
-            write_char_to_file(stream, *ptr_string);
+            fputc(*ptr_string, stream);
             ret_num++;
             break;
         case '\n':
-            write_char_to_file(stream, *ptr_string);
+            fputc(*ptr_string, stream);
             ret_num++;
             break;
         case '%':
@@ -79,13 +95,13 @@ int vfprintf(FILE *stream, const char *format, va_list arg)
             switch (*ptr_string)
             {
             case '%':
-                write_char_to_file(stream, '%');
+                fputc('%', stream);
                 ret_num++;
                 ptr_string++;
                 continue;
             case 'c':
                 arg_int_val = va_arg(arg_temp, int);
-                write_char_to_file(stream, (char)arg_int_val);
+                fputc((char)arg_int_val, stream);
                 ret_num++;
                 ptr_string++;
                 continue;
@@ -94,7 +110,7 @@ int vfprintf(FILE *stream, const char *format, va_list arg)
                 if (arg_int_val < 0)
                 {
                     arg_int_val = -arg_int_val;
-                    write_char_to_file(stream, '-');
+                    fputc('-', stream);
                     ret_num++;
                 }
                 val_seg = arg_int_val;
@@ -117,7 +133,7 @@ int vfprintf(FILE *stream, const char *format, va_list arg)
                 {
                     val_seg = arg_int_val / m_pow_n(10, cnt - 1);
                     arg_int_val %= m_pow_n(10, cnt - 1);
-                    write_char_to_file(stream, (char)val_seg + '0');
+                    fputc((char)val_seg + '0', stream);
                     cnt--;
                 }
 
@@ -130,7 +146,7 @@ int vfprintf(FILE *stream, const char *format, va_list arg)
                 if (arg_int_val < 0)
                 {
                     arg_int_val = -arg_int_val;
-                    write_char_to_file(stream, '-');
+                    fputc('-', stream);
                     ret_num++;
                 }
                 val_seg = arg_int_val;
@@ -152,7 +168,7 @@ int vfprintf(FILE *stream, const char *format, va_list arg)
                 {
                     val_seg = arg_int_val / m_pow_n(8, cnt - 1);
                     arg_int_val %= m_pow_n(8, cnt - 1);
-                    write_char_to_file(stream, (char)val_seg + '0');
+                    fputc((char)val_seg + '0', stream);
                     cnt--;
                 }
                 ptr_string++;
@@ -179,11 +195,11 @@ int vfprintf(FILE *stream, const char *format, va_list arg)
                     val_seg = arg_hex_val / m_pow_n(16, cnt - 1);
                     arg_hex_val %= m_pow_n(16, cnt - 1);
                     if (val_seg <= 9)
-                        write_char_to_file(stream, (char)val_seg + '0');
+                        fputc((char)val_seg + '0', stream);
                     else
                     {
-                        // write_char_to_file(stream, (char)val_seg - 10 + 'a');
-                        write_char_to_file(stream, (char)val_seg - 10 + 'A');
+                        // fputc(stream, (char)val_seg - 10 + 'a');
+                        fputc((char)val_seg - 10 + 'A', stream);
                     }
                     cnt--;
                 }
@@ -211,7 +227,7 @@ int vfprintf(FILE *stream, const char *format, va_list arg)
                 {
                     val_seg = arg_int_val / m_pow_n(2, cnt - 1);
                     arg_int_val %= m_pow_n(2, cnt - 1);
-                    write_char_to_file(stream, (char)val_seg + '0');
+                    fputc((char)val_seg + '0', stream);
                     cnt--;
                 }
                 ptr_string++;
@@ -222,7 +238,7 @@ int vfprintf(FILE *stream, const char *format, va_list arg)
                 ret_num += (unsigned int)strlen(arg_string_val);
                 while (*arg_string_val)
                 {
-                    write_char_to_file(stream, *arg_string_val);
+                    fputc(*arg_string_val, stream);
                     arg_string_val++;
                 }
                 ptr_string++;
@@ -233,7 +249,7 @@ int vfprintf(FILE *stream, const char *format, va_list arg)
                 if (arg_float_val < 0)
                 {
                     arg_float_val = -arg_float_val;
-                    write_char_to_file(stream, '-');
+                    fputc('-', stream);
                     ret_num++;
                 }
 
@@ -255,10 +271,10 @@ int vfprintf(FILE *stream, const char *format, va_list arg)
                 {
                     val_seg = val_temp / m_pow_n(10, cnt - 1);
                     val_temp %= m_pow_n(10, cnt - 1);
-                    write_char_to_file(stream, (char)val_seg + '0');
+                    fputc((char)val_seg + '0', stream);
                     cnt--;
                 }
-                write_char_to_file(stream, '.');
+                fputc('.', stream);
                 ret_num++;
                 arg_float_val *= 1000000;
                 cnt = 6;
@@ -267,19 +283,19 @@ int vfprintf(FILE *stream, const char *format, va_list arg)
                 {
                     val_seg = val_temp / m_pow_n(10, cnt - 1);
                     val_temp %= m_pow_n(10, cnt - 1);
-                    write_char_to_file(stream, (char)val_seg + '0');
+                    fputc((char)val_seg + '0', stream);
                     cnt--;
                 }
                 ret_num += 6;
                 ptr_string++;
                 continue;
             default:
-                write_char_to_file(stream, ' ');
+                fputc(' ', stream);
                 ret_num++;
                 continue;
             }
         default:
-            write_char_to_file(stream, *ptr_string);
+            fputc(*ptr_string, stream);
             ret_num++;
             break;
         }
@@ -744,4 +760,14 @@ int snprintf (char* buf, size_t buf_nbytes, const char* format, ...)
     va_end (args);
 
     return res;
+}
+
+int fputc(int character, FILE* stream)
+{
+    return write(stream->fd, &character, 1);
+}
+
+int putc (int character, FILE* stream)
+{
+    return write(stream->fd, &character, 1);
 }

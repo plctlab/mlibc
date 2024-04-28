@@ -8,11 +8,17 @@
  */
 
 #include <stdlib.h>
+#include <stdint.h>
 #include <ctype.h>
 #include <string.h>
 #include <stdbool.h>
 #include <limits.h>
 #include <sys/types.h>
+
+int abs(int a)
+{
+    return a > 0 ? a : -a;
+}
 
 double atof(const char *str)
 {
@@ -179,6 +185,15 @@ long long llabs(long long a)
 lldiv_t lldiv(long long num, long long den)
 {
     return (lldiv_t){ num/den, num%den };
+}
+
+int rand_r(unsigned int* seed)
+{
+    unsigned int s = *seed;
+    if(s == 0)
+        s = 0x12345678;
+    s = (s * 25214903917) & (INT32_MAX);
+    return s;
 }
 
 float strtof(char *str, char **ptr)
@@ -568,3 +583,18 @@ void abort(void)
     {
     }
 }
+
+
+
+// int rand_r(unsigned int* seed);
+// int rand(void);
+// void* malloc(size_t size);
+// void free(void* ptr);
+// void* calloc(size_t num, size_t size);
+// void* realloc(void* ptr, size_t size);
+// void qsort (void *, size_t, size_t, int (*)(const void *, const void *));
+// double strtod(char *str, char **ptr);
+// long strtol(const char *nptr, char **endptr, int base);
+// llong_type strtoll(const char *nptr, char **endptr, int base);
+// unsigned long strtoul(const char *nptr, char **endptr, int base);
+// ullong_type strtoull(const char *nptr, char **endptr, int base);

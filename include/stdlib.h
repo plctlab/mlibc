@@ -94,7 +94,7 @@ double atof(const char *str);
 int atoi(const char *s);
 long atol(const char *s);
 long long atoll(const char *s);
-char *itoa(int num,char *str,int radix);
+char *itoa(int num, char *str,int radix);
 div_t div(int num, int den);
 long labs(long a);
 ldiv_t ldiv(long num, long den);
