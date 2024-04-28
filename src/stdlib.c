@@ -15,7 +15,7 @@
 #include <limits.h>
 #include <sys/types.h>
 
-static unsigned int rand_next;
+static unsigned int __MLIBC_rand_next;
 
 int abs(int a)
 {
@@ -196,14 +196,14 @@ int rand_r(unsigned int* seed)
 
 void srand(unsigned int seed)
 {
-    rand_next = seed;
+    __MLIBC_rand_next = seed;
 }
 
 int rand(void)
 {
-    rand_next = rand_r(&rand_next);
-    
-    return rand_next;
+    __MLIBC_rand_next = rand_r(&__MLIBC_rand_next);
+
+    return __MLIBC_rand_next;
 }
 
 float strtof(char *str, char **ptr)

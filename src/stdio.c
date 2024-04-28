@@ -298,6 +298,20 @@ int fprintf(FILE *stream, const char *format, ...)
     return res;
 }
 
+int vprintf(const char *str,  va_list arg)
+{
+    int res;
+    FILE *stream;
+    va_list arg_temp = arg;
+
+    va_copy(arg_temp, arg);
+
+    res = vfprintf(stream, str, arg_temp);
+    va_end (arg);
+
+    return res;
+}
+
 int printf(const char *str, ...)
 {
     va_list args;
@@ -335,13 +349,13 @@ int puts(const char* str)
     return r ? r : EOF;
 }
 
-static int write_char_to_arr(char* buf, char ch)
+static int __MLIBC_write_char_to_arr(char* buf, char ch)
 {
     *buf = ch;
     return ch;
 }
 
-int __vsprintf(char* buf, int buf_nbytes, const char *format, va_list arg)
+int __MLIBC_vsprintf(char* buf, int buf_nbytes, const char *format, va_list arg)
 {
     va_list arg_temp;
     unsigned int ret_num = 0;       /*return printf char num*/
@@ -377,22 +391,22 @@ int __vsprintf(char* buf, int buf_nbytes, const char *format, va_list arg)
         switch (*ptr_string)
         {
         case ' ':
-            write_char_to_arr(buf , (char)*ptr_string);
+            __MLIBC_write_char_to_arr(buf , (char)*ptr_string);
             buf++;
             ret_num++;
             break;
         case '\t':
-            write_char_to_arr(buf , *ptr_string);
+            __MLIBC_write_char_to_arr(buf , *ptr_string);
             ret_num++;
             buf++;
             break;
         case '\r':
-            write_char_to_arr(buf , *ptr_string);
+            __MLIBC_write_char_to_arr(buf , *ptr_string);
             ret_num++;
             buf++;
             break;
         case '\n':
-            write_char_to_arr(buf , *ptr_string);
+            __MLIBC_write_char_to_arr(buf , *ptr_string);
             ret_num++;
             buf++;
             break;
@@ -403,14 +417,14 @@ int __vsprintf(char* buf, int buf_nbytes, const char *format, va_list arg)
             switch (*ptr_string)
             {
             case '%':
-                write_char_to_arr(buf , '%');
+                __MLIBC_write_char_to_arr(buf , '%');
                 ret_num++;
                 buf++;
                 ptr_string++;
                 continue;
             case 'c':
                 arg_int_val = va_arg(arg_temp, int);
-                write_char_to_arr(buf , (char)arg_int_val);
+                __MLIBC_write_char_to_arr(buf , (char)arg_int_val);
                 ret_num++;
                 buf++;
                 ptr_string++;
@@ -420,7 +434,7 @@ int __vsprintf(char* buf, int buf_nbytes, const char *format, va_list arg)
                 if (arg_int_val < 0)
                 {
                     arg_int_val = -arg_int_val;
-                    write_char_to_arr(buf , '-');
+                    __MLIBC_write_char_to_arr(buf , '-');
                     ret_num++;
                     buf++;
                 }
@@ -449,7 +463,7 @@ int __vsprintf(char* buf, int buf_nbytes, const char *format, va_list arg)
                 {
                     val_seg = arg_int_val / m_pow_n(10, cnt - 1);
                     arg_int_val %= m_pow_n(10, cnt - 1);
-                    write_char_to_arr(buf , (char)val_seg + '0');
+                    __MLIBC_write_char_to_arr(buf , (char)val_seg + '0');
                     buf++;
                     cnt--;
                 }
@@ -465,7 +479,7 @@ int __vsprintf(char* buf, int buf_nbytes, const char *format, va_list arg)
                 {
                     arg_int_val = -arg_int_val;
 
-                    write_char_to_arr(buf , '-');
+                    __MLIBC_write_char_to_arr(buf , '-');
                     ret_num++;
                     buf++;
                 }
@@ -493,7 +507,7 @@ int __vsprintf(char* buf, int buf_nbytes, const char *format, va_list arg)
                 {
                     val_seg = arg_int_val / m_pow_n(8, cnt - 1);
                     arg_int_val %= m_pow_n(8, cnt - 1);
-                    write_char_to_arr(buf , (char)val_seg + '0');
+                    __MLIBC_write_char_to_arr(buf , (char)val_seg + '0');
                     buf++;
                     cnt--;
                 }
@@ -528,11 +542,11 @@ int __vsprintf(char* buf, int buf_nbytes, const char *format, va_list arg)
                     val_seg = arg_hex_val / m_pow_n(16, cnt - 1);
                     arg_hex_val %= m_pow_n(16, cnt - 1);
                     if (val_seg <= 9)
-                        write_char_to_arr(buf , (char)val_seg + '0');
+                        __MLIBC_write_char_to_arr(buf , (char)val_seg + '0');
                     else
                     {
-                        // write_char_to_arr(buf , (char)val_seg - 10 + 'a');
-                        write_char_to_arr(buf , (char)val_seg - 10 + 'A');
+                        // __MLIBC_write_char_to_arr(buf , (char)val_seg - 10 + 'a');
+                        __MLIBC_write_char_to_arr(buf , (char)val_seg - 10 + 'A');
                     }
                     buf++;
                     cnt--;
@@ -566,7 +580,7 @@ int __vsprintf(char* buf, int buf_nbytes, const char *format, va_list arg)
                 {
                     val_seg = arg_int_val / m_pow_n(2, cnt - 1);
                     arg_int_val %= m_pow_n(2, cnt - 1);
-                    write_char_to_arr(buf , (char)val_seg + '0');
+                    __MLIBC_write_char_to_arr(buf , (char)val_seg + '0');
                     buf++;
                     cnt--;
                 }
@@ -586,7 +600,7 @@ int __vsprintf(char* buf, int buf_nbytes, const char *format, va_list arg)
 
                 while (*arg_string_val)
                 {
-                    write_char_to_arr(buf , *arg_string_val);
+                    __MLIBC_write_char_to_arr(buf , *arg_string_val);
                     arg_string_val++;
                     buf++;
                 }
@@ -598,7 +612,7 @@ int __vsprintf(char* buf, int buf_nbytes, const char *format, va_list arg)
                 if (arg_float_val < 0)
                 {
                     arg_float_val = -arg_float_val;
-                    write_char_to_arr(buf, '-');
+                    __MLIBC_write_char_to_arr(buf, '-');
                     ret_num++;
                     buf++;
                 }
@@ -628,11 +642,11 @@ int __vsprintf(char* buf, int buf_nbytes, const char *format, va_list arg)
                 {
                     val_seg = val_temp / m_pow_n(10, cnt - 1);
                     val_temp %= m_pow_n(10, cnt - 1);
-                    write_char_to_arr(buf , (char)val_seg + '0');
+                    __MLIBC_write_char_to_arr(buf , (char)val_seg + '0');
                     cnt--;
                     buf++;
                 }
-                write_char_to_arr(buf , '.');
+                __MLIBC_write_char_to_arr(buf , '.');
                 ret_num++;
                 buf++;
 
@@ -651,7 +665,7 @@ int __vsprintf(char* buf, int buf_nbytes, const char *format, va_list arg)
                 {
                     val_seg = val_temp / m_pow_n(10, cnt - 1);
                     val_temp %= m_pow_n(10, cnt - 1);
-                    write_char_to_arr(buf , (char)val_seg + '0');
+                    __MLIBC_write_char_to_arr(buf , (char)val_seg + '0');
                     cnt--;
                     buf++;
                 }
@@ -659,7 +673,7 @@ int __vsprintf(char* buf, int buf_nbytes, const char *format, va_list arg)
                 ptr_string++;
                 continue;
             default:
-                write_char_to_arr(buf , ' ');
+                __MLIBC_write_char_to_arr(buf , ' ');
                 ret_num++;
                 buf++;
                 continue;
@@ -667,7 +681,7 @@ int __vsprintf(char* buf, int buf_nbytes, const char *format, va_list arg)
         default:
             if(outline)
                 break;
-            write_char_to_arr(buf , *ptr_string);
+            __MLIBC_write_char_to_arr(buf , *ptr_string);
             ret_num++;
             buf++;
             break;
@@ -687,7 +701,7 @@ int vsnprintf(char* buf, int buf_nbytes, const char *format, va_list arg)
 
     va_copy(args_temp, arg);
 
-    res = __vsprintf(buf, buf_nbytes, format, arg);
+    res = __MLIBC_vsprintf(buf, buf_nbytes, format, arg);
 
     va_end(args_temp);
 
@@ -701,7 +715,7 @@ int vsprintf(char* buf, const char* format, va_list arg)
 
     va_copy(args_temp, arg);
 
-    res = __vsprintf(buf, -1, format, arg);
+    res = __MLIBC_vsprintf(buf, -1, format, arg);
 
     va_end(args_temp);
 
@@ -749,8 +763,8 @@ int putc (int character, FILE* stream)
     {
         return EOF;
     }
-    
-    return write(stream->fd, character)
+
+    return write(stream->fd, &character, 1);
 }
 
 
