@@ -101,6 +101,7 @@ ldiv_t ldiv(long num, long den);
 long long llabs(long long a);
 lldiv_t lldiv(long long num, long long den);
 int rand_r(unsigned int* seed);
+void srand(unsigned int seed);
 int rand(void);
 void* malloc(size_t size);
 void free(void* ptr);

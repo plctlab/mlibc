@@ -15,6 +15,8 @@
 #include <limits.h>
 #include <sys/types.h>
 
+static unsigned int rand_next;
+
 int abs(int a)
 {
     return a > 0 ? a : -a;
@@ -189,11 +191,19 @@ lldiv_t lldiv(long long num, long long den)
 
 int rand_r(unsigned int* seed)
 {
-    unsigned int s = *seed;
-    if(s == 0)
-        s = 0x12345678;
-    s = (s * 25214903917) & (INT32_MAX);
-    return s;
+    return ((*seed + 1664525) * 1013904223) & INT32_MAX;
+}
+
+void srand(unsigned int seed)
+{
+    rand_next = seed;
+}
+
+int rand(void)
+{
+    rand_next = rand_r(&rand_next);
+    
+    return rand_next;
 }
 
 float strtof(char *str, char **ptr)

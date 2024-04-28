@@ -15,25 +15,6 @@
 #include <unistd.h>
 
 
-int getc (FILE* stream)
-{
-    int buf = EOF;
-    return read(stream->fd, &buf, 1);
-}
-
-int fgetc (FILE* stream)
-{
-    int buf = EOF;
-    return read(stream->fd, &buf, 1);
-}
-
-int getchar(void)
-{
-    int buf = EOF;
-    return read(stdin, &buf, 1);
-}
-
-
 /* calculate m^n */
 unsigned long m_pow_n(unsigned long m, unsigned long n)
 {
@@ -328,14 +309,9 @@ int printf(const char *str, ...)
     return res;
 }
 
-static void _putchar(char ch)
-{
-    (void)write(1, &ch, 1);
-}
-
 int putchar(int c)
 {
-    _putchar((char)c);
+    fputc(c, stdin);
     return c;
 }
 
@@ -764,10 +740,45 @@ int snprintf (char* buf, size_t buf_nbytes, const char* format, ...)
 
 int fputc(int character, FILE* stream)
 {
-    return write(stream->fd, &character, 1);
+    return putc(character, stream);
 }
 
 int putc (int character, FILE* stream)
 {
-    return write(stream->fd, &character, 1);
+    if(stream == NULL)
+    {
+        return EOF;
+    }
+    
+    return write(stream->fd, character)
+}
+
+
+int getc (FILE* stream)
+{
+    int buf = EOF;
+
+    if(stream == NULL)
+    {
+        return EOF;
+    }
+
+    if(read(stream->fd, &buf, 1) == 1)
+    {
+        return buf;
+    }
+    else
+    {
+        return EOF;
+    }
+}
+
+int fgetc (FILE* stream)
+{
+    return getc(stream);
+}
+
+int getchar(void)
+{
+    return fgetc(stdout);
 }
