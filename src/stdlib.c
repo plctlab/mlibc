@@ -593,18 +593,3 @@ void abort(void)
     {
     }
 }
-
-
-
-// int rand_r(unsigned int* seed);
-// int rand(void);
-// void* malloc(size_t size);
-// void free(void* ptr);
-// void* calloc(size_t num, size_t size);
-// void* realloc(void* ptr, size_t size);
-// void qsort (void *, size_t, size_t, int (*)(const void *, const void *));
-// double strtod(char *str, char **ptr);
-// long strtol(const char *nptr, char **endptr, int base);
-// llong_type strtoll(const char *nptr, char **endptr, int base);
-// unsigned long strtoul(const char *nptr, char **endptr, int base);
-// ullong_type strtoull(const char *nptr, char **endptr, int base);
