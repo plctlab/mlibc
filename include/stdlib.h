@@ -108,6 +108,7 @@ void free(void* ptr);
 void* calloc(size_t num, size_t size);
 void* realloc(void* ptr, size_t size);
 void qsort (void *, size_t, size_t, int (*)(const void *, const void *));
+void *bsearch (const void *key, const void *base, size_t nelem, size_t elem_size, int (*cmp) (const void *, const void *));
 double strtod(char *str, char **ptr);
 long strtol(const char *nptr, char **endptr, int base);
 llong_type strtoll(const char *nptr, char **endptr, int base);
