@@ -5,6 +5,7 @@ cwd = GetCurrentDir()
 src = Glob('src/*.c')
 
 CPPPATH = [cwd + '/include']
+CPPPATH += [cwd + '/src/internal']
 CPPDEFINES = ['RT_USING_MLIBC', 'RT_USING_LIBC']
 
 LIBS = ['gcc']
