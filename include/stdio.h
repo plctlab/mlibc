@@ -27,6 +27,7 @@ struct __MLIBC_IO_FILE{
     size_t (*write)(FILE *, unsigned char *, size_t);
     size_t (*read)(FILE *, unsigned char *, size_t);
     off_t (*seek)(FILE *, off_t, int);
+    int (*close)(FILE *);
 
     unsigned char *buf;
     size_t buf_size;
