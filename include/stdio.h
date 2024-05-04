@@ -17,10 +17,33 @@
 #define _FILE_IND_EOF   (1 << 0)
 #define _FILE_IND_ERROR (1 << 1)
 
-typedef struct {
+struct __MLIBC_IO_FILE;
+typedef struct __MLIBC_IO_FILE FILE;
+struct __MLIBC_IO_FILE{
     int fd;
-    char indicators;
-} FILE;
+    unsigned char *wbase;
+    unsigned char *wpos, wend;
+    unsigned char *rpos, rend;
+    size_t (*write)(FILE *, unsigned char *, size_t);
+    size_t (*read)(FILE *, unsigned char *, size_t);
+    off_t (*seek)(FILE *, off_t, int);
+
+    unsigned char *buf;
+    size_t buf_size;
+
+    int lbf;
+    char *getln_buf;
+
+    FILE *prev, *next;
+
+    volatile int lock;
+    long lockcount;
+    FILE *prev_lock, *next_lock;
+
+    int mode;
+    off_t off;
+    unsigned char indicators;
+};
 
 extern FILE* stdin;
 extern FILE* stdout;
@@ -42,18 +65,55 @@ extern FILE* stderr;
 #define CHAR_BIT 8
 #define UCHAR_MAX 255
 
-int snprintf (char* buf, size_t buf_nbytes, const char* format, ...);
-int sprintf (char* buf, const char* format, ...);
-int printf (const char* format, ...);
-int fprintf (FILE* stream, const char* format, ...);
-int putchar(int c);
-int fputc (int character, FILE* stream);
-int putc (int character, FILE* stream);
-int puts(const char* str);
-int getc (FILE* stream);
-int getchar (void);
-int fgetc (FILE* stream);
-int fileno(FILE *f);
+/* File open and close */
+int fclose(FILE *);
+FILE *fdopen(int, const char *);
+int fopen(const char *, const char *);
+FILE *freopen(const char *, const char *, FILE *);
+
+/* Formatted I/O status */
+int printf(const char *, ...);
+void perror(const char *);
+int scanf(const char *, ...);
+int snprintf(char *, size_t, const char *, ...);
+int sprintf(char *, const char *, ...);
+int sscanf(const char *, const char *, ...);
+int vfprintf(FILE *, const char *, va_list);
+int vfscanf(FILE *, const char *, va_list);
+int vprintf(const char *, va_list);
+int vscanf(const char *, va_list);
+int vsnprintf(char *, size_t, const char *, va_list);
+int vsprintf(char *, const char *, va_list);
+int vsscanf(const char *, const char *, va_list);
+
+/* File read and write operations */
+int feof(FILE *);
+int ferror(FILE *);
+int fflush(FILE *);
+int fgetc(FILE *);
+char *fgets(char *, int, FILE *);
+int fileno(FILE *);
+void flockfile(FILE *);
+int fprintf(FILE *, const char *, ...);
+int fputc(int, FILE *);
+int fputs(const char *, FILE *);
+size_t fread(void *, size_t, size_t, FILE *);
+size_t fwrite(const void *, size_t, size_t, FILE *);
+int ftrylockfile(FILE *);
+void funlockfile(FILE *);
+int getc(FILE *);
+int getc_unlocked(FILE *);
+int getchar(void);
+int getchar_unlocked(void);
+char *gets(char *);
+int putc(int, FILE *);
+int putc_unlocked(int, FILE *);
+int putchar(int);
+int putchar_unlocked(int);
+int puts(const char *);
+int ungetc(int, FILE *);
+
+
 int libc_stdio_set_console(const char* device_name, int mode);
 int libc_stdio_get_console(void);
 
