@@ -12,10 +12,25 @@
 #include <sys/types.h>
 #include <stdarg.h>
 
-#define EOF (-1)
-
 #define _FILE_IND_EOF   (1 << 0)
 #define _FILE_IND_ERROR (1 << 1)
+
+#define UNGET   8       /* unget size */
+#define BUFSIZ  128     /* buffer size */
+#define EOF     (-1)    /* end-of-file descriptor */
+
+#ifndef SEEK_SET
+#define SEEK_SET    0   /* set file offset to offset */
+#endif
+#ifndef SEEK_CUR
+#define SEEK_CUR    1   /* set file offset to current plus offset */
+#endif
+#ifndef SEEK_END
+#define SEEK_END    2   /* set file offset to EOF plus offset */
+#endif
+
+#define CHAR_BIT 8
+#define UCHAR_MAX 255
 
 struct __MLIBC_IO_FILE;
 typedef struct __MLIBC_IO_FILE FILE;
@@ -49,22 +64,6 @@ struct __MLIBC_IO_FILE{
 extern FILE* stdin;
 extern FILE* stdout;
 extern FILE* stderr;
-
-#define BUFSIZ 128
-#define EOF     (-1)
-
-#ifndef SEEK_SET
-#define SEEK_SET    0   /* set file offset to offset */
-#endif
-#ifndef SEEK_CUR
-#define SEEK_CUR    1   /* set file offset to current plus offset */
-#endif
-#ifndef SEEK_END
-#define SEEK_END    2   /* set file offset to EOF plus offset */
-#endif
-
-#define CHAR_BIT 8
-#define UCHAR_MAX 255
 
 /* File open and close */
 int fclose(FILE *);
