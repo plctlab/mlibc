@@ -5,6 +5,7 @@
  *
  * Change Logs:
  * Date           Author       Notes
+ * 2024/5/5       linsichen    add bsearch
  */
 
 #include <stdlib.h>

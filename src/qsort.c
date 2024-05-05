@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) mlibc & plct lab
+ *
+ * SPDX-License-Identifier: MIT
+ *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2024/5/5       linsichen    realize qsort
+ */
 #include <stdlib.h>
 #include <stdint.h>
 
