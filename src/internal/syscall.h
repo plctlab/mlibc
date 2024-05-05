@@ -10,9 +10,9 @@ typedef struct
 } iovec;
 
 /* Filesystem call*/
-int __mlibc_fcntl(int fd, int cmd, ...);
-int __mlibc_ioctl(int fd, unsigned long req, ...);
-ssize_t __mlibc_readv(int fd, iovec *iov, size_t iov_size);
+int __mlibc_sys_fcntl(int fd, int cmd, ...);
+int __mlibc_sys_ioctl(int fd, int cmd, ...);
+ssize_t __mlibc_sys_readv(int fd, iovec *iov, size_t iov_size);
 ssize_t __mlibc_sys_read(int fd, unsigned char *buf, size_t buf_size);
 ssize_t __mlibc_sys_writev(int fd, iovec *iov, size_t iov_size);
 int __mlibc_sys_close(int fd);
