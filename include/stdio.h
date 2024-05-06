@@ -15,7 +15,6 @@
 #define _FILE_IND_EOF   (1 << 0)
 #define _FILE_IND_ERROR (1 << 1)
 
-#define UNGET   8       /* unget size */
 #define BUFSIZ  128     /* buffer size */
 #define EOF     (-1)    /* end-of-file descriptor */
 
