@@ -15,6 +15,7 @@
 #define assert(expr)((void) 0)
 #else
 void __assert_fail (const char* expr, const char* file, int line);
+void __assert_func(const char *file, int line, const char *func, const char *failedexpr);
 
 #define assert(expr) \
     if (!(expr)) \
