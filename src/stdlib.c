@@ -5,7 +5,8 @@
  *
  * Change Logs:
  * Date           Author       Notes
- * 2024/5/5       linsichen    add bsearch
+ * 2024/4/25       0Bitbiscuits     add rand_r, rand, srand
+ * 2024/4/29       0Bitbiscuits     add bsearch
  */
 
 #include <stdlib.h>
