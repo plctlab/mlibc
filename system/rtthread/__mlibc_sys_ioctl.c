@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) mlibc & plct lab
+ *
+ * SPDX-License-Identifier: MIT
+ *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2024/5/6    0Bitbiscuits  realize sys_ioctl
+ */
 #include "../internal/syscall.h"
 #include <stdarg.h>
 #include <dfs_file.h>

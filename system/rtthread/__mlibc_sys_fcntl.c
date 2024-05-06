@@ -5,7 +5,7 @@
  *
  * Change Logs:
  * Date           Author       Notes
- * 2024/5/6       0Bitbiscuits    realize fcntl
+ * 2024/5/6    0Bitbiscuits  realize sys_fcntl
  */
 #include "../internal/syscall.h"
 #include <stdarg.h>
