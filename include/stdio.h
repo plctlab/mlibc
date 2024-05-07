@@ -57,6 +57,7 @@ struct __MLIBC_IO_FILE{
 
     int mode;
     off_t off;
+    unsigned char flags;
     unsigned char indicators;
 };
 

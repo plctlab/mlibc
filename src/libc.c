@@ -9,6 +9,9 @@
  */
 #include <stdio.h>
 #include <unistd.h>
+#include <libc.h>
+
+MLIBC mlibc;
 
 FILE* stdin = NULL;
 FILE* stdout = NULL;
@@ -20,6 +23,7 @@ static FILE stderr_file;
 
 int __libc_init_array(void)
 {
+    mlibc.RUN_IN_OS = 1;
     return 0;
 }
 

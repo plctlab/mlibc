@@ -7,9 +7,10 @@
  * Date           Author       Notes
  * 2024/5/6   0Bitbiscuits  realize sys_writev
  */
-#include "../internal/syscall.h"
+#include <syscall.h>
 #include <dfs_file.h>
 #include <errno.h>
+#include <unistd.h>
 
 /**
  * @brief Write data from multiple buffers to a file.
@@ -19,7 +20,7 @@
  * @param iov_size the number of buffer
  * @return ssize_t The number of bytes write, which returns -1 if the write operation fails
  */
-ssize_t __mlibc_sys_writev(int fd, iovec *iov, size_t iov_size)
+ssize_t __mlibc_sys_writev(int fd, iovec_t *iov, size_t iov_size)
 {
     int i = 0;
     ssize_t cnt = 0;

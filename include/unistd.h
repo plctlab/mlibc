@@ -17,6 +17,7 @@
 #define STDOUT_FILENO   (1)
 #define STDERR_FILENO   (2)
 
+int creat(const char *path, mode_t mode);
 int close(int d);
 int read(int fd, void *buf, size_t len);
 int fsync(int fildes);
@@ -36,6 +37,7 @@ int unlink(const char *pathname);
 
 char *getcwd(char *buf, size_t size);
 int fcntl(int fd, int cmd, ... /* arg */ );
+int ioctl(int fildes, int cmd, ...);
 
 int chdir(const char *path);
 int mkdir(const char *pathname, mode_t mode);

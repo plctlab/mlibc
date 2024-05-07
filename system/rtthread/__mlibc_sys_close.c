@@ -7,9 +7,10 @@
  * Date           Author       Notes
  * 2024/5/6   0Bitbiscuits  realize sys_close
  */
-#include "../internal/syscall.h"
+#include <syscall.h>
 #include <dfs_file.h>
 #include <errno.h>
+#include <unistd.h>
 
 /**
  * @brief the function will close the open file descriptor.

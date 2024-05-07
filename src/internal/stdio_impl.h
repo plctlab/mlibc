@@ -12,7 +12,6 @@
 
 #include <stdio.h>
 
-size_t __mlibc_open(int fd, const char *mode);
 size_t __mlibc_close(FILE *);
 size_t __mlibc_read(FILE *, unsigned char *, size_t);
 size_t __mlibc_write(FILE *, const unsigned char *, size_t);
