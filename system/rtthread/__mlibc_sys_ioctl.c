@@ -7,9 +7,10 @@
  * Date           Author       Notes
  * 2024/5/6    0Bitbiscuits  realize sys_ioctl
  */
-#include "../internal/syscall.h"
+#include <syscall.h>
 #include <stdarg.h>
 #include <dfs_file.h>
+#include <unistd.h>
 
 /**
  * @brief  * this function is a POSIX compliant version, which shall perform a variety of
