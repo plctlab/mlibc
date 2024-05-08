@@ -48,7 +48,7 @@ static uint8_t *__MLIBC_get_median(uint8_t *beg, uint8_t *mid, uint8_t *end, __M
             (cmp(beg, end)) < 0 ? beg : (cmp(mid, end) < 0 ? end : mid);
 }
 
-void __MLIBC_qsort_func(uint8_t *pbeg, uint8_t *pend, size_t elem_size, __MLIBC_cmp_t cmp)
+static void __MLIBC_qsort_func(uint8_t *pbeg, uint8_t *pend, size_t elem_size, __MLIBC_cmp_t cmp)
 {
     size_t nelem = pend > pbeg ? (pend - pbeg) / elem_size + 1 : 0;
     uint8_t *pmid = NULL;

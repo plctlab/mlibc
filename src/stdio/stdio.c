@@ -695,7 +695,7 @@ int __MLIBC_vsprintf(char* buf, int buf_nbytes, const char *format, va_list arg)
     return ret_num;
 }
 
-int vsnprintf(char* buf, int buf_nbytes, const char *format, va_list arg)
+int vsnprintf(char* buf, size_t buf_nbytes, const char *format, va_list arg)
 {
     va_list args_temp;
     int res;

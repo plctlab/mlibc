@@ -114,4 +114,6 @@ long strtol(const char *nptr, char **endptr, int base);
 llong_type strtoll(const char *nptr, char **endptr, int base);
 unsigned long strtoul(const char *nptr, char **endptr, int base);
 ullong_type strtoull(const char *nptr, char **endptr, int base);
+void abort(void);
+void exit(int status);
 #endif /*MLIBC_STDLIB_H__*/
