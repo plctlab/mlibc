@@ -7,19 +7,19 @@
  * Date           Author       Notes
  * 2024/5/6    0Bitbiscuits  the first version
  */
-#include <syscall.h>
+#include <sys/syscall.h>
 #include <dfs_file.h>
 #include <unistd.h>
 
 /**
- * @brief The function is used to read data from a file descriptor into the buffer.
+ * @brief The function is used to write data to buffer
  * 
  * @param fd the file descriptor
  * @param buf buffer
  * @param buf_size buffer size
- * @return ssize_t The number of bytes read, which returns -1 if the read operation fails.
+ * @return ssize_t The number of bytes we write, which returns -1 if the write operation fails.
  */
-off_t __mlibc_sys_lseek(int fd, off_t offset, int whence)
+ssize_t __mlibc_sys_write(int fd, unsigned char *buf, size_t buf_size)
 {
-    return lseek(fd, offset, whence);
+    return write(fd, buf, buf_size);
 }

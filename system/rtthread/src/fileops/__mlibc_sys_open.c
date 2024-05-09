@@ -7,7 +7,7 @@
  * Date           Author       Notes
  * 2024/5/7    0Bitbiscuits  the first version
  */
-#include <syscall.h>
+#include <sys/syscall.h>
 #include <dfs_file.h>
 #include <stdarg.h>
 

@@ -8,7 +8,7 @@
  * 2024/5/7    0Bitbiscuits  the first version
  */
 #include <stdio_impl.h>
-#include <syscall.h>
+#include <sys/syscall.h>
 
 /**
  * @brief set file point position and get position after setting
@@ -21,7 +21,7 @@
  * SEEK_END    2   set file offset to EOF plus offset
  * @return ssize_t current file point position
  */
-off_t __mlibc_lseek(int fd, off_t offset, int whence)
+off_t __mlibc_lseek(FILE *f, off_t offset, int whence)
 {
-    return __mlibc_sys_lseek(fd, offset, whence);
+    return __mlibc_sys_lseek(f->fd, offset, whence);
 }

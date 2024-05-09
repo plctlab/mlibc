@@ -36,8 +36,8 @@ typedef struct __MLIBC_IO_FILE FILE;
 struct __MLIBC_IO_FILE{
     int fd;
     unsigned char *wbase;
-    unsigned char *wpos, wend;
-    unsigned char *rpos, rend;
+    unsigned char *wpos, *wend;
+    unsigned char *rpos, *rend;
     size_t (*write)(FILE *, unsigned char *, size_t);
     size_t (*read)(FILE *, unsigned char *, size_t);
     off_t (*seek)(FILE *, off_t, int);

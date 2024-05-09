@@ -5,12 +5,22 @@
  *
  * Change Logs:
  * Date           Author       Notes
- * 2024/5/6    0Bitbiscuits  the first version
+ * 2024/5/9    0Bitbiscuits  the first version
  */
-#ifndef MLIBC_SYSCALL_H__
-#define MLIBC_SYSCALL_H__
+#ifndef MLIBC_SYS_FILEOPS_H__
+#define MLIBC_SYS_FILEOPS_H__
 
-#include <sys/types.h>
+#include <rtconfig.h>
+
+#ifdef RT_USING_DFS
+
+#ifndef MLIBC_USING_FS
+#define MLIBC_USING_FS
+#endif /* MLIBC_USING_FS */
+
+#include <dfs_file.h>
+
+typedef struct dfs_file * mlibc_file_t;
 
 typedef struct
 {
@@ -29,4 +39,6 @@ ssize_t __mlibc_sys_writev(int fd, iovec_t *iov, size_t iov_size);
 ssize_t __mlibc_sys_write(int fd, unsigned char *buf, size_t buf_size);
 off_t __mlibc_sys_lseek(int fd, off_t offset, int whence);
 
-#endif /* MLIBC_SYSCALL_H__ */
+#endif /* RT_USING_DFS */
+
+#endif /* MLIBC_SYS_FILEOPS_H__ */
