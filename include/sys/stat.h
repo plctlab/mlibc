@@ -71,7 +71,7 @@ struct stat
     uint32_t  st_blocks;
     long      st_spare4[2];
 };
-
+    
 int mkdir(const char *, mode_t);
 
 #endif /*MLIBC_SYS_STAT_H__*/

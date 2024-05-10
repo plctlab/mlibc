@@ -7,11 +7,11 @@
  * Date           Author       Notes
  * 2024/5/7   0Bitbiscuits  the first version
  */
-#include <syscall.h>
+#include <sys/syscall.h>
 #include <stdio_impl.h>
 #include <fcntl.h>
 
-size_t __mlibc_write(FILE *f, const unsigned char *buf, size_t buf_size)
+size_t __mlibc_write(FILE *f, unsigned char *buf, size_t buf_size)
 {
     iovec_t iov[2] = {
         { .buf = f->wbase, .buf_size = f->wpos - f->wbase },

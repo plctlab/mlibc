@@ -408,3 +408,27 @@ char* strtok(char* s, const char* delim)
 
     return (strtok_r(s, delim, &last));
 }
+
+char *strpbrk(const char *s1, const char *s2)
+{
+    const char *p = s1;
+
+    while(*p && strchr(s2, *p) == NULL)
+    {
+        ++p;
+    }
+
+    return *p ? (char *)p : NULL;
+}
+
+size_t strspn(const char *s, const char *group)
+{
+    const char *p = s;
+
+    while(*p && strchr(group, *p) != NULL)
+    {
+        ++p;
+    }
+
+    return p - s;
+}

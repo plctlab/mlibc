@@ -7,7 +7,7 @@
  * Date           Author       Notes
  * 2024/5/6   0Bitbiscuits  realize sys_writev
  */
-#include <syscall.h>
+#include <sys/syscall.h>
 #include <dfs_file.h>
 #include <errno.h>
 #include <unistd.h>

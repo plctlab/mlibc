@@ -16,8 +16,6 @@ typedef long clock_t;
 typedef long suseconds_t;
 typedef unsigned long size_t;
 
-typedef void * timer_t;
-
 #define INT_FAST16_MIN  INT32_MIN
 #define INT_FAST32_MIN  INT32_MIN
 

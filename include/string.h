@@ -36,5 +36,8 @@ char *strrev(char *str);
 size_t strcspn(const char* s, const char* c);
 char* strtok_r(char* s, const char* delim, char** last);
 char* strtok(char* s, const char* delim);
+char *strpbrk(const char *s1, const char *s2);
+size_t strspn(const char *s, const char *group);
+size_t strxfrm(char *dest, const char *src, size_t n);
 
 #endif /*MLIBC_STRING_H__*/
