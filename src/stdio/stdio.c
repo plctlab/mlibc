@@ -764,8 +764,9 @@ int putc (int character, FILE* stream)
     {
         return EOF;
     }
-
-    return write(stream->fd, &character, 1);
+    rt_kprintf("%c", character);
+    return 0;
+    //return write(stream->fd, &character, 1);
 }
 
 
