@@ -15,6 +15,8 @@
 #define MLIBC_ALIGN(size, align)           (((size) + (align) - 1) & ~((align) - 1))
 #define MLIBC_ALIGN_DOWN(size, align)      ((size) & ~((align) - 1))
 
+#define offsetof(type, member) ((size_t) &((type *)0)->member)
+
 typedef int ptrdiff_t;
 
 #endif /*MLIBC_STDDEF_H__*/
