@@ -21,8 +21,7 @@ typedef unsigned short   gid_t;
 typedef signed long      off_t;
 typedef int              mode_t;
 typedef unsigned long    size_t;
-typedef unsigned long    ubase_t;
-typedef signed long      base_t;
+
 #ifndef ARCH_CPU_64BIT
 typedef signed int       ssize_t;       /* Used for a count of bytes or an error indication. */
 #else

@@ -36,7 +36,7 @@
 ** architecture. There is no reliable portable method at compile-time.
 */
 #if defined (__alpha__) || defined (__ia64__) || defined (__x86_64__) \
-	|| defined (_WIN64) || defined (__LP64__) || defined (__LLP64__)
+	|| defined (_WIN64) || defined (__LP64__) || defined (__LLP64__) || defined (ARCH_CPU_64BIT)
 #define TLSF_64BIT
 #endif
 
