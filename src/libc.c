@@ -10,8 +10,11 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <libc.h>
+#include <tlsf.h>
+#include <arch_config.h>
 
 MLIBC mlibc;
+tlsf_t tlsf;
 
 FILE* stdin = NULL;
 FILE* stdout = NULL;
@@ -21,9 +24,18 @@ static FILE stdin_file;
 static FILE stdout_file;
 static FILE stderr_file;
 
+
+
+int _libc_init(void);
+
 int __libc_init_array(void)
 {
     mlibc.RUN_IN_OS = 1;
+    if(!mlibc.RUN_IN_OS)
+    {
+        __mlibc_heap_nosys_init((void *)HEAP_BEGIN, (void *)HEAP_END);
+    }
+
     return 0;
 }
 

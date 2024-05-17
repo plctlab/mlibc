@@ -17,4 +17,7 @@ typedef struct
 
 extern MLIBC mlibc;
 
+void __mlibc_heap_sys_init(void);
+void __mlibc_heap_nosys_init(void *begin_addr, void *end_addr);
+
 #endif /* MLIBC_LIBC_H__ */
