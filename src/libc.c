@@ -25,9 +25,6 @@ static FILE stdout_file;
 static FILE stderr_file;
 
 
-
-int _libc_init(void);
-
 int __libc_init_array(void)
 {
     mlibc.RUN_IN_OS = 1;
