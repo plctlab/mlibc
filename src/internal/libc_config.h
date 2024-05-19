@@ -10,6 +10,5 @@
 #ifndef MLIBC_LIBC_CONFIG_H__
 #define MLIBC_LIBC_CONFIG_H__
 
-#define MLIBC_USING_ARCH_STM32
 
 #endif

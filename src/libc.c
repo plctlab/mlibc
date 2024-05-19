@@ -10,8 +10,13 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <libc.h>
+#include <libc_config.h>
 #include <tlsf.h>
 #include <arch_config.h>
+
+#define HEAP_SIZE  8192
+#define HEAP_BEGIN (void *)&HEAP_SPACE[0]
+#define HEAP_END   (void *)&HEAP_SPACE[HEAP_SIZE - 1]
 
 MLIBC mlibc;
 tlsf_t tlsf;
@@ -23,11 +28,11 @@ FILE* stderr = NULL;
 static FILE stdin_file;
 static FILE stdout_file;
 static FILE stderr_file;
-
+static char HEAP_SPACE[HEAP_SIZE];
 
 int __libc_init_array(void)
 {
-    mlibc.RUN_IN_OS = 1;
+    mlibc.RUN_IN_OS = 0;
     if(!mlibc.RUN_IN_OS)
     {
         __mlibc_heap_nosys_init((void *)HEAP_BEGIN, (void *)HEAP_END);

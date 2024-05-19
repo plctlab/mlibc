@@ -12,8 +12,4 @@
 
 #include <libc_config.h>
 
-#ifdef MLIBC_USING_ARCH_STM32
-#include "stm32/config.h"
-#endif /* MLIBC_USING_ARCH_STM32F4XX */
-
 #endif /* MLIBC_BOARD_H__ */
