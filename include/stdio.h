@@ -51,10 +51,6 @@ struct __MLIBC_IO_FILE{
 
     FILE *prev, *next;
 
-    volatile int lock;
-    long lockcount;
-    FILE *prev_lock, *next_lock;
-
     int mode;
     off_t off;
     unsigned char flags;

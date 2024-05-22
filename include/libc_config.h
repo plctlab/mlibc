@@ -10,5 +10,7 @@
 #ifndef MLIBC_LIBC_CONFIG_H__
 #define MLIBC_LIBC_CONFIG_H__
 
+/* Select the system of libc running */
+#define MLIBC_RUNNING_BARE
 
 #endif

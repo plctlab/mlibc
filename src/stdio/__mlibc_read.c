@@ -8,7 +8,7 @@
  * 2024/5/7   0Bitbiscuits  the first version
  */
 #include <sys/syscall.h>
-#include <stdio_impl.h>
+#include "../internal/stdio_impl.h"
 #include <fcntl.h>
 
 

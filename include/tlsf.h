@@ -39,7 +39,7 @@
 */
 
 #include <stddef.h>
-#include <sys/syscall.h>
+#include <sys/types.h>
 
 #if defined(__cplusplus)
 extern "C" {
@@ -68,7 +68,6 @@ void tlsf_free(tlsf_t tlsf, void* ptr);
 
 /* Returns internal block size, not original request size */
 size_t tlsf_block_size(void* ptr);
-int tlsf_control_size(void);
 
 /* Overheads/limits of internal structures. */
 size_t tlsf_size(void);

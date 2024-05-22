@@ -841,11 +841,6 @@ static void integrity_walker(void* ptr, size_t size, int used, void* user)
 	integ->status += status;
 }
 
-int tlsf_control_size(void)
-{
-	return sizeof(control_t);
-}
-
 int tlsf_check(tlsf_t tlsf)
 {
 	int i, j;

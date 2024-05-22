@@ -12,48 +12,35 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <sys/types.h>
+#include <libc_config.h>
+#include <porting/porting_mem.h>
 #include <assert.h>
 #include <stdint.h>
 
+#define MIN_MALLOC_FROM_SYS (1024 - tlsf_pool_overhead())
+
 extern tlsf_t tlsf;
-
-void __mlibc_heap_nosys_init(void *begin_addr, void *end_addr)
-{
-    ssize_t begin_align = MLIBC_ALIGN((ssize_t)begin_addr, MLIBC_ALIGN_SIZE);
-    ssize_t end_align   = MLIBC_ALIGN_DOWN((ssize_t)end_addr, MLIBC_ALIGN_SIZE);
-
-    assert(end_align > begin_align);
-
-    /* Initialize mlibc memory heap */
-    tlsf = tlsf_create_with_pool((void *)begin_align, end_align - begin_align);
-}
-
-void __mlibc_heap_sys_init(void)
-{
-    /* Initialize mlibc memory heap */
-    void *block = NULL;
-
-    block = sys_malloc(MLIBC_ALIGN(tlsf_control_size(), MLIBC_ALIGN_SIZE));
-    tlsf = tlsf_create(block);
-}
 
 void *malloc(size_t size)
 {
+    size_t malloc_size = 0;
+    pool_t ret = NULL;
     void *block = NULL;
 
+    size = MLIBC_ALIGN(size, MLIBC_ALIGN_SIZE);
     if(block = tlsf_malloc(tlsf, size))
     {
         return block;
     }
 
-    if(mlibc.RUN_IN_OS)
+    malloc_size = size < MIN_MALLOC_FROM_SYS ? MIN_MALLOC_FROM_SYS : size;
+    if((block = __mlibc_sbrk(malloc_size + tlsf_pool_overhead())) != NULL)
     {
-        block = sys_malloc(size + tlsf_pool_overhead());
-        if(block)
+        if((ret = tlsf_add_pool(tlsf, block, malloc_size + tlsf_pool_overhead())) == NULL)
         {
-            tlsf_add_pool(tlsf, block, size + tlsf_pool_overhead());
-            block = tlsf_malloc(tlsf, size);
+            __mlibc_free(block);
         }
+        block = tlsf_malloc(tlsf, size);
     }
 
     return block;

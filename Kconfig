@@ -1,0 +1,6 @@
+config BSP_USING_GPIO
+    bool "Enable GPIO"
+    select RT_USING_PIN
+    default y
+    help
+    config gpio
