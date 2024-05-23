@@ -8,9 +8,6 @@ list = os.listdir(cwd)
 src     = []
 CPPPATH = [cwd]
 
-group = DefineGroup('__mlibc_arch', src, depend = [''], CPPPATH = CPPPATH)
-
-objs += group
 for d in list:
     path = os.path.join(cwd, d)
     if os.path.isfile(os.path.join(path, 'SConscript')):
