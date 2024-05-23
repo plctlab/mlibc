@@ -7,9 +7,34 @@
  * Date           Author       Notes
  * 2024/5/7   0Bitbiscuits  the first version
  */
-#include <sys/syscall.h>
-#include <stdio_impl.h>
+#include "../internal/stdio_impl.h"
+#include <sys/sys_fio.h>
+#include <sys/errno.h>
 #include <fcntl.h>
+
+static ssize_t __mlibc_writev(int fd, iovec_t *iov, size_t iov_size)
+{
+    int i = 0;
+    ssize_t cnt = 0;
+    ssize_t ret = -EBADF;
+
+    for(; i < iov_size; i++)
+    {
+        ret = __mlibc_sys_write(fd, (iov + i)->buf, (iov + i)->buf_size);
+        if(ret <= 0)
+        {
+            break;
+        }
+        cnt += ret;
+    }
+
+    if(ret < 0)
+    {
+        return ret;
+    }
+    
+    return cnt;
+}
 
 size_t __mlibc_write(FILE *f, unsigned char *buf, size_t buf_size)
 {
@@ -24,7 +49,7 @@ size_t __mlibc_write(FILE *f, unsigned char *buf, size_t buf_size)
 
     while(1)
     {
-        ret = __mlibc_sys_writev(f->fd, iov_p, iov_cnt);
+        ret = __mlibc_writev(f->fd, iov_p, iov_cnt);
         if(ret == total) // all data write into file
         {
             /* reset the write pointer of the buffer. */

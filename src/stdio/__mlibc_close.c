@@ -7,8 +7,8 @@
  * Date           Author       Notes
  * 2024/5/7    0Bitbiscuits  the first version
  */
-#include <stdio_impl.h>
-#include <sys/syscall.h>
+#include "../internal/stdio_impl.h"
+#include <sys/sys_fio.h>
 
 /**
  * @brief call sys_close to close file

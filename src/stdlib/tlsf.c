@@ -841,6 +841,16 @@ static void integrity_walker(void* ptr, size_t size, int used, void* user)
 	integ->status += status;
 }
 
+size_t tlsf_SL_INDEX_COUNT_LOG2(void)
+{
+	return SL_INDEX_COUNT_LOG2;
+}
+
+size_t tlsf_fls_top(size_t size)
+{
+	return tlsf_fls_sizet(size);
+}
+
 int tlsf_check(tlsf_t tlsf)
 {
 	int i, j;

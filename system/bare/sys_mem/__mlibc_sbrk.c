@@ -2,7 +2,7 @@
 
 #ifdef MLIBC_RUNNING_BARE
 
-#include <porting/porting_mem.h>
+#include <sys/sys_mem.h>
 #include <stdint.h>
 #include <assert.h>
 

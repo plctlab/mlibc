@@ -13,7 +13,7 @@
 #include <stddef.h>
 #include <sys/types.h>
 #include <libc_config.h>
-#include <porting/porting_mem.h>
+#include <sys/sys_mem.h>
 #include <assert.h>
 #include <stdint.h>
 
@@ -21,11 +21,14 @@
 
 extern tlsf_t tlsf;
 
+/* Ensure the allocated memory is greater than or equal to the requested size. */
 void *malloc(size_t size)
 {
-    size_t malloc_size = 0;
     pool_t ret = NULL;
     void *block = NULL;
+    size_t malloc_size = 0;
+    size_t round = 0;
+    size_t offset = 0;
 
     size = MLIBC_ALIGN(size, MLIBC_ALIGN_SIZE);
     if(block = tlsf_malloc(tlsf, size))
@@ -34,10 +37,20 @@ void *malloc(size_t size)
     }
 
     malloc_size = size < MIN_MALLOC_FROM_SYS ? MIN_MALLOC_FROM_SYS : size;
-    if((block = __mlibc_sbrk(malloc_size + tlsf_pool_overhead())) != NULL)
+    /* Additional space is needed when adding a memory block to the memory pool. */
+    malloc_size += tlsf_pool_overhead();
+
+    /* Optimizing the size of allocated memory blocks based on the TLSF algorithm mechanism. */
+    offset = tlsf_fls_top(malloc_size) - tlsf_SL_INDEX_COUNT_LOG2();
+    round = (1 << offset) - 1;
+    malloc_size = (malloc_size + round) & ((~(1U)) << (offset - 1));
+
+    /* Allocate memory blocks from system */
+    if((block = __mlibc_sbrk(malloc_size)) != NULL)
     {
-        if((ret = tlsf_add_pool(tlsf, block, malloc_size + tlsf_pool_overhead())) == NULL)
+        if((ret = tlsf_add_pool(tlsf, block, malloc_size)) == NULL)
         {
+            /* When memory allocation succeeds but fails to be added to the memory pool, return the allocated memory. */
             __mlibc_free(block);
         }
         block = tlsf_malloc(tlsf, size);

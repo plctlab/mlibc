@@ -7,7 +7,7 @@
  * Date           Author       Notes
  * 2024/5/6    0Bitbiscuits  realize sys_fcntl
  */
-#include <sys/syscall.h>
+#include <sys/sys_fio.h>
 #include <stdarg.h>
 #include <dfs_file.h>
 #include <unistd.h>

@@ -84,6 +84,10 @@ void tlsf_walk_pool(pool_t pool, tlsf_walker walker, void* user);
 int tlsf_check(tlsf_t tlsf);
 int tlsf_check_pool(pool_t pool);
 
+/* Extended function for malloc */
+size_t tlsf_SL_INDEX_COUNT_LOG2(void);
+size_t tlsf_fls_top(size_t size);
+
 #if defined(__cplusplus)
 };
 #endif

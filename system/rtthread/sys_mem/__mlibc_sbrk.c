@@ -2,7 +2,7 @@
 
 #ifdef MLIBC_RUNNING_RTTHREAD
 
-#include <porting/porting_mem.h>
+#include <sys/sys_mem.h>
 #include <rtthread.h>
 #include <stdint.h>
 #include <board.h>

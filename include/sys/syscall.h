@@ -12,12 +12,5 @@
 #define MLIBC_SYSCALL_H__
 
 #include <sys/types.h>
-#include <sys_fileops.h>
-#include <sys_mem.h>
-
-/* system-related */
-#ifdef MLIBC_USING_FS
-typedef mlibc_file_t file_t;
-#endif
 
 #endif /* MLIBC_SYSCALL_H__ */
