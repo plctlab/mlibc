@@ -14,7 +14,7 @@
 #include <stdlib.h>
 #include <compiler.h>
 
-FILE *fdopen(int fd, const char *mode)
+mlibc_weak FILE *fdopen(int fd, const char *mode)
 {
     FILE *f;
 

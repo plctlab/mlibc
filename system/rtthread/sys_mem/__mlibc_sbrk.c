@@ -13,13 +13,8 @@
 
 #include <sys/sys_mem.h>
 #include <rtthread.h>
-#include <stdint.h>
-#include <board.h>
 
-#define MLIBC_HEAP_START    HEAP_BEGIN
-#define MLIBC_HEAP_END      HEAP_END
-
-void *__mlibc_sbrk(ptrdiff_t size)
+void *__mlibc_sbrk(size_t size)
 {
     return rt_malloc(size);
 }

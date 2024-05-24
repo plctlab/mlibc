@@ -7,7 +7,7 @@
  * Date           Author       Notes
  * 2024/5/17   0Bitbiscuits  the first version
  */
-#include <tlsf.h>
+#include "../internal/tlsf.h"
 #include <libc.h>
 #include <stdlib.h>
 #include <stddef.h>
@@ -16,13 +16,14 @@
 #include <sys/sys_mem.h>
 #include <assert.h>
 #include <stdint.h>
+#include <compiler.h>
 
 #define MIN_MALLOC_FROM_SYS (1024 - tlsf_pool_overhead())
 
 extern tlsf_t tlsf;
 
 /* Ensure the allocated memory is greater than or equal to the requested size. */
-void *malloc(size_t size)
+mlibc_weak void *malloc(size_t size)
 {
     pool_t ret = NULL;
     void *block = NULL;
@@ -59,7 +60,7 @@ void *malloc(size_t size)
     return block;
 }
 
-void *realloc(void* ptr, size_t size)
+mlibc_weak void *realloc(void* ptr, size_t size)
 {
     if(ptr == NULL)
     {
@@ -69,7 +70,7 @@ void *realloc(void* ptr, size_t size)
     return tlsf_realloc(tlsf, ptr, size);
 }
 
-void *calloc(size_t num, size_t size)
+mlibc_weak void *calloc(size_t num, size_t size)
 {
     void *block = NULL;
 
@@ -79,7 +80,7 @@ void *calloc(size_t num, size_t size)
     return block;
 }
 
-void free(void* ptr)
+mlibc_weak void free(void* ptr)
 {
     tlsf_free(tlsf, ptr);
 }

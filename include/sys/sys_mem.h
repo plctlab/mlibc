@@ -10,10 +10,10 @@
 #ifndef PORTING_MEM_H__
 #define PORTING_MEM_H__
 
-#include <stddef.h>
+#include <sys/types.h>
 
 // allocate memory from system
-void* __mlibc_sbrk(ptrdiff_t increment);
+void* __mlibc_sbrk(size_t increment);
 // give memory back
 void __mlibc_free(void *mem);
 

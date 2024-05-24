@@ -11,7 +11,7 @@
 #include <unistd.h>
 #include <libc.h>
 #include <libc_config.h>
-#include <tlsf.h>
+#include "internal/tlsf.h"
 #include <assert.h>
 #include <fcntl.h>
 
