@@ -20,8 +20,8 @@ static ssize_t __mlibc_writev(int fd, iovec_t *iov, size_t iov_size)
 
     for(; i < iov_size; i++)
     {
-        ret = __mlibc_sys_write(fd, (iov + i)->buf, (iov + i)->buf_size);
-        if(ret <= 0)
+        ret = __mlibc_sys_write(fd, iov[i].buf, iov[i].buf_size);
+        if(ret < 0)
         {
             break;
         }
@@ -42,7 +42,7 @@ size_t __mlibc_write(FILE *f, unsigned char *buf, size_t buf_size)
         { .buf = f->wbase, .buf_size = f->wpos - f->wbase },
         { .buf = buf, .buf_size = buf_size}
     };
-    iovec_t *iov_p;
+    iovec_t *iov_p = iov;
     size_t total = iov_p[0].buf_size + iov_p[1].buf_size;
     ssize_t ret = 0;
     int iov_cnt = 2;
@@ -57,7 +57,7 @@ size_t __mlibc_write(FILE *f, unsigned char *buf, size_t buf_size)
             f->wpos = f->wbase = f->buf;
             return buf_size;
         }
-        if(ret < 0) // write failed
+        if(ret <= 0) // write failed
         {
             f->wpos = f->wbase = f->wend = 0;
             f->flags |= F_ERR;
