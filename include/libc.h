@@ -17,4 +17,6 @@ typedef struct
 
 extern MLIBC mlibc;
 
+int _libc_init(void);
+
 #endif /* MLIBC_LIBC_H__ */

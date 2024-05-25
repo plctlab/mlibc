@@ -43,22 +43,22 @@ struct __MLIBC_IO_FILE{
     off_t (*seek)(FILE *, off_t, int);
     int (*close)(FILE *);
 
+    /* buffer */
     unsigned char *buf;
     size_t buf_size;
 
+    /* line buffered mode */
     int lbf;
     char *getln_buf;
 
+    /* file list */
     FILE *prev, *next;
 
-    volatile int lock;
-    long lockcount;
-    FILE *prev_lock, *next_lock;
-
+    /* file mode */
     int mode;
+    /* file offset */
     off_t off;
     unsigned char flags;
-    unsigned char indicators;
 };
 
 extern FILE* stdin;

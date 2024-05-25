@@ -7,7 +7,7 @@
  * Date           Author       Notes
  * 2024/5/6    0Bitbiscuits  realize sys_read
  */
-#include <sys/syscall.h>
+#include <sys/sys_fio.h>
 #include <dfs_file.h>
 #include <unistd.h>
 
@@ -19,7 +19,7 @@
  * @param buf_size buffer size
  * @return ssize_t The number of bytes read, which returns -1 if the read operation fails.
  */
-ssize_t __mlibc_sys_read(int fd, unsigned char *buf, size_t buf_size)
+ssize_t __mlibc_sys_read(int fd, void* buf, size_t buf_size)
 {
     return read(fd, buf, buf_size);
 }

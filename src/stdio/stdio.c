@@ -764,7 +764,6 @@ int putc (int character, FILE* stream)
     {
         return EOF;
     }
-
     return write(stream->fd, &character, 1);
 }
 
