@@ -9,7 +9,7 @@
  */
 #include <libc_config.h>
 
-#ifdef MLIBC_RUNNING_BARE
+#ifdef MLIBC_MEM_USING_TLSF
 
 #include <sys/sys_mem.h>
 #include <assert.h>
@@ -38,4 +38,4 @@ void __mlibc_sys_heap_init(void)
     }
 }
 
-#endif /* MLIBC_RUNNING_BARE */
+#endif /* MLIBC_MEM_USING_TLSF */

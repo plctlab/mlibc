@@ -9,6 +9,8 @@
  */
 #include <libc_config.h>
 
+#ifdef MLIBC_MEM_USING_TLSF
+
 #include <sys/sys_mem.h>
 #include <assert.h>
 #include <compiler.h>
@@ -20,3 +22,5 @@ mlibc_weak void __mlibc_sys_free(void* ptr)
 {
     tlsf_free(tlsf, ptr);
 }
+
+#endif /* MLIBC_MEM_USING_TLSF */

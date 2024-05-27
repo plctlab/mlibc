@@ -13,4 +13,7 @@
 /* Select the system of libc running */
 #define MLIBC_RUNNING_BARE
 
+/* Choose a memory management algorithm. */
+#define MLIBC_MEM_USING_TLSF
+
 #endif

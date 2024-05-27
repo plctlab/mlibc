@@ -1,4 +1,15 @@
+/*
+ * Copyright (c) mlibc & plct lab
+ *
+ * SPDX-License-Identifier: MIT
+ *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2024/5/27  0Bitbiscuits the first version
+ */
 #include <libc_config.h>
+
+#ifdef MLIBC_MEM_USING_TLSF
 
 #include <sys/sys_mem.h>
 #include <assert.h>
@@ -45,3 +56,5 @@ mlibc_weak void *__mlibc_sys_malloc(size_t size)
 
     return block;
 }
+
+#endif /* MLIBC_MEM_USING_TLSF */
