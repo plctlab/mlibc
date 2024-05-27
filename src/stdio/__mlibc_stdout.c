@@ -12,13 +12,13 @@
 
 static unsigned char stdout_buf[BUFSIZ + UNGET];
 FILE __stdout_FILE = {
-	.fd = 0,
+    .fd = 0,
     .buf = stdout_buf + UNGET,
-	.buf_size = BUFSIZ,
-	.flags = F_PERM | F_NORD,
+    .buf_size = BUFSIZ,
+    .flags = F_PERM | F_NORD,
     .lbf = '\n',
-	.write = __mlibc_write,
-	.seek = __mlibc_lseek,
-	.close = __mlibc_close,
+    .write = __mlibc_write,
+    .seek = __mlibc_lseek,
+    .close = __mlibc_close,
 };
 FILE *stdout = &__stdout_FILE;

@@ -18,6 +18,6 @@ int __mlibc_fmode_to_flags(const char *mode)
     if (*mode == 'w') flags |= O_TRUNC;
 
     if (*mode == 'a') flags |= O_APPEND;
-	
+    
     return flags;
 }

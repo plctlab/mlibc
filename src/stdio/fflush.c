@@ -53,11 +53,11 @@ int fflush(FILE *f)
     }
 
     /* If reading, sync position to the end of file */
-	if (f->rpos != f->rend) f->seek(f, f->rpos-f->rend, SEEK_CUR);
+    if (f->rpos != f->rend) f->seek(f, f->rpos-f->rend, SEEK_CUR);
 
-	/* Clear read and write modes */
-	f->wpos = f->wbase = f->wend = 0;
-	f->rpos = f->rend = 0;
+    /* Clear read and write modes */
+    f->wpos = f->wbase = f->wend = 0;
+    f->rpos = f->rend = 0;
 
     return 0;
 }

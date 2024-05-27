@@ -30,25 +30,25 @@
 FILE *fopen(const char *path, const char *mode)
 {
     FILE *f;
-	int fd;
-	int flags = 0;
+    int fd;
+    int flags = 0;
 
-	/* Check for valid initial mode character */
-	if (!strchr("rwa", *mode)) {
-		/* error operation */
-		return 0;
-	}
+    /* Check for valid initial mode character */
+    if (!strchr("rwa", *mode)) {
+        /* error operation */
+        return 0;
+    }
 
-	/* Compute the flags to pass to open() */
-	flags = __mlibc_fmode_to_flags(mode);
+    /* Compute the flags to pass to open() */
+    flags = __mlibc_fmode_to_flags(mode);
 
-	fd = __mlibc_sys_open(path, flags);
-	if (fd < 0) return 0;
+    fd = __mlibc_sys_open(path, flags);
+    if (fd < 0) return 0;
 
-	f = fdopen(fd, mode);
-	if (f) return f;
+    f = fdopen(fd, mode);
+    if (f) return f;
 
-	__mlibc_sys_close(fd);
+    __mlibc_sys_close(fd);
 
-	return NULL;
+    return NULL;
 }

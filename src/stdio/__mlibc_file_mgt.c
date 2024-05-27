@@ -21,8 +21,8 @@ FILE *__mlibc_file_add(FILE *f)
 void __mlibc_file_remove(FILE *f)
 {
     if (f->prev) f->prev->next = f->next;
-	if (f->next) f->next->prev = f->prev;
-	if (head == f) head = f->next;
+    if (f->next) f->next->prev = f->prev;
+    if (head == f) head = f->next;
 }
 
 FILE *__mlibc_file_head(void)
