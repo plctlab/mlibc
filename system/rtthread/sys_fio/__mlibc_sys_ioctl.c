@@ -26,12 +26,13 @@
  */
 int __mlibc_sys_ioctl(int fd, int cmd, ...)
 {
-    int res = 0;
-    va_list args;
+    void *arg;
+    va_list ap;
 
-    va_start(args, cmd);
-    res = ioctl(fd, cmd, args);
-    va_end(args);
+    va_start(ap, cmd);
+    arg = va_arg(ap, void *);
+    va_end(ap);
 
-    return res;
+    /* we use fcntl for this API. */
+    return __mlibc_sys_fcntl(fd, cmd, arg);
 }

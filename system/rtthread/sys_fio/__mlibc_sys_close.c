@@ -20,5 +20,26 @@
  */
 int __mlibc_sys_close(int fd)
 {
-    return close(fd);
+    int result;
+    struct dfs_file *d;
+
+    d = fd_get(fd);
+    if (d == NULL)
+    {
+        rt_set_errno(-EBADF);
+
+        return -1;
+    }
+
+    result = dfs_file_close(d);
+    fd_release(fd);
+
+    if (result < 0)
+    {
+        rt_set_errno(result);
+
+        return -1;
+    }
+
+    return 0;
 }

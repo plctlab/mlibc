@@ -10,6 +10,13 @@
 #include "../internal/stdio_impl.h"
 #include <fcntl.h>  
 
+/**
+ * @brief If the parameter is null, it flushes the buffers of all files;
+ * if a file is specified, it flushes the buffer of the specified file.
+ * 
+ * @param f file pointer
+ * @return int 
+ */
 int fflush(FILE *f)
 {
     int r = 0;

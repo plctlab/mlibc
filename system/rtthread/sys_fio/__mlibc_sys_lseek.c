@@ -21,5 +21,49 @@
  */
 off_t __mlibc_sys_lseek(int fd, off_t offset, int whence)
 {
-    return lseek(fd, offset, whence);
+    int result;
+    struct dfs_file *d;
+
+    d = fd_get(fd);
+    if (d == NULL)
+    {
+        rt_set_errno(-EBADF);
+
+        return -1;
+    }
+
+    switch (whence)
+    {
+    case SEEK_SET:
+        break;
+
+    case SEEK_CUR:
+        offset += d->pos;
+        break;
+
+    case SEEK_END:
+        offset += d->vnode->size;
+        break;
+
+    default:
+        rt_set_errno(-EINVAL);
+
+        return -1;
+    }
+
+    if (offset < 0)
+    {
+        rt_set_errno(-EINVAL);
+
+        return -1;
+    }
+    result = dfs_file_lseek(d, offset);
+    if (result < 0)
+    {
+        rt_set_errno(result);
+
+        return -1;
+    }
+
+    return offset;
 }

@@ -21,5 +21,25 @@
  */
 ssize_t __mlibc_sys_write(int fd, void *buf, size_t buf_size)
 {
-    return write(fd, buf, buf_size);
+    int result;
+    struct dfs_file *d;
+
+    /* get the fd */
+    d = fd_get(fd);
+    if (d == NULL)
+    {
+        rt_set_errno(-EBADF);
+
+        return -1;
+    }
+
+    result = dfs_file_write(d, buf, buf_size);
+    if (result < 0)
+    {
+        rt_set_errno(result);
+
+        return -1;
+    }
+
+    return result;
 }

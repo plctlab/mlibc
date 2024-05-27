@@ -22,12 +22,29 @@
  */
 int __mlibc_sys_open(const char *path, int flags, ...)
 {
-    int ret = 0;
-    va_list args;
+    int fd, result;
+    struct dfs_file *d;
 
-    va_start(args, flags);
-    ret = open(path, flags, args);
-    va_end(args);
+    /* allocate a fd */
+    fd = fd_new();
+    if (fd < 0)
+    {
+        rt_set_errno(-ENOMEM);
 
-    return ret;
+        return -1;
+    }
+    d = fd_get(fd);
+
+    result = dfs_file_open(d, path, flags);
+    if (result < 0)
+    {
+        /* release the ref-count of fd */
+        fd_release(fd);
+
+        rt_set_errno(result);
+
+        return -1;
+    }
+
+    return fd;
 }

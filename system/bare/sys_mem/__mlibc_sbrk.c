@@ -15,7 +15,7 @@
 #include <assert.h>
 #include <compiler.h>
 
-#define HEAP_DEFAULT_SIZE   1024 * 8
+#define HEAP_DEFAULT_SIZE   1024 * 10
 #define MLIBC_HEAP_START    (&MLIBC_HEAP[0])
 #define MLIBC_HEAP_END      (&MLIBC_HEAP[HEAP_DEFAULT_SIZE - 1])
 
@@ -32,7 +32,7 @@ static char *prev_point = NULL;
  * @param size The size of the memory block you want to allocate.
  * @return void* The address of the target memory block.
  */
-mlibc_weak void *__mlibc_sbrk(size_t size)
+mlibc_weak void *__mlibc_heap_sbrk(size_t size)
 {
     if(cur_point == NULL)
     {
@@ -59,7 +59,7 @@ mlibc_weak void *__mlibc_sbrk(size_t size)
  * @param mem The memory block address you allocated
  * @return void
  */
-mlibc_weak void __mlibc_free(void *mem)
+mlibc_weak void __mlibc_heap_free(void *mem)
 {
     assert(0);
 }

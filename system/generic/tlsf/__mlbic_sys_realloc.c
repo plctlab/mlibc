@@ -9,19 +9,14 @@
  */
 #include <libc_config.h>
 
-#ifdef MLIBC_RUNNING_RTTHREAD
-
 #include <sys/sys_mem.h>
-#include <rtthread.h>
+#include <assert.h>
+#include <compiler.h>
+#include "inc/tlsf.h"
 
-void *__mlibc_heap_sbrk(size_t size)
+extern tlsf_t tlsf;
+
+void *__mlibc_sys_realloc(void* ptr, size_t size)
 {
-    return rt_malloc(size);
+    return tlsf_realloc(tlsf, ptr, size);
 }
-
-void mlibc_heap_free(void *mem)
-{
-    rt_free(mem);
-}
-
-#endif /* MLIBC_RUNNING_RTTHREAD */

@@ -13,8 +13,13 @@
 #include <sys/types.h>
 
 // allocate memory from system
-void* __mlibc_sbrk(size_t increment);
-// give memory back
-void __mlibc_free(void *mem);
+void __mlibc_sys_heap_init(void);
+void* __mlibc_sys_malloc(size_t size);
+void* __mlibc_sys_realloc(void *ptr, size_t size);
+void __mlibc_sys_free(void *mem);
+
+// heap controller
+void *__mlibc_heap_sbrk(size_t size);
+void __mlibc_heap_free(void *mem);
 
 #endif /* PORTING_MEM_H__ */

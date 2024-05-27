@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "tlsf.h"
+#include "inc/tlsf.h"
 
 #if defined(__cplusplus)
 #define tlsf_decl inline

@@ -24,12 +24,29 @@
  */
 int __mlibc_sys_fcntl(int fd, int cmd, ...)
 {
-    int res = 0;
-    va_list args;
+    int ret = -1;
+    struct dfs_file *d;
 
-    va_start(args, cmd);
-    res = fcntl(fd, cmd, args);
-    va_end(args);
+    /* get the fd */
+    d = fd_get(fd);
+    if (d)
+    {
+        void *arg;
+        va_list ap;
 
-    return res;
+        va_start(ap, cmd);
+        arg = va_arg(ap, void *);
+        va_end(ap);
+
+        ret = dfs_file_ioctl(d, cmd, arg);
+    }
+    else ret = -EBADF;
+
+    if (ret < 0)
+    {
+        rt_set_errno(ret);
+        ret = -1;
+    }
+
+    return ret;
 }
