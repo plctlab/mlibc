@@ -7,10 +7,6 @@
  * Date           Author       Notes
  * 2024/5/23   0Bitbiscuits  the first version
  */
-#include <libc_config.h>
-
-#ifdef MLIBC_RUNNING_BARE
-
 #include <sys/sys_mem.h>
 #include <assert.h>
 #include <compiler.h>
@@ -63,5 +59,3 @@ mlibc_weak void __mlibc_heap_free(void *mem)
 {
     assert(0);
 }
-
-#endif /* MLIBC_RUNNING_BARE */

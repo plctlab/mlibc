@@ -7,12 +7,6 @@
  * Date           Author       Notes
  * 2024/5/7    0Bitbiscuits  the first version
  */
-#include <libc_config.h>
-#ifdef MLIBC_RUNNING_RTTHREAD
-
-#include <rtconfig.h>
-#ifdef RT_USING_DFS
-
 #include <sys/sys_fio.h>
 #include <compiler.h>
 
@@ -32,6 +26,3 @@ mlibc_weak int __mlibc_sys_open(const char *path, int flags, ...)
     
     return -1;
 }
-
-#endif /* RT_USING_DFS */
-#endif /* MLIBC_RUNNING_RT_THREAD */
