@@ -14,19 +14,17 @@
 #ifdef RT_USING_DFS
 
 #include <sys/sys_fio.h>
-#include <dfs_file.h>
-#include <errno.h>
-#include <unistd.h>
+#include <compiler.h>
 
 /**
- * @brief the function will close the open file descriptor.
+ * @brief Empty implementation.
  * 
- * @param fd the file descriptor
- * @return int 0 on successful, -1 on failed.
+ * @param fd The file descriptor
+ * @return int
  */
-int __mlibc_sys_close(int fd)
+mlibc_weak __mlibc_sys_close(int fd)
 {
-    close(fd);
+    (void)fd;
 
     return 0;
 }

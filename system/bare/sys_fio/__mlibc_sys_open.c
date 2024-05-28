@@ -14,8 +14,7 @@
 #ifdef RT_USING_DFS
 
 #include <sys/sys_fio.h>
-#include <dfs_file.h>
-#include <stdarg.h>
+#include <compiler.h>
 
 /**
  * @brief this function is a POSIX compliant version, which will open a file and
@@ -26,16 +25,12 @@
  * @param ... 
  * @return ssize_t the non-negative integer on successful open, others for failed.
  */
-int __mlibc_sys_open(const char *path, int flags, ...)
+mlibc_weak int __mlibc_sys_open(const char *path, int flags, ...)
 {
-    int ret = 0;
-    va_list args;
-
-    va_start(args, flags);
-    ret = open(path, flags, args);
-    va_end(args);
-
-    return ret;
+    (void)path;
+    (void)flags;
+    
+    return -1;
 }
 
 #endif /* RT_USING_DFS */

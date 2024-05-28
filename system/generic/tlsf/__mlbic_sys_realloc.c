@@ -18,7 +18,7 @@
 
 extern tlsf_t tlsf;
 
-void *__mlibc_sys_realloc(void* ptr, size_t size)
+mlibc_weak void *__mlibc_sys_realloc(void* ptr, size_t size)
 {
     return tlsf_realloc(tlsf, ptr, size);
 }

@@ -8,7 +8,6 @@
  * 2024/5/23   0Bitbiscuits  the first version
  */
 #include <libc_config.h>
-
 #ifdef MLIBC_RUNNING_RTTHREAD
 
 #include <sys/sys_mem.h>
@@ -19,7 +18,7 @@ void *__mlibc_heap_sbrk(size_t size)
     return rt_malloc(size);
 }
 
-void mlibc_heap_free(void *mem)
+void __mlibc_heap_free(void *mem)
 {
     rt_free(mem);
 }

@@ -14,9 +14,7 @@
 #ifdef RT_USING_DFS
 
 #include <sys/sys_fio.h>
-#include <stdarg.h>
-#include <dfs_file.h>
-#include <unistd.h>
+#include <compiler.h>
 
 /**
  * @brief  * this function is a POSIX compliant version, which shall perform a variety of
@@ -30,16 +28,12 @@
  * @return 0 on successful completion. Otherwise, -1 shall be returned and errno
  * set to indicate the error.
  */
-int __mlibc_sys_ioctl(int fd, int cmd, ...)
+mlibc_weak int __mlibc_sys_ioctl(int fd, int cmd, ...)
 {
-    int res = 0;
-    va_list args;
+    (void)fd;
+    (void)cmd;
 
-    va_start(args, cmd);
-    res = ioctl(fd, cmd, args);
-    va_end(args);
-
-    return res;
+    return -1;
 }
 
 #endif /* RT_USING_DFS */

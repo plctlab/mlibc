@@ -14,8 +14,7 @@
 #ifdef RT_USING_DFS
 
 #include <sys/sys_fio.h>
-#include <dfs_file.h>
-#include <unistd.h>
+#include <compiler.h>
 
 /**
  * @brief The function is used to read data from a file descriptor into the buffer.
@@ -25,9 +24,13 @@
  * @param buf_size buffer size
  * @return ssize_t The number of bytes read, which returns -1 if the read operation fails.
  */
-ssize_t __mlibc_sys_read(int fd, void* buf, size_t buf_size)
+mlibc_weak ssize_t __mlibc_sys_read(int fd, void* buf, size_t buf_size)
 {
-    return read(fd, buf, buf_size);
+    (void)fd;
+    (void)buf;
+    (void)buf_size;
+
+    return -1;
 }
 
 #endif /* RT_USING_DFS */

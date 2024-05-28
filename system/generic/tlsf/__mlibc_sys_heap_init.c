@@ -26,7 +26,7 @@ static tlsf_t __heap_init(void *mem, size_t size)
 }
 
 /* Initialize mlibc memory heap */
-void __mlibc_sys_heap_init(void)
+mlibc_weak void __mlibc_sys_heap_init(void)
 {
     void *ret = NULL;
 

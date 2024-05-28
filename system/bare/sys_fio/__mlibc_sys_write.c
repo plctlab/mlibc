@@ -14,8 +14,7 @@
 #ifdef RT_USING_DFS
 
 #include <sys/sys_fio.h>
-#include <dfs_file.h>
-#include <unistd.h>
+#include <compiler.h>
 
 /**
  * @brief The function is used to write data to buffer
@@ -25,29 +24,13 @@
  * @param buf_size buffer size
  * @return ssize_t The number of bytes we write, which returns -1 if the write operation fails.
  */
-ssize_t __mlibc_sys_write(int fd, void *buf, size_t buf_size)
+mlibc_weak ssize_t __mlibc_sys_write(int fd, void *buf, size_t buf_size)
 {
-    int result;
-    struct dfs_file *d;
+    (void)fd;
+    (void)buf;
+    (void)buf_size;
 
-    /* get the fd */
-    d = fd_get(fd);
-    if (d == NULL)
-    {
-        rt_set_errno(-EBADF);
-
-        return -1;
-    }
-
-    result = dfs_file_write(d, buf, buf_size);
-    if (result < 0)
-    {
-        rt_set_errno(result);
-
-        return -1;
-    }
-
-    return result;
+    return -1;
 }
 
 #endif /* RT_USING_DFS */
