@@ -11,6 +11,7 @@
 #define MLIBC_LIBC_CONFIG_H__
 
 /* Select the system of libc running */
+#define MLIBC_USING_SYSTEM
 #define MLIBC_RUNNING_RTTHREAD
 
 /* Choose a memory management algorithm. */

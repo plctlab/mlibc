@@ -9,10 +9,37 @@ Embedded libc，一个为嵌入式系统和裸机适配的libc库
 + 低资源占用
 + OpenSource
 + Especially for RISC-V..
++ 代码结构清晰易懂
++ 可扩展
++ 移植性强
 
 ## 目录
 
+[mlibc文件架构](ARCH.md)
 
+```
+├───arch            
+├───include         
+│   ├───arch        
+│   │   └───generic 
+│   └───sys         
+├───src             
+│   ├───crt         
+│   ├───internal    
+│   ├───stdio       
+│   └───stdlib      
+├───system          
+│   ├───bare        
+│   │   ├───sys_fio 
+│   │   └───sys_mem 
+│   ├───generic     
+│   │   └───tlsf    
+│   │       └───inc 
+│   └───rtthread    
+│       ├───sys_fio 
+│       └───sys_mem 
+└───toolchains      
+```
 
 ## 背景
 
@@ -48,7 +75,15 @@ Embedded libc，一个为嵌入式系统和裸机适配的libc库
 
 # 快速上手
 
-TODO
+目前仅支持 **RT-Thread + 星火一号** 
+
+使用步骤：
+
+1. 配置Env + scons环境
+
+   - 环境配置步骤可以参考[文档中心]([Env 用户手册 (rt-thread.org)](https://www.rt-thread.org/document/site/#/development-tools/env/env))
+
+     
 
 
 
@@ -65,10 +100,6 @@ TODO
   1. 提交代码
 
   1. 新建 Pull Request
-
-
-
-
 
 # 许可协议
 
