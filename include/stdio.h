@@ -68,7 +68,7 @@ extern FILE* stderr;
 /* File open and close */
 int fclose(FILE *);
 FILE *fdopen(int, const char *);
-int fopen(const char *, const char *);
+FILE *fopen(const char *, const char *);
 FILE *freopen(const char *, const char *, FILE *);
 
 /* Formatted I/O status */

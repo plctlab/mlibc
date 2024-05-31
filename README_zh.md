@@ -9,10 +9,37 @@ Embedded libc，一个为嵌入式系统和裸机适配的libc库
 + 低资源占用
 + OpenSource
 + Especially for RISC-V..
++ 代码结构清晰易懂
++ 可扩展
++ 移植性强
 
 ## 目录
 
+[mlibc文件架构](ARCH.md)
 
+```
+├───arch            
+├───include         
+│   ├───arch        
+│   │   └───generic 
+│   └───sys         
+├───src             
+│   ├───crt         
+│   ├───internal    
+│   ├───stdio       
+│   └───stdlib      
+├───system          
+│   ├───bare        
+│   │   ├───sys_fio 
+│   │   └───sys_mem 
+│   ├───generic     
+│   │   └───tlsf    
+│   │       └───inc 
+│   └───rtthread    
+│       ├───sys_fio 
+│       └───sys_mem 
+└───toolchains      
+```
 
 ## 背景
 
@@ -48,11 +75,63 @@ Embedded libc，一个为嵌入式系统和裸机适配的libc库
 
 # 快速上手
 
-TODO
+### QEMU运行RT-Thread
 
+#### 开发环境
 
+windows下的环境配置教程：
 
+https://github.com/RT-Thread/rt-thread/blob/master/documentation/quick-start/quick_start_qemu/quick_start_qemu_windows.md
 
+通过这个教程我们就可以在windows环境下运行RT-Thread了。
+
+#### 宏配置
+
+我们进入`rt-thread\bsp\qemu-vexpress-a9`文件夹，打开**env**，在命令行中输入**menuconfig**，进入配置界面
+
+**将DFS v2.0切换为DFS v1.0：**
+
+- RT-Thread Components
+  - DFS: device virtual file system
+    - The version of DFS (DFS v1.0)
+
+**下载mlibc软件包：**
+
+- RT-Thread online packages
+  - system packages
+    - 选中当前页面的倒数第六个选项： mlibc: Embedded libc, especially for RISC-V
+
+完成之后就可以退出配置页面然后在命令行输入**scons -j12**进行编译了。
+
+### 星火一号 + RT-Thread
+
+#### 开发环境
+
+不知道哪里下载源码的同学可以参考上面windows环境配置教程
+
+进入`rt-thread\bsp\stm32\stm32f407-rt-spark`目录，然后打开**env**，在命令行输入**menuconfig**，进入配置界面
+
+#### 宏配置
+
+**开启文件系统：**
+
+- Hardware Drivers Config
+  - Onboard Peripheral Drivers
+    - Enable File System
+
+**开启fatfs：**
+
+- RT-Thread Components
+  - DFS: device virtual file system
+    - Enable elm-chan fatfs
+      - elm-chan's FatFs, Generic FAT Filesystem Module
+      - 修改 Maximum sector size to be handled 为 4096
+
+**下载mlibc软件包：**
+
+- RT-Thread online packages
+  - system packages
+    - 选中当前页面的倒数第六个选项： mlibc: Embedded libc, especially for RISC-V
 
 # 贡献代码
 
@@ -65,10 +144,6 @@ TODO
   1. 提交代码
 
   1. 新建 Pull Request
-
-
-
-
 
 # 许可协议
 

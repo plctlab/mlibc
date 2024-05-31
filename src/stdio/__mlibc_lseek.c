@@ -8,7 +8,7 @@
  * 2024/5/7    0Bitbiscuits  the first version
  */
 #include "../internal/stdio_impl.h"
-#include <sys/sys_fio.h>
+#include <unistd.h>
 
 /**
  * @brief set file point position and get position after setting
@@ -23,5 +23,5 @@
  */
 off_t __mlibc_lseek(FILE *f, off_t offset, int whence)
 {
-    return __mlibc_sys_lseek(f->fd, offset, whence);
+    return lseek(f->fd, offset, whence);
 }

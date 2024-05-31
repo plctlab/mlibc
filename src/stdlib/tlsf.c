@@ -1,3 +1,7 @@
+#include <libc_config.h>
+
+#ifdef MLIBC_MEM_USING_TLSF
+
 #include <assert.h>
 #include <limits.h>
 #include <stddef.h>
@@ -5,7 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "tlsf.h"
+#include "../internal/tlsf.h"
 
 #if defined(__cplusplus)
 #define tlsf_decl inline
@@ -1272,3 +1276,5 @@ void* tlsf_realloc(tlsf_t tlsf, void* ptr, size_t size)
 
 	return p;
 }
+
+#endif /* MLIBC_MEM_USING_TLSF */

@@ -5,6 +5,6 @@ cwd     = GetCurrentDir()
 src     = Glob('*.c')
 CPPPATH = []
 
-group = DefineGroup('__mlibc_sys_rtthread', src, depend = [''], CPPPATH = CPPPATH)
+group = DefineGroup('mlibc', src, depend = [''], CPPPATH = CPPPATH)
 
 Return('group')

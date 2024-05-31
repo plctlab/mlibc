@@ -46,4 +46,7 @@ int rmdir(const char *pathname);
 #include <sys/stat.h>
 int stat(const char *pathname, struct stat *statbuf);
 
+#include <stddef.h>
+void *sbrk (ptrdiff_t __incr);
+
 #endif /*MLIBC_UNISTD_H__*/

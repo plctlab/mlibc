@@ -7,22 +7,38 @@
  * Date           Author       Notes
  * 2024/5/17   0Bitbiscuits  the first version
  */
-#include "../internal/tlsf.h"
-#include <libc.h>
 #include <stdlib.h>
-#include <stddef.h>
-#include <sys/types.h>
-#include <libc_config.h>
-#include <sys/sys_mem.h>
 #include <assert.h>
-#include <stdint.h>
+#include <unistd.h>
+#include <sys/types.h>
 #include <compiler.h>
+#include "../internal/tlsf.h"
+#include "../internal/mem_impl.h"
 
-#define MIN_MALLOC_FROM_SYS (1024 - tlsf_pool_overhead())
+#define MIN_MALLOC_FROM_SYS (1024)
 
-extern tlsf_t tlsf;
+tlsf_t tlsf;
 
-/* Ensure the allocated memory is greater than or equal to the requested size. */
+static tlsf_t __heap_init(void *mem, size_t size)
+{
+    assert(size >= tlsf_size() && "Need more memory to init heap management");
+    
+    return tlsf_create(mem);
+}
+
+/* Initialize mlibc memory heap */
+mlibc_weak void __mlibc_sys_heap_init(void)
+{
+    void *ret = NULL;
+
+    if(!tlsf)
+    {
+        ret = sbrk(tlsf_size());
+        assert(ret && "memory controller init failed");
+        tlsf = __heap_init(ret, tlsf_size());
+    }
+}
+
 mlibc_weak void *malloc(size_t size)
 {
     pool_t ret = NULL;
@@ -47,12 +63,12 @@ mlibc_weak void *malloc(size_t size)
     malloc_size = (malloc_size + round) & ((~(1U)) << (offset - 1));
 
     /* Allocate memory blocks from system */
-    if((block = __mlibc_sbrk(malloc_size)) != NULL)
+    if((block = sbrk(malloc_size)) != NULL)
     {
         if((ret = tlsf_add_pool(tlsf, block, malloc_size)) == NULL)
         {
             /* When memory allocation succeeds but fails to be added to the memory pool, return the allocated memory. */
-            __mlibc_free(block);
+            return NULL;
         }
         block = tlsf_malloc(tlsf, size);
     }
@@ -62,11 +78,6 @@ mlibc_weak void *malloc(size_t size)
 
 mlibc_weak void *realloc(void* ptr, size_t size)
 {
-    if(ptr == NULL)
-    {
-        return malloc(size);
-    }
-
     return tlsf_realloc(tlsf, ptr, size);
 }
 
@@ -82,5 +93,5 @@ mlibc_weak void *calloc(size_t num, size_t size)
 
 mlibc_weak void free(void* ptr)
 {
-    tlsf_free(tlsf, ptr);
+   tlsf_free(tlsf, ptr);
 }

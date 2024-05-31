@@ -29,6 +29,9 @@ size_t __mlibc_towrite(FILE *);
 
 void __mlibc_stdio_exit(void);
 
-FILE *mlibc_file_add(FILE *f);
+FILE *__mlibc_file_add(FILE *f);
+void __mlibc_file_remove(FILE *f);
+FILE *__mlibc_file_head(void);
+int __mlibc_fmode_to_flags(const char *mode);
 
 #endif /* MLIBC_STDIO_IMPL_H__ */
