@@ -8,7 +8,7 @@
  * 2024/5/7   0Bitbiscuits  the first version
  */
 #include "../internal/stdio_impl.h"
-#include <sys/sys_fio.h>
+#include <unistd.h>
 #include <sys/errno.h>
 #include <fcntl.h>
 
@@ -20,7 +20,7 @@ static ssize_t __mlibc_writev(int fd, iovec_t *iov, size_t iov_size)
 
     for(; i < iov_size; i++)
     {
-        ret = __mlibc_sys_write(fd, iov[i].buf, iov[i].buf_size);
+        ret = write(fd, iov[i].buf, iov[i].buf_size);
         if(ret < 0)
         {
             break;

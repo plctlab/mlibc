@@ -8,7 +8,7 @@
  * 2024/5/24  0Bitbiscuits  the first version
  */
 #include "../internal/stdio_impl.h"
-#include <sys/sys_fio.h>
+#include <unistd.h>
 #include <fcntl.h>
 #include <string.h>
 #include <compiler.h>
@@ -42,13 +42,13 @@ FILE *fopen(const char *path, const char *mode)
     /* Compute the flags to pass to open() */
     flags = __mlibc_fmode_to_flags(mode);
 
-    fd = __mlibc_sys_open(path, flags);
+    fd = open(path, flags);
     if (fd < 0) return 0;
 
     f = fdopen(fd, mode);
     if (f) return f;
 
-    __mlibc_sys_close(fd);
+    close(fd);
 
     return NULL;
 }

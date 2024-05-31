@@ -8,7 +8,7 @@
  * 2024/5/23   0Bitbiscuits  the first version
  */
 #include "../internal/stdio_impl.h"
-#include <sys/sys_fio.h>
+#include <unistd.h>
 #include <fcntl.h>
 #include <string.h>
 #include <stdlib.h>
@@ -41,7 +41,7 @@ mlibc_weak FILE *fdopen(int fd, const char *mode)
     }
 
     /* allocate memory for file and buffer */
-    if(!(f=malloc(sizeof(FILE) + UNGET + BUFSIZ)))
+    if(!(f = malloc(sizeof(FILE) + UNGET + BUFSIZ)))
     {
         return NULL;
     }
@@ -56,11 +56,11 @@ mlibc_weak FILE *fdopen(int fd, const char *mode)
 
     /* Set append mode on fd if opened for append */
     if (*mode == 'a') {
-        int flags = __mlibc_sys_fcntl(fd, F_GETFL);
+        int flags = fcntl(fd, F_GETFL);
 
         if (!(flags & O_APPEND))
         { 
-            __mlibc_sys_fcntl(fd, F_SETFL, flags | O_APPEND);
+            fcntl(fd, F_SETFL, flags | O_APPEND);
         }
         f->flags |= F_APP;
     }

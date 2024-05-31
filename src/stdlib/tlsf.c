@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "inc/tlsf.h"
+#include "../internal/tlsf.h"
 
 #if defined(__cplusplus)
 #define tlsf_decl inline

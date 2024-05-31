@@ -8,7 +8,7 @@
  * 2024/5/7    0Bitbiscuits  the first version
  */
 #include "../internal/stdio_impl.h"
-#include <sys/sys_fio.h>
+#include <unistd.h>
 
 /**
  * @brief call sys_close to close file
@@ -18,5 +18,5 @@
  */
 ssize_t __mlibc_close(FILE *f)
 {
-    return __mlibc_sys_close(f->fd);
+    return close(f->fd);
 }

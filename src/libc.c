@@ -11,9 +11,9 @@
 #include <unistd.h>
 #include <libc.h>
 #include <libc_config.h>
-#include <sys/sys_mem.h>
 #include <assert.h>
 #include <fcntl.h>
+#include "internal/mem_impl.h"
 
 MLIBC mlibc;
 

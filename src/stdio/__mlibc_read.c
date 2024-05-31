@@ -8,7 +8,7 @@
  * 2024/5/7   0Bitbiscuits  the first version
  */
 #include "../internal/stdio_impl.h"
-#include <sys/sys_fio.h>
+#include <unistd.h>
 #include <sys/errno.h>
 #include <fcntl.h>
 
@@ -20,7 +20,7 @@ ssize_t __mlibc_readv(int fd, iovec_t *iov, size_t iov_size)
 
     for(; i < iov_size; ++i)
     {
-        ret = __mlibc_sys_read(fd, (iov + i)->buf, (iov + i)->buf_size);
+        ret = read(fd, (iov + i)->buf, (iov + i)->buf_size);
         if(ret <= 0)
         {
             break;
@@ -59,7 +59,7 @@ size_t __mlibc_read(FILE *f, unsigned char *buf, size_t len)
      * fill user buf and file buf.
      */
     cnt = iov[0].buf_size ? __mlibc_readv(f->fd, iov, 2)
-        : __mlibc_sys_read(f->fd, iov[1].buf, iov[1].buf_size);
+        : read(f->fd, iov[1].buf, iov[1].buf_size);
     if(cnt <= 0) 
     {
         /* when cnt equals 0 means read EOF, otherwise read ERR */
