@@ -29,7 +29,7 @@ int file_io_test(void)
     }
     else
     {
-        int wc = f->write(f, "abc", 3);
+        int wc = f->write(f, (unsigned char*)"abc", 3);
         f->close(f);
         printf("write %d char\n", wc);
 
