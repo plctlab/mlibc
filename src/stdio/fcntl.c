@@ -5,18 +5,17 @@
  *
  * Change Logs:
  * Date           Author       Notes
- * 2024/5/30   0Bitbiscuits the first version
+ * 2024/6/4   0Bitbiscuits the first version
  */
 #include <unistd.h>
 #include <fcntl.h>
 #include <compiler.h>
-#include <rtthread.h>
+#include <errno.h>
 
-void *sbrk (ptrdiff_t incr)
+mlibc_weak int fcntl(int fd, int cmd, ... /* arg */ )
 {
-    void *blk = NULL;
-#ifdef RT_USING_HEAP
-    blk = rt_malloc(incr);
-#endif
-    return blk;
+    (void)fd;
+    (void)cmd;
+
+    return -EINVAL;
 }
