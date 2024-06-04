@@ -5,38 +5,39 @@
  *
  * Change Logs:
  * Date           Author       Notes
- * 2024/5/17   0Bitbiscuits  the first version
+ * 2024/6/4   0Bitbiscuits the first version
  */
 #include <stdlib.h>
 #include <assert.h>
-#include <unistd.h>
-#include <sys/types.h>
 #include <compiler.h>
-#include "../internal/tlsf.h"
 #include "../internal/mem_impl.h"
 
 #define MIN_MALLOC_FROM_SYS (1024)
 
-tlsf_t tlsf;
+extern tlsf_t tlsf;
 
-static tlsf_t __heap_init(void *mem, size_t size)
+/**
+ * @brief Memory allocation functions specifically implemented for
+ * bare-metal systems (Currently supports only the GCC compiler)
+ * 
+ * @param incr allocate size
+ * @return mlibc_weak* 
+ */
+mlibc_weak void *sbrk(int incr)
 {
-    assert(size >= tlsf_size() && "Need more memory to init heap management");
-    
-    return tlsf_create(mem);
-}
+    extern int __bss_end;
+    static int *heap_end = NULL;
+    int *prev_heap_end = NULL;
 
-/* Initialize mlibc memory heap */
-mlibc_weak void __mlibc_sys_heap_init(void)
-{
-    void *ret = NULL;
-
-    if(!tlsf)
+    if(heap_end == 0)
     {
-        ret = sbrk(tlsf_size());
-        assert(ret && "memory controller init failed");
-        tlsf = __heap_init(ret, tlsf_size());
+        heap_end = &__bss_end;
     }
+
+    prev_heap_end = heap_end;
+    heap_end += incr;
+
+    return (void *)prev_heap_end;
 }
 
 mlibc_weak void *malloc(size_t size)
@@ -74,24 +75,4 @@ mlibc_weak void *malloc(size_t size)
     }
 
     return block;
-}
-
-mlibc_weak void *realloc(void* ptr, size_t size)
-{
-    return tlsf_realloc(tlsf, ptr, size);
-}
-
-mlibc_weak void *calloc(size_t num, size_t size)
-{
-    void *block = NULL;
-
-    block = malloc(num * size);
-    if(block) memset(block, 0, num * size);
-
-    return block;
-}
-
-mlibc_weak void free(void* ptr)
-{
-   tlsf_free(tlsf, ptr);
 }
