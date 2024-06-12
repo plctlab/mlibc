@@ -12,7 +12,7 @@
 #define MLIBC_SYS_STAT_H__
 
 #include <stdint.h>
-#include <sys/time.h>
+#include <time.h>
 
 #define S_IFMT               00170000
 #define S_IFSOCK             0140000

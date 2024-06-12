@@ -1,12 +1,14 @@
 add_rules("mode.debug", "mode.release")
 includes("toolchains/*.lua")
 
-TARGET_DIR  = "./../../GIT/riscv-qemu/project/mlibc"
+TARGET_DIR  = "."
 
-DEVICE = ' -mcmodel=medany -march=rv64imafdc -mabi=lp64 '
+DEVICE = " "
 
 --set target
 target("mlibc")
+    -- set toolchains
+    set_toolchains("arm-none-eabi")
     -- set target file type
     set_kind("static")
     --strip all infomation
@@ -15,10 +17,8 @@ target("mlibc")
     set_default(true)
     -- set target dir
     set_targetdir(TARGET_DIR)
-    -- --set target filename
-    -- set_filename("mlibc.a")
-    --set optimize O1
-    set_optimize("fast")
+    -- set target filename
+    set_filename("libmlibc.a")
     --set languages standard
     set_languages("c99", "cxx11")
     -- set compiler cflags for device
@@ -27,102 +27,60 @@ target("mlibc")
     add_cflags("-nostdlib","-ffreestanding","-nostdinc", "-Wl,-Map=cc.map",{force = true})
     -- add all files
     add_files("src/*.c")
+    add_files("src/crt/*.c")
+    add_files("src/stdio/*.c")
+    add_files("src/stdlib/*.c")
     -- add headfile dir
-    add_includedirs("./include",{public = true})
+    add_includedirs("./include", {public = true})
 
-    add_includedirs("./arch/riscv64",{public = true})
-
-    set_toolchains("riscv64-unknown-elf")
-    
-    after_link(function (target)
-    os.cp("./include/*.h", "./../../GIT/riscv-qemu/project/mlibc")
-    os.cp("./arch/riscv64*.h", "./../../GIT/riscv-qemu/project/mlibc")
-    end)
+    -- after_link(function (target)
+    -- os.cp("./include/*.h", "./../../GIT/riscv-qemu/project/mlibc")
+    -- os.cp("./arch/riscv64*.h", "./../../GIT/riscv-qemu/project/mlibc")
+    -- end)
     
 target_end() 
-    
 
+target("cortex-a9")
+    set_toolchains("arm-none-eabi") 
 
--- target("include")
---     set_kind("headeronly")
+    set_filename("cortex-a9.elf")
+    set_targetdir("testcase/hello_arm_cortex_a9")
 
---     add_files("include/*.h", "./arch/riscv64",{public = true})
---     add_files("./arch/riscv64/*.h",{public = true})
+    add_files("testcase/hello_arm_cortex_a9/*.c")
+    add_files("testcase/hello_arm_cortex_a9/*.s")
+    add_includedirs("./testcase/hello_arm_cortex_a9")
 
---     add_cflags(DEVICE, {force = true})
---     add_cflags("-nostdlib","-ffreestanding","-nostdinc", {force = true})
---     set_toolchains("riscv64-unknown-elf")
---     -- set_targetdir("./../../GIT/riscv-qemu/project/mlibc")
---     set_targetdir("./")
+    add_linkdirs(".")
+    add_links("mlibc")
 
---     set_filename("mlibc.h")
--- target_end()
---
--- If you want to known more usage about xmake, please see https://xmake.io
---
--- ## FAQ
---
--- You can enter the project directory firstly before building project.
---
---   $ cd projectdir
---
--- 1. How to build project?
---
---   $ xmake
---
--- 2. How to configure project?
---
---   $ xmake f -p [macosx|linux|iphoneos ..] -a [x86_64|i386|arm64 ..] -m [debug|release]
---
--- 3. Where is the build output directory?
---
---   The default output directory is `./build` and you can configure the output directory.
---
---   $ xmake f -o outputdir
---   $ xmake
---
--- 4. How to run and debug target after building project?
---
---   $ xmake run [targetname]
---   $ xmake run -d [targetname]
---
--- 5. How to install target to the system directory or other output directory?
---
---   $ xmake install
---   $ xmake install -o installdir
---
--- 6. Add some frequently-used compilation flags in xmake.lua
---
--- @code
---    -- add debug and release modes
---    add_rules("mode.debug", "mode.release")
---
---    -- add macro defination
---    add_defines("NDEBUG", "_GNU_SOURCE=1")
---
---    -- set warning all as error
---    set_warnings("all", "error")
---
---    -- set language: c99, c++11
---    set_languages("c99", "c++11")
---
---    -- set optimization: none, faster, fastest, smallest
---    set_optimize("fastest")
---
---    -- add include search directories
---    add_includedirs("/usr/include", "/usr/local/include")
---
---    -- add link libraries and search directories
---    add_links("tbox")
---    add_linkdirs("/usr/local/lib", "/usr/lib")
---
---    -- add system link libraries
---    add_syslinks("z", "pthread")
---
---    -- add compilation and link flags
---    add_cxflags("-stdnolib", "-fno-strict-aliasing")
---    add_ldflags("-L/usr/local/lib", "-lpthread", {force = true})
---
--- @endcode
---
+    add_cflags("-g")
+    add_asflags("-mcpu=cortex-a9", "-mthumb")
+    add_ldflags("-T testcase/hello_arm_cortex_a9/link.ld", "-nostartfiles", {force = true})
 
+    on_run(function (target)
+        -- 运行命令
+        os.exec("qemu-system-arm -M vexpress-a9 -kernel %s -serial stdio -m 512", target:targetfile())
+    end)
+target_end()
+
+target("cortex-r52")
+    set_toolchains("arm-none-eabi")
+    set_filename("cortex-r52.elf")
+    set_targetdir("testcase/hello_arm_cortex_r52")
+
+    add_files("testcase/hello_arm_cortex_r52/*.c")
+    add_files("testcase/hello_arm_cortex_r52/*.s")
+    add_includedirs("./testcase/hello_arm_cortex_r52")
+
+    add_linkdirs(".")
+    add_links("mlibc")
+
+    add_cflags("-g")
+    add_asflags("-mcpu=cortex-r52", "-mthumb")
+    add_ldflags("-T testcase/hello_arm_cortex_r52/link.ld", "-nostartfiles", {force = true})
+
+    on_run(function (target)
+        -- 运行命令
+        os.exec("qemu-system-arm -M mps3-an536 -kernel %s -serial stdio -m 512", target:targetfile())
+    end)
+target_end()
