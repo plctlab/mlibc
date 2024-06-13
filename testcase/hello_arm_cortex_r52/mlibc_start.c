@@ -6,10 +6,15 @@
 int main(void)
 {   
     char buf[] = "Hello cortex-r52\n";
+    char *c = buf;
 
     UartStdOutInit();
     
-    printf("%s", buf);
+    while(*c)
+    {
+        UartPutc(*c);
+        ++c;
+    }
     
     // 用户代码
     while (1)

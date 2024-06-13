@@ -32,11 +32,6 @@ target("mlibc")
     add_files("src/stdlib/*.c")
     -- add headfile dir
     add_includedirs("./include", {public = true})
-
-    -- after_link(function (target)
-    -- os.cp("./include/*.h", "./../../GIT/riscv-qemu/project/mlibc")
-    -- os.cp("./arch/riscv64*.h", "./../../GIT/riscv-qemu/project/mlibc")
-    -- end)
     
 target_end() 
 
