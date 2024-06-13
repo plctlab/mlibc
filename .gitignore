@@ -7,4 +7,6 @@ build/
 
 #ide
 .vscode/
-
+*.obj
+*.a
+*.elf
