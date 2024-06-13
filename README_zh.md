@@ -85,6 +85,8 @@ https://github.com/RT-Thread/rt-thread/blob/master/documentation/quick-start/qui
 
 通过这个教程我们就可以在windows环境下运行RT-Thread了。
 
+### vexpress-a9 + RT-Thread
+
 #### 宏配置
 
 我们进入`rt-thread\bsp\qemu-vexpress-a9`文件夹，打开**env**，在命令行中输入**menuconfig**，进入配置界面
@@ -113,13 +115,13 @@ https://github.com/RT-Thread/rt-thread/blob/master/documentation/quick-start/qui
 
 #### 宏配置
 
-**开启文件系统：**
+**开启文件系统（可选）：**
 
 - Hardware Drivers Config
   - Onboard Peripheral Drivers
     - Enable File System
 
-**开启fatfs：**
+**开启fatfs（可选）：**
 
 - RT-Thread Components
   - DFS: device virtual file system
@@ -132,6 +134,42 @@ https://github.com/RT-Thread/rt-thread/blob/master/documentation/quick-start/qui
 - RT-Thread online packages
   - system packages
     - 选中当前页面的倒数第六个选项： mlibc: Embedded libc, especially for RISC-V
+
+### cortex-a9裸机
+
+#### 开发环境
+
+> xmake + env
+
+#### 使用步骤
+
+1. 获取mlibc软件包 
+2. 进入mlibc文件夹，打开env
+3. 依次执行以下命令：
+   - xmake build mlibc
+   - xmake build cortex-a9
+   - xmake run cortex-a9
+
+### cortex-r52裸机
+
+#### 开发环境
+
+> xmake + env + qemu-9.0.0
+
+替换env中原本的qemu文件夹：
+
+替换指定路径下的文件夹：`env-windows-1.5.0\tools\qemu\qemu`
+
+> 注意：文件夹的名字也需要改为对应的名字（qemu/qemu64），具体取决于env的版本
+
+#### 使用步骤
+
+1. 获取mlibc软件包 
+2. 进入mlibc文件夹，打开env
+3. 依次执行以下命令：
+   - xmake build mlibc
+   - xmake build cortex-r52
+   - xmake run cortex-r52
 
 # 贡献代码
 
