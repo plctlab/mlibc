@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) mlibc & plct lab
+ *
+ * SPDX-License-Identifier: MIT
+ *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2024/6/14   0Bitbiscuits the first version
+ */
 #ifndef UART_PL011_H
 #define UART_PL011_H
 

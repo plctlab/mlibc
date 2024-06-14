@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) mlibc & plct lab
+ *
+ * SPDX-License-Identifier: MIT
+ *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2024/6/14   0Bitbiscuits the first version
+ */
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>

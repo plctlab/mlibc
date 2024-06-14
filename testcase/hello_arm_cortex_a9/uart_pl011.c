@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) mlibc & plct lab
+ *
+ * SPDX-License-Identifier: MIT
+ *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2024/6/14   0Bitbiscuits the first version
+ */
 #include "uart_pl011.h"
 #include <sys/types.h>
 

@@ -21,23 +21,11 @@ Embedded libc，一个为嵌入式系统和裸机适配的libc库
 ├───arch            
 ├───include         
 │   ├───arch        
-│   │   └───generic 
-│   └───sys         
 ├───src             
 │   ├───crt         
 │   ├───internal    
 │   ├───stdio       
-│   └───stdlib      
-├───system          
-│   ├───bare        
-│   │   ├───sys_fio 
-│   │   └───sys_mem 
-│   ├───generic     
-│   │   └───tlsf    
-│   │       └───inc 
-│   └───rtthread    
-│       ├───sys_fio 
-│       └───sys_mem 
+│   └───stdlib
 └───toolchains      
 ```
 
