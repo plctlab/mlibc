@@ -10,3 +10,5 @@ build/
 *.obj
 *.a
 *.elf
+*.table
+*.bat

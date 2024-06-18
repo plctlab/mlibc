@@ -8,13 +8,6 @@
 .global _start
 _Reset:
     b Reset_Handler
-    b Abort_Exception /* 0x4  Undefined Instruction */
-    b . /* 0x8  Software Interrupt */
-    b Abort_Exception  /* 0xC  Prefetch Abort */
-    b Abort_Exception /* 0x10 Data Abort */
-    b . /* 0x14 Reserved */
-    b . /* 0x18 IRQ */
-    b . /* 0x1C FIQ */
 
 .section .text
 Reset_Handler:
