@@ -54,7 +54,7 @@ target("cortex-a9")
 
     on_run(function (target)
         -- 运行命令
-        os.exec("qemu-system-arm -M vexpress-a9 -kernel %s -serial stdio -m 512", target:targetfile())
+        os.exec("qemu-system-arm -M vexpress-a9 -kernel %s -serial stdio -m 512 -S -s", target:targetfile())
     end)
 target_end()
 
