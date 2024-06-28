@@ -4,8 +4,8 @@ ENTRY(_Reset)
 
 MEMORY
 {
-    ROM (rx) : ORIGIN = 0x08000000, LENGTH = 512k
-    RAM (rwx): ORIGIN = 0x20000000, LENGTH = 512k
+    ROM (rx) : ORIGIN = 0x08000000, LENGTH = 4M
+    RAM (rwx) : ORIGIN = 0x20000000, LENGTH = 8M
 }
 
 SECTIONS
@@ -14,20 +14,22 @@ SECTIONS
         *(.vector_table)
         *(.text*)
         *(.rodata*)
+        . = ALIGN(4);
+        __text_end = .;
      } > ROM
-    _text_end = .;
-    .data : AT(ADDR(.text) + SIZEOF(.text))
+
+    .data : AT(__text_end)
     {
-        _data_start = .;
+        __data_start = .;
         *(.data)
-        . = ALIGN(8);
-        _data_end = .;
+        . = ALIGN(4);
+        __data_end = .;
     } > RAM
     .bss : {
-        _bss_start = .;
+        __bss_start = .;
         *(.bss)
-        . = ALIGN(8);
-        _bss_end = .;
+        . = ALIGN(4);
+        __bss_end = .;
     } > RAM
 
     _fiq_stack_start = ADDR(.bss) + SIZEOF(.bss);
