@@ -71,42 +71,6 @@ target("cortex-a9")
     end)
 target_end()
 
-target("mytest")
-    local CFLAGS  = "-O0 -gdwarf-2"
-    local AFLAGS  = "-gdwarf-2 -mcpu=cortex-a9 -mthumb"
-    local LDFALGS = "-T testcase/mytest/link.ld -nostartfiles"
-
-    set_toolchains("arm-none-eabi") 
-    set_filename("mytest.elf")
-    set_targetdir("testcase/mytest")
-
-    add_files("testcase/mytest/*.c")
-    add_files("testcase/mytest/*.s")
-    add_includedirs("./testcase/mytest")
-
-    add_linkdirs(".")
-    add_links("mlibc")
-
-    add_cflags(CFLAGS)
-    add_asflags(AFLAGS)
-    add_ldflags(LDFALGS , {force = true})
-
-    after_build(function (target) 
-        os.cp(target:targetfile(), './target.elf')
-    end)
-
-    on_run(function (target)
-        import("core.base.option")
-        local args = option.get("arguments")
-
-        if args and args[1] == 'debug' then
-            os.exec("qemu-system-arm -M vexpress-a9 -kernel %s -serial stdio -m 512 -S -s", target:targetfile())    
-        else 
-            os.exec("qemu-system-arm -M vexpress-a9 -kernel %s -serial stdio -m 512", target:targetfile())
-        end 
-    end)
-target_end()
-
 target("cortex-r52")
 
     local CFLAGS  = "-O0 -gdwarf-2"

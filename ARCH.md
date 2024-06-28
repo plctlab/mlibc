@@ -9,7 +9,6 @@ src-->crt
 src-->internal
 src-->stdio
 include-->sys
-
 ```
 
 ## 模块介绍
@@ -37,16 +36,16 @@ include目录中有三种类型的文件
 
 ## 系统调用接口
 
-
-
 ### 内存管理接口
 
-TODO
+- malloc
+- free
+- realloc
+- calloc
 
 ### 文件I/O接口
 
-TODO
-
-## 硬件接口
-
-TODO
+- open
+- read
+- write
+- close
