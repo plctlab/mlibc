@@ -43,21 +43,20 @@ stack_loop:
     strlt r0, [r1], #4
     blt stack_loop
 
-    /* Start copying data */
-    ldr r0, =_text_end
-    ldr r1, =_data_start
-    ldr r2, =_data_end
+    ldr r0, =__text_end
+    ldr r1, =__data_start
+    ldr r2, =__data_end
 
 data_loop:
     cmp r1, r2
     ldrlt r3, [r0], #4
     strlt r3, [r1], #4
     blt data_loop
-
+   
     /* Initialize .bss */
     mov r0, #0
-    ldr r1, =_bss_start
-    ldr r2, =_bss_end
+    ldr r1, =__bss_start
+    ldr r2, =__bss_end
 
 bss_loop:
     cmp r1, r2

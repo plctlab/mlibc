@@ -36,8 +36,11 @@ target("mlibc")
 target_end() 
 
 target("cortex-a9")
-    set_toolchains("arm-none-eabi") 
+    local CFLAGS  = "-O0 -gdwarf-2"
+    local AFLAGS  = "-gdwarf-2 -mcpu=cortex-a9 -mthumb"
+    local LDFALGS = "-T testcase/hello_arm_cortex_a9/link.ld -nostartfiles"
 
+    set_toolchains("arm-none-eabi") 
     set_filename("cortex-a9.elf")
     set_targetdir("testcase/hello_arm_cortex_a9")
 
@@ -48,17 +51,32 @@ target("cortex-a9")
     add_linkdirs(".")
     add_links("mlibc")
 
-    add_cflags("-g")
-    add_asflags("-mcpu=cortex-a9", "-mthumb")
-    add_ldflags("-T testcase/hello_arm_cortex_a9/link.ld", "-nostartfiles", {force = true})
+    add_cflags(CFLAGS)
+    add_asflags(AFLAGS)
+    add_ldflags(LDFALGS , {force = true})
+
+    after_build(function (target) 
+        os.cp(target:targetfile(), './target.elf')
+    end)
 
     on_run(function (target)
-        -- 运行命令
-        os.exec("qemu-system-arm -M vexpress-a9 -kernel %s -serial stdio -m 512", target:targetfile())
+        import("core.base.option")
+        local args = option.get("arguments")
+
+        if args and args[1] == 'debug' then
+            os.exec("qemu-system-arm -M vexpress-a9 -kernel %s -serial stdio -m 512 -S -s", target:targetfile())    
+        else 
+            os.exec("qemu-system-arm -M vexpress-a9 -kernel %s -serial stdio -m 512", target:targetfile())
+        end 
     end)
 target_end()
 
 target("cortex-r52")
+
+    local CFLAGS  = "-O0 -gdwarf-2"
+    local AFLAGS  = "-gdwarf-2 -mcpu=cortex-r52 -mthumb"
+    local LDFALGS = "-T testcase/hello_arm_cortex_r52/link.ld -nostartfiles"
+
     set_toolchains("arm-none-eabi")
     set_filename("cortex-r52.elf")
     set_targetdir("testcase/hello_arm_cortex_r52")
@@ -70,12 +88,22 @@ target("cortex-r52")
     add_linkdirs(".")
     add_links("mlibc")
 
-    add_cflags("-g")
-    add_asflags("-mcpu=cortex-r52", "-mthumb")
-    add_ldflags("-T testcase/hello_arm_cortex_r52/link.ld", "-nostartfiles", {force = true})
+    add_cflags(CFLAGS)
+    add_asflags(AFLAGS)
+    add_ldflags(LDFALGS , {force = true})
+
+    after_build(function (target) 
+        os.cp(target:targetfile(), './target.elf')
+    end)
 
     on_run(function (target)
-        -- 运行命令
-        os.exec("qemu-system-arm -M mps3-an536 -kernel %s -serial stdio -m 512", target:targetfile())
+        import("core.base.option")
+        local args = option.get("arguments")
+
+        if args and args[1] == 'debug' then
+            os.exec("qemu-system-arm -M mps3-an536 -kernel %s -serial stdio -m 512 -S -s", target:targetfile())    
+        else 
+            os.exec("qemu-system-arm -M mps3-an536 -kernel %s -serial stdio -m 512", target:targetfile())
+        end 
     end)
 target_end()

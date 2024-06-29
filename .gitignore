@@ -12,3 +12,4 @@ build/
 *.elf
 *.table
 *.bat
+*.asm
