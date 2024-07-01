@@ -9,12 +9,16 @@
  */
 #include "../internal/printf.h"
 #include <compiler.h>
+#include <stdarg.h>
 
 mlibc_weak int printf(const char* format, ...)
 {
     va_list va;
+    int ret = 0;
+
     va_start(va, format);
-    const int ret = printf_(format, va);
+    ret = printf_(format, va);
     va_end(va);
+
     return ret;
 }

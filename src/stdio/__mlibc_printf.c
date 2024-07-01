@@ -35,6 +35,7 @@
 
 /* adjust code */
 #include "../internal/printf.h"
+#include "../internal/stdio_impl.h"
 #include <sys/types.h>
 #define intmax_t long
 /* ----------- */
@@ -140,7 +141,6 @@ static inline void _out_buffer(char character, void* buffer, size_t idx, size_t 
   }
 }
 
-
 // internal null output
 static inline void _out_null(char character, void* buffer, size_t idx, size_t maxlen)
 {
@@ -148,12 +148,12 @@ static inline void _out_null(char character, void* buffer, size_t idx, size_t ma
 }
 
 
-// internal _putchar wrapper
+// internal putchar wrapper
 static inline void _out_char(char character, void* buffer, size_t idx, size_t maxlen)
 {
   (void)buffer; (void)idx; (void)maxlen;
   if (character) {
-    _putchar(character);
+    putchar(character);
   }
 }
 

@@ -5,26 +5,20 @@
  *
  * Change Logs:
  * Date           Author       Notes
- * 2024/6/28   0Bitbiscuits the first version
+ * 2024/7/1    0Bitbiscuits the first version
  */
-#include "../internal/printf.h"
-#include "../internal/stdio_impl.h"
-#include <errno.h>
 #include <stdio.h>
+#include <stdarg.h>
+#include <compiler.h>
 
-int fprintf(FILE* f, const char* format, ...)
+mlibc_weak int fprintf(FILE* f, const char* format, ...)
 {
     va_list va;
-    char f_buffer[BUFSIZ];
-
-    if(f == NULL)
-    {
-        return -EINVAL;
-    }
+    int ret;
 
     va_start(va, format);
-    int ret = vsnprintf_(f_buffer, BUFSIZ,  format, va);
-    f->write(f, f_buffer, ret);
+    ret = vfprintf(f, format, va);
     va_end(va);
+
     return ret;
 }

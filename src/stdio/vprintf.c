@@ -8,13 +8,16 @@
  * 2024/6/28   0Bitbiscuits the first version
  */
 #include "../internal/printf.h"
+#include <compiler.h>
+#include <stdarg.h>
 
-
-int vprintf(const char* format, va_list va)
+mlibc_weak int vprintf(const char* format, va_list va)
 {
-    va_list va;
-    va_start(va, format);
-    const int ret = vprintf_(format, va);
-    va_end(va);
+    va_list vap;
+    int ret = 0;
+
+    va_copy(vap, vap);
+    ret = vprintf_(format, vap);
+    va_end(vap);
     return ret;
 }
