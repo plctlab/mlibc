@@ -24,7 +24,7 @@ target("mlibc")
     -- set compiler cflags for device
     add_cflags(DEVICE, {force = true})
     -- set compiler cflags for no standard library
-    add_cflags("-nostdlib","-ffreestanding","-nostdinc", "-Wl,-Map=cc.map",{force = true})
+    add_cflags("-nostdlib", "-ffreestanding", "-nostdinc", "-Wl,-Map=cc.map",{force = true})
     -- add all files
     add_files("src/*.c")
     add_files("src/crt/*.c")
@@ -38,7 +38,7 @@ target_end()
 target("cortex-a9")
     local CFLAGS  = "-O0 -gdwarf-2"
     local AFLAGS  = "-gdwarf-2 -mcpu=cortex-a9 -mthumb"
-    local LDFALGS = "-T testcase/hello_arm_cortex_a9/link.ld -nostartfiles"
+    local LDFALGS = "-T testcase/hello_arm_cortex_a9/link.ld -nostartfiles -nostdlib -nostdinc -lgcc"
 
     set_toolchains("arm-none-eabi") 
     set_filename("cortex-a9.elf")
@@ -46,6 +46,8 @@ target("cortex-a9")
 
     add_files("testcase/hello_arm_cortex_a9/*.c")
     add_files("testcase/hello_arm_cortex_a9/*.s")
+
+    add_includedirs("./include")
     add_includedirs("./testcase/hello_arm_cortex_a9")
 
     add_linkdirs(".")
@@ -75,7 +77,7 @@ target("cortex-r52")
 
     local CFLAGS  = "-O0 -gdwarf-2"
     local AFLAGS  = "-gdwarf-2 -mcpu=cortex-r52 -mthumb"
-    local LDFALGS = "-T testcase/hello_arm_cortex_r52/link.ld -nostartfiles"
+    local LDFALGS = "-T testcase/hello_arm_cortex_r52/link.ld -nostartfiles -nostdlib -nostdinc -lgcc"
 
     set_toolchains("arm-none-eabi")
     set_filename("cortex-r52.elf")
@@ -83,6 +85,8 @@ target("cortex-r52")
 
     add_files("testcase/hello_arm_cortex_r52/*.c")
     add_files("testcase/hello_arm_cortex_r52/*.s")
+
+    add_includedirs("./include")
     add_includedirs("./testcase/hello_arm_cortex_r52")
 
     add_linkdirs(".")
