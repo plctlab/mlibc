@@ -17,6 +17,10 @@
 
 #define offsetof(type, member) ((size_t) &((type *)0)->member)
 
-typedef int ptrdiff_t;
+#ifndef ARCH_CPU_64BIT
+typedef signed int          ptrdiff_t;
+#else
+typedef signed long long    ptrdiff_t;
+#endif /* ARCH_CPU_64BIT */
 
 #endif /*MLIBC_STDDEF_H__*/

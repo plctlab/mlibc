@@ -11,6 +11,8 @@
 #ifndef MLIBC_ALLTYPES_H__
 #define MLIBC_ALLTYPES_H__
 
+#include <stdint.h>
+
 typedef long time_t;
 typedef long clock_t;
 typedef long suseconds_t;

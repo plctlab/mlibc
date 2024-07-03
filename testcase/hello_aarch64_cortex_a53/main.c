@@ -5,14 +5,12 @@
  *
  * Change Logs:
  * Date           Author       Notes
- * 2024/6/14   0Bitbiscuits the first version
+ * 2024/7/5   0Bitbiscuits the first version
  */
-#include <stdint.h>
-#include <stdbool.h>
-#include <string.h>
 #include <stdio.h>
+#include <compiler.h>
 
-#define PL011_UART0_BASE    0x10009000u
+#define PL011_UART0_BASE    0x09000000
 #define __REG32(x)          (*((volatile unsigned int *)(x)))
 #define UART_DR(base)   __REG32(base + 0x00)
 #define UART_FR(base)   __REG32(base + 0x18)
@@ -50,11 +48,10 @@ ssize_t write(int fd, const void *buf, size_t count)
     return buffer - (char*)buf;
 }
 
-int main() {
-    char buf[] = "Hello cortex-a9\n";
-    char *c = buf;
-    FILE f;
-
+int main(void)
+{
+    const char *c = buf;
+    
     UartStdOutInit();
 
     printf("Hello mlibc\n");
@@ -71,4 +68,3 @@ int main() {
 
     return 0;
 }
-

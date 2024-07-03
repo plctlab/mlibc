@@ -19,7 +19,7 @@
  * SEEK_SET    0   set file offset to offset
  * SEEK_CUR    1   set file offset to current plus offset
  * SEEK_END    2   set file offset to EOF plus offset
- * @return ssize_t current file point position
+ * @return off_t current file point position
  */
 off_t __mlibc_lseek(FILE *f, off_t offset, int whence)
 {

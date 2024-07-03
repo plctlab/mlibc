@@ -14,7 +14,7 @@
 mlibc_weak int fprintf(FILE* f, const char* format, ...)
 {
     va_list va;
-    int ret;
+    int ret = 0;
 
     va_start(va, format);
     ret = vfprintf(f, format, va);

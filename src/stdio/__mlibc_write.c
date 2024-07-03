@@ -36,7 +36,7 @@ static ssize_t __mlibc_writev(int fd, iovec_t *iov, size_t iov_size)
     return cnt;
 }
 
-size_t __mlibc_write(FILE *f, unsigned char *buf, size_t buf_size)
+ssize_t __mlibc_write(FILE *f, unsigned char *buf, size_t buf_size)
 {
     iovec_t iov[2] = {
         { .buf = f->wbase, .buf_size = f->wpos - f->wbase },

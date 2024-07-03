@@ -38,10 +38,10 @@ struct __MLIBC_IO_FILE{
     unsigned char *wbase;
     unsigned char *wpos, *wend;
     unsigned char *rpos, *rend;
-    size_t (*write)(FILE *, unsigned char *, size_t);
-    size_t (*read)(FILE *, unsigned char *, size_t);
+    ssize_t (*write)(FILE *, unsigned char *, size_t);
+    ssize_t (*read)(FILE *, unsigned char *, size_t);
     off_t (*seek)(FILE *, off_t, int);
-    int (*close)(FILE *);
+    ssize_t (*close)(FILE *);
 
     /* buffer */
     unsigned char *buf;
