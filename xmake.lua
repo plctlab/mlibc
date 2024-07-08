@@ -1,169 +1,136 @@
 add_rules("mode.debug", "mode.release")
 includes("toolchains/*.lua")
 
-TARGET_DIR  = "./build/"
+local TARGET_DIR = "build/"
 
---set target
-target("arm-mlibc")
-    -- set toolchains
-    set_toolchains("arm-none-eabi")
-    -- set target file type
+local mlibc_config = {
+    ["arm32"] = {
+        target = "arm32",
+        toolchain = "arm-none-eabi",
+        define_flags = ""
+    },
+    ["aarch64"] = {
+        target = "aarch64",
+        toolchain = "aarch64-none-elf",
+        define_flags = "-DARCH_CPU_64BIT"
+    }
+}
+
+target("mlibc")
+    local arch = get_config("arch")
+    local config = mlibc_config[arch]
+    if not config then 
+        config = mlibc_config['arm32']
+    end 
+    -- Set toolchains
+    set_toolchains(config.toolchain)
+    -- Set target file type as static library
     set_kind("static")
-    --strip all infomation
+    -- Strip all information
     set_strip("all")
-    --set default target
+    -- Set as default target
     set_default(true)
-    -- set target dir
-    set_targetdir(TARGET_DIR .. "arm")
-    -- set target filename
+    -- Set target directory
+    set_targetdir(TARGET_DIR .. config.target)
+    -- Set target filename
     set_filename("libmlibc.a")
-    --set languages standard
+    -- Set languages standard
     set_languages("c99", "cxx11")
-    -- set compiler cflags for no standard library
-    add_cflags("-nostdlib", "-ffreestanding", "-nostdinc", "-Wl,-Map=cc.map", {force = true})
-    -- add all files
+    -- Set compiler flags, including custom Define
+    add_cflags(config.define_flags, "-nostdlib", "-ffreestanding", "-nostdinc", "-Wl,-Map=cc.map", {force = true})
+    -- Add all source files
     add_files("src/*.c")
-    add_files("src/crt/*.c")
     add_files("src/stdio/*.c")
     add_files("src/stdlib/*.c")
-    -- add headfile dir
+    -- Add header file directory
     add_includedirs("./include", {public = true})
-    
 target_end()
 
-target("aarch64-mlibc")
-    -- set Define
-    local DEFINE  = " -DARCH_CPU_64BIT "
-    -- set toolchains
-    set_toolchains("aarch64-none-elf")
-    -- set target file type
-    set_kind("static")
-    --strip all infomation
-    set_strip("all")
-    --set default target
-    set_default(true)
-    -- set target dir
-    set_targetdir(TARGET_DIR .. "aarch64")
-    -- set target filename
-    set_filename("libmlibc.a")
-    --set languages standard
-    set_languages("c99", "cxx11")
-    -- set compiler cflags for no standard library
-    add_cflags(DEFINE, "-nostdlib", "-ffreestanding", "-nostdinc", "-Wl,-Map=cc.map", ' -mstrict-align ', {force = true})
-    -- add all files
-    add_files("src/*.c")
-    add_files("src/crt/*.c")
-    add_files("src/stdio/*.c")
-    add_files("src/stdlib/*.c")
-    -- add headfile dir
-    add_includedirs("./include", {public = true})
-    
-target_end() 
+option("board")
+    set_default("qemu-vexpress-a9")
+    set_showmenu(true)
+    set_description("Select the board to build for")
+    set_values("qemu-arm-r52", "qemu-vexpress-a9", "qemu-virt-aarch64")
+option_end()
 
-target("cortex-a53")
-    local DEFINE  = " -DARCH_CPU_64BIT "
-    local DEVICE   = ' -mstrict-align '
-    local CFLAGS  = DEFINE .. " -O0 -gdwarf-2 " .. DEVICE
-    local AFLAGS  = DEFINE .. "-gdwarf-2 -mcpu=cortex-a53" .. DEVICE
-    local LDFALGS = "-T testcase/hello_aarch64_cortex_a53/link.ld -nostartfiles -nostdlib -nostdinc -lgcc"
+local testcase_config = {
+    ["qemu-arm-r52"] = {
+        toolchain = "arm-none-eabi",
+        arch = "arm32", 
+        envs = {
+            DEFINE = " ",
+            DEVICE = " -mcpu=cortex-r52 -mthumb ",
+            DEBUG  = " -gdwarf-2 "
+        },
+        flags = {
+            cflags = " -O0 ",
+            asflags = " ", 
+            ldflags = " -nostartfiles -nostdlib -nostdinc -lgcc "
+        }
+    },
+    ["qemu-vexpress-a9"] = {
+        toolchain = "arm-none-eabi",
+        arch = "arm32", 
+        envs = {
+            DEFINE = " ",
+            DEVICE = " -mcpu=cortex-a9 -mthumb ",
+            DEBUG  = " -gdwarf-2 "
+        },
+        flags = {
+            cflags = " -O0 ",
+            asflags = " ", 
+            ldflags = " -nostartfiles -nostdlib -nostdinc -lgcc "
+        }
+    },
+    ["qemu-virt-aarch64"] = {
+        toolchain = "aarch64-none-elf",
+        arch = "aarch64", 
+        envs = {
+            DEFINE = " -mcpu=cortex-a53 -DARCH_CPU_64BIT ",
+            DEVICE = " -mstrict-align ",
+            DEBUG  = " -gdwarf-2 "
+        },
+        flags = {
+            cflags  = " -O0 ",
+            asflags = " ",
+            ldflags = " -nostartfiles -nostdlib -nostdinc -lgcc "
+        }
+    }
+}
 
-    set_toolchains("aarch64-none-elf") 
-    set_filename("cortex-a53.elf")
-    set_targetdir("testcase/hello_aarch64_cortex_a53")
+target("hello")
+    local board_path = "testcase/board"
+    set_kind("binary")
+    set_targetdir("testcase/hello")
+    add_imports("core.base.option")
+    add_files("testcase/hello/main.c")
+    local board = get_config("board")
+    local config = testcase_config[board]
+    print(board)
+    -- Configure toolchain, compile information and parameters
+    on_load(function (target)
+        -- set toolchains
+        target:set("toolchains", config.toolchain)
+        target:set("arch", config.arch)
+        -- set flags
+        local cflags = config.flags.cflags 
+                    .. config.envs.DEVICE 
+                    .. config.envs.DEFINE 
+        local asflags = config.flags.asflags 
+                    .. config.envs.DEVICE 
+                    .. config.envs.DEFINE 
+        local ldflags = config.flags.ldflags
+        target:add("cflags", cflags)
+        target:add("asflags", asflags)
+        target:add("ldflags", "-T " .. path.join(board_path, board, "link.ld") .. ldflags)
 
-    add_files("testcase/hello_aarch64_cortex_a53/*.c")
-    add_files("testcase/hello_aarch64_cortex_a53/*.s")
+        target:add("files", path.join(board_path, board, "startup.s"))
+        target:add("includedirs", path.join(board_path, board))
 
-    add_includedirs("./testcase/hello_aarch64_cortex_a53")
-    
-    add_linkdirs("./build/aarch64/")
-    add_links("mlibc")
+        target:add("deps", "mlibc")
+        target:add("linkdirs", path.join("build", config.arch))
+        target:add("links", "mlibc")
 
-    add_cflags(CFLAGS, {force = true})
-    add_asflags(AFLAGS, {force = true})
-    add_ldflags(LDFALGS, {force = true})
-
-    add_deps("aarch64-mlibc")
-
-    on_run(function (target)
-        import("core.base.option")
-        local args = option.get("arguments")
-
-        if args and args[1] == 'debug' then
-            os.exec("qemu-system-aarch64 -M virt -cpu cortex-a53 -kernel %s -serial stdio -m 512 -S -s", target:targetfile())    
-        else 
-            os.exec("qemu-system-aarch64 -M virt -cpu cortex-a53 -kernel %s -serial stdio -m 512", target:targetfile())
-        end 
-    end)
-
-target_end()
-
-target("cortex-a9")
-    local CFLAGS  = " -O0 -gdwarf-2 "
-    local AFLAGS  = "-gdwarf-2 -mcpu=cortex-a9 -mthumb"
-    local LDFALGS = "-T testcase/hello_arm_cortex_a9/link.ld -nostartfiles -nostdlib -nostdinc -lgcc"
-
-    set_toolchains("arm-none-eabi") 
-    set_filename("cortex-a9.elf")
-    set_targetdir("testcase/hello_arm_cortex_a9")
-
-    add_files("testcase/hello_arm_cortex_a9/*.c")
-    add_files("testcase/hello_arm_cortex_a9/*.s")
-
-    add_includedirs("./testcase/hello_arm_cortex_a9")
-
-    add_linkdirs("./build/arm/")
-    add_links("mlibc")
-
-    add_cflags(CFLAGS, {force = true})
-    add_asflags(AFLAGS, {force = true})
-    add_ldflags(LDFALGS, {force = true})
-
-    add_deps("arm-mlibc")
-
-    on_run(function (target)
-        import("core.base.option")
-        local args = option.get("arguments")
-
-        if args and args[1] == 'debug' then
-            os.exec("qemu-system-arm -M vexpress-a9 -kernel %s -serial stdio -m 512 -S -s", target:targetfile())    
-        else 
-            os.exec("qemu-system-arm -M vexpress-a9 -kernel %s -serial stdio -m 512", target:targetfile())
-        end 
-    end)
-target_end()
-
-target("cortex-r52")
-    local CFLAGS  = " -O0 -gdwarf-2 "
-    local AFLAGS  = "-gdwarf-2 -mcpu=cortex-r52 -mthumb"
-    local LDFALGS = "-T testcase/hello_arm_cortex_r52/link.ld -nostartfiles -nostdlib -nostdinc -lgcc"
-
-    set_toolchains("arm-none-eabi")
-    set_filename("cortex-r52.elf")
-    set_targetdir("testcase/hello_arm_cortex_r52")
-
-    add_files("testcase/hello_arm_cortex_r52/*.c")
-    add_files("testcase/hello_arm_cortex_r52/*.s")
-
-    add_includedirs("./testcase/hello_arm_cortex_r52")
-
-    add_linkdirs("./build/arm/")
-    add_links("mlibc")
-
-    add_cflags(CFLAGS, {force = true})
-    add_asflags(AFLAGS, {force = true})
-    add_ldflags(LDFALGS, {force = true})
-
-    add_deps("arm-mlibc")
-
-    on_run(function (target)
-        import("core.base.option")
-        local args = option.get("arguments")
-
-        if args and args[1] == 'debug' then
-            os.exec("qemu-system-arm -M mps3-an536 -kernel %s -serial stdio -m 512 -S -s", target:targetfile())    
-        else 
-            os.exec("qemu-system-arm -M mps3-an536 -kernel %s -serial stdio -m 512", target:targetfile())
-        end 
+        target:set("filename", board .. ".elf")
     end)
 target_end()
