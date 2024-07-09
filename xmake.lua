@@ -7,12 +7,12 @@ local mlibc_config = {
     ["arm32"] = {
         target = "arm32",
         toolchain = "arm-none-eabi",
-        define_flags = ""
+        define_flags = " "
     },
     ["aarch64"] = {
         target = "aarch64",
         toolchain = "aarch64-none-elf",
-        define_flags = "-DARCH_CPU_64BIT"
+        define_flags = " "
     }
 }
 
@@ -86,7 +86,7 @@ local testcase_config = {
         toolchain = "aarch64-none-elf",
         arch = "aarch64", 
         envs = {
-            DEFINE = " -mcpu=cortex-a53 -DARCH_CPU_64BIT ",
+            DEFINE = " -mcpu=cortex-a53 ",
             DEVICE = " -mstrict-align ",
             DEBUG  = " -gdwarf-2 "
         },
@@ -100,13 +100,12 @@ local testcase_config = {
 
 target("hello")
     local board_path = "testcase/board"
+    local board = get_config("board")
+    local config = testcase_config[board]
     set_kind("binary")
     set_targetdir("testcase/hello")
     add_imports("core.base.option")
     add_files("testcase/hello/main.c")
-    local board = get_config("board")
-    local config = testcase_config[board]
-    print(board)
     -- Configure toolchain, compile information and parameters
     on_load(function (target)
         -- set toolchains

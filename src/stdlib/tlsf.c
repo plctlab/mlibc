@@ -1,7 +1,3 @@
-#include <libc_config.h>
-
-#ifdef MLIBC_MEM_USING_TLSF
-
 #include <assert.h>
 #include <limits.h>
 #include <stddef.h>
@@ -40,7 +36,7 @@
 ** architecture. There is no reliable portable method at compile-time.
 */
 #if defined (__alpha__) || defined (__ia64__) || defined (__x86_64__) \
-	|| defined (_WIN64) || defined (__LP64__) || defined (__LLP64__) || defined (ARCH_CPU_64BIT)
+	|| defined (_WIN64) || defined (__LP64__) || defined (__LLP64__) || (defined(__GNUC__) && (__SIZEOF_POINTER__ == 8))
 #define TLSF_64BIT
 #endif
 
@@ -1276,5 +1272,3 @@ void* tlsf_realloc(tlsf_t tlsf, void* ptr, size_t size)
 
 	return p;
 }
-
-#endif /* MLIBC_MEM_USING_TLSF */

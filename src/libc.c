@@ -10,7 +10,6 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <libc.h>
-#include <libc_config.h>
 #include <assert.h>
 #include <fcntl.h>
 #include "internal/mem_impl.h"

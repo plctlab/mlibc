@@ -12,6 +12,7 @@
 #define MLIBC_TIME_H__
 
 #include "alltypes.h"
+#include "sys/types.h"
 
 struct tm
 {

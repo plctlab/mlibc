@@ -11,6 +11,7 @@
 #define MLIBC_STDIO_H__
 #include <sys/types.h>
 #include <stdarg.h>
+#include <stddef.h>
 
 #define _FILE_IND_EOF   (1 << 0)
 #define _FILE_IND_ERROR (1 << 1)

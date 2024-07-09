@@ -11,6 +11,8 @@
 #ifndef MLIBC_INTTYPES_H__
 #define MLIBC_INTTYPES_H__
 
+#include <stdint.h>
+
 typedef signed long long    intmax_t;
 typedef unsigned long long  uintmax_t;
 
@@ -19,9 +21,6 @@ typedef struct
     intmax_t quot;
     intmax_t rem;
 } imaxdiv_t;
-
-
-#define UINTPTR_MAX UINT32_MAX
 
 #if UINTPTR_MAX == UINT64_MAX
 #define __PRI64 "l"
