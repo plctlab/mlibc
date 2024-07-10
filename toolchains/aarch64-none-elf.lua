@@ -1,7 +1,7 @@
-PATH = "D:\\My\\plugin\\gcc-arm-none-eabi-10.3-2021.10-win32"
+PATH = "D:\\My\\plugin\\arm-gnu-toolchain-13.2.Rel1-mingw-w64-i686-aarch64-none-elf"
 BIN_DIR = PATH .. "\\bin"
 
-toolchain("arm-none-eabi")
+toolchain("aarch64-none-elf")
     set_kind("standalone")
     set_sdkdir(PATH)
     set_bindir(BIN_DIR)

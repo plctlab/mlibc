@@ -11,12 +11,6 @@
 #ifndef MLIBC_STDINT_H__
 #define MLIBC_STDINT_H__
 
-#ifdef __cplusplus
-    #define NULL (0)
-#else
-    #define NULL ((void*)0)
-#endif /*__cplusplus*/
-
 typedef signed char int8_t;
 typedef signed short int16_t;
 typedef signed int int32_t;
@@ -28,7 +22,6 @@ typedef unsigned int uint32_t;
 typedef unsigned long long uint64_t;
 
 typedef unsigned long uintptr_t;
-
 
 #define INT8_MIN   (-1-0x7f)
 #define INT16_MIN  (-1-0x7fff)
@@ -45,12 +38,23 @@ typedef unsigned long uintptr_t;
 #define UINT32_MAX (0xffffffffu)
 #define UINT64_MAX (0xffffffffffffffffu)
 
-/* for 32bit */
+#if (defined(__GNUC__) && (__SIZEOF_POINTER__ == 8))
+/* for 64bit */
+#define INTPTR_MIN      INT64_MIN
+#define INTPTR_MAX      INT64_MAX
+#define UINTPTR_MAX     UINT64_MAX
+#define PTRDIFF_MIN     INT64_MIN
+#define PTRDIFF_MAX     INT64_MAX
+#define SIZE_MAX        UINT64_MAX
+#else 
+/* for 32bit (default) */
 #define INTPTR_MIN      INT32_MIN
 #define INTPTR_MAX      INT32_MAX
 #define UINTPTR_MAX     UINT32_MAX
 #define PTRDIFF_MIN     INT32_MIN
 #define PTRDIFF_MAX     INT32_MAX
 #define SIZE_MAX        UINT32_MAX
+#endif /* __GNUC__ */
+
 
 #endif /*MLIBC_STDINT_H__*/

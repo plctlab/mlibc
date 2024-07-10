@@ -17,8 +17,7 @@
 mlibc_weak int vfprintf(FILE *f, const char *format, va_list va)
 {
     va_list vap;
-    char f_buffer[BUFSIZ];
-    int ret;
+    int ret = 0;
 
     if(f == NULL)
     {
@@ -26,8 +25,8 @@ mlibc_weak int vfprintf(FILE *f, const char *format, va_list va)
     }
 
     va_copy(vap, va);
-    ret = vsnprintf_(f_buffer, BUFSIZ,  format, vap);
-    f->write(f, f_buffer, ret);
+    ret = vsnprintf(f->buf, BUFSIZ,  format, vap);
+    f->write(f, f->buf, ret);
     va_end(vap);
     
     return ret;

@@ -10,8 +10,6 @@
 #ifndef MLIBC_COMPILER_H__
 #define MLIBC_COMPILER_H__
 
-#define __ARMCC_VERSION
-
 #if defined(__ARMCC_VERSION)        /* ARM Compiler */
 #define mlibc_section(x)               __attribute__((section(x)))
 #define mlibc_used                     __attribute__((used))

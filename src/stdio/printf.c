@@ -8,6 +8,7 @@
  * 2024/6/28   0Bitbiscuits the first version
  */
 #include "../internal/printf.h"
+#include <stdio.h>
 #include <compiler.h>
 #include <stdarg.h>
 
@@ -17,7 +18,7 @@ mlibc_weak int printf(const char* format, ...)
     int ret = 0;
 
     va_start(va, format);
-    ret = printf_(format, va);
+    ret = vprintf(format, va);
     va_end(va);
 
     return ret;

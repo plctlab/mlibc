@@ -11,10 +11,8 @@
 #ifndef MLIBC_SYS_TYPES_H__
 #define MLIBC_SYS_TYPES_H__
 
-#include <stdint.h>
-
-typedef int32_t          clockid_t;
-typedef int32_t          key_t;         /* Used for interprocess communication. */
+typedef signed int       clockid_t;
+typedef signed int       key_t;         /* Used for interprocess communication. */
 typedef int              pid_t;         /* Used for process IDs and process group IDs. */
 typedef unsigned short   uid_t;
 typedef unsigned short   gid_t;
@@ -22,11 +20,11 @@ typedef signed long      off_t;
 typedef int              mode_t;
 typedef unsigned long    size_t;
 
-#ifndef ARCH_CPU_64BIT
-typedef signed int       ssize_t;       /* Used for a count of bytes or an error indication. */
-#else
+#if (defined(__GNUC__) && (__SIZEOF_POINTER__ == 8))
 typedef long signed int  ssize_t;       /* Used for a count of bytes or an error indication. */
-#endif /*ARCH_CPU_64BIT*/
+#else
+typedef signed int       ssize_t;       /* Used for a count of bytes or an error indication. */
+#endif /* __GNUC__ */
 typedef unsigned long    __timer_t;
 typedef __timer_t        timer_t;
 typedef unsigned long    useconds_t;    /* microseconds (unsigned) */

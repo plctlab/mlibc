@@ -13,6 +13,7 @@
 #include "../internal/mem_impl.h"
 
 #define MIN_MALLOC_FROM_SYS (1024)
+#define MLIBC_ALIGN_SIZE    (16)
 
 extern tlsf_t tlsf;
 

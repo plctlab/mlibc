@@ -42,11 +42,11 @@ ssize_t __mlibc_readv(int fd, iovec_t *iov, size_t iov_size)
  * @param f  a pointer to a FILE structure
  * @param buf user buffer
  * @param len user buffer size
- * @return size_t the number of file data we read
+ * @return ssize_t the number of file data we read
  */
-size_t __mlibc_read(FILE *f, unsigned char *buf, size_t len)
+ssize_t __mlibc_read(FILE *f, unsigned char *buf, size_t len)
 {
-    size_t cnt = 0;
+    ssize_t cnt = 0;
     /* read data into user buf first */
     iovec_t iov[2] = {
         { .buf = buf, .buf_size = len - !!f->buf_size },

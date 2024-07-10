@@ -8,13 +8,17 @@
  * 2024/6/28   0Bitbiscuits the first version
  */
 #include "../internal/printf.h"
+#include <stdio.h>
 #include <compiler.h>
 
 mlibc_weak int snprintf(char* buffer, size_t count, const char* format, ...)
 {
     va_list va;
+    int ret = 0;
+
     va_start(va, format);
-    const int ret = snprintf_(buffer, count, format, va);
+    ret = vsnprintf(buffer, count, format, va);
     va_end(va);
+    
     return ret;
 }

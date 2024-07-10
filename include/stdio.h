@@ -11,6 +11,7 @@
 #define MLIBC_STDIO_H__
 #include <sys/types.h>
 #include <stdarg.h>
+#include <stddef.h>
 
 #define _FILE_IND_EOF   (1 << 0)
 #define _FILE_IND_ERROR (1 << 1)
@@ -38,10 +39,10 @@ struct __MLIBC_IO_FILE{
     unsigned char *wbase;
     unsigned char *wpos, *wend;
     unsigned char *rpos, *rend;
-    size_t (*write)(FILE *, unsigned char *, size_t);
-    size_t (*read)(FILE *, unsigned char *, size_t);
+    ssize_t (*write)(FILE *, unsigned char *, size_t);
+    ssize_t (*read)(FILE *, unsigned char *, size_t);
     off_t (*seek)(FILE *, off_t, int);
-    int (*close)(FILE *);
+    ssize_t (*close)(FILE *);
 
     /* buffer */
     unsigned char *buf;

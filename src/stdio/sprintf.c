@@ -8,13 +8,17 @@
  * 2024/6/28   0Bitbiscuits the first version
  */
 #include "../internal/printf.h"
+#include <stdio.h>
 #include <compiler.h>
 
-mlibc_weak int sprintf_(char* buffer, const char* format, ...)
+mlibc_weak int sprintf(char* buffer, const char* format, ...)
 {
     va_list va;
+    int ret = 0;
+
     va_start(va, format);
-    const int ret = sprintf_(buffer, format, va);
+    ret = vsnprintf(buffer, -1, format, va);
     va_end(va);
+
     return ret;
 }

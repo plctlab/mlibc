@@ -19,8 +19,8 @@ typedef struct
 } iovec_t;
 
 ssize_t __mlibc_close(FILE *);
-size_t __mlibc_read(FILE *, unsigned char *, size_t);
-size_t __mlibc_write(FILE *, unsigned char *, size_t);
+ssize_t __mlibc_read(FILE *, unsigned char *, size_t);
+ssize_t __mlibc_write(FILE *, unsigned char *, size_t);
 
 off_t __mlibc_lseek(FILE *, off_t, int);
 
