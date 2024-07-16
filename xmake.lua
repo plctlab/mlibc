@@ -13,6 +13,11 @@ local mlibc_config = {
         target = "aarch64",
         toolchain = "aarch64-none-elf",
         define_flags = " "
+    },
+    ["riscv64"] = {
+        target = "riscv64",
+        toolchain = "riscv64-unknown-elf",
+        define_flags = " -mcmodel=medany "
     }
 }
 
@@ -95,6 +100,20 @@ local testcase_config = {
             asflags = " ",
             ldflags = " -nostartfiles -nostdlib -nostdinc -lgcc "
         }
+    },
+    ["qemu-virt-riscv64"] = {
+        toolchain = "riscv64-unknown-elf",
+        arch = "riscv64", 
+        envs = {
+            DEFINE = " ",
+            DEVICE = " -mcmodel=medany -mstrict-align ",
+            DEBUG  = " -gdwarf-2 "
+        },
+        flags = {
+            cflags  = " -O0 ",
+            asflags = " ",
+            ldflags = " -nostartfiles -nostdlib -nostdinc -lgcc "
+        }
     }
 }
 
@@ -119,6 +138,7 @@ target("hello")
                     .. config.envs.DEVICE 
                     .. config.envs.DEFINE 
         local ldflags = config.flags.ldflags
+        
         target:add("cflags", cflags)
         target:add("asflags", asflags)
         target:add("ldflags", "-T " .. path.join(board_path, board, "link.ld") .. ldflags)
