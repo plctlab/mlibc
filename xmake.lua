@@ -7,17 +7,20 @@ local mlibc_config = {
     ["arm32"] = {
         target = "arm32",
         toolchain = "arm-none-eabi",
+        arch_flags = " ",
         define_flags = " "
     },
     ["aarch64"] = {
         target = "aarch64",
         toolchain = "aarch64-none-elf",
+        arch_flags = " ",
         define_flags = " "
     },
     ["riscv64"] = {
         target = "riscv64",
         toolchain = "riscv64-unknown-elf",
-        define_flags = " -mcmodel=medany "
+        arch_flags = " -mcmodel=medany ",
+        define_flags = " "
     }
 }
 
@@ -42,7 +45,7 @@ target("mlibc")
     -- Set languages standard
     set_languages("c99", "cxx11")
     -- Set compiler flags, including custom Define
-    add_cflags(config.define_flags, "-nostdlib", "-ffreestanding", "-nostdinc", "-Wl,-Map=cc.map", {force = true})
+    add_cflags(config.define_flags, config.arch_flags, "-nostdlib", "-ffreestanding", "-nostdinc", "-Wl,-Map=cc.map", {force = true})
     -- Add all source files
     add_files("src/*.c")
     add_files("src/stdio/*.c")
@@ -134,9 +137,11 @@ target("hello")
         local cflags = config.flags.cflags 
                     .. config.envs.DEVICE 
                     .. config.envs.DEFINE 
+                    .. config.envs.DEBUG
         local asflags = config.flags.asflags 
                     .. config.envs.DEVICE 
                     .. config.envs.DEFINE 
+                    .. config.envs.DEBUG
         local ldflags = config.flags.ldflags
         
         target:add("cflags", cflags)
