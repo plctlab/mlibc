@@ -131,12 +131,12 @@ https://github.com/RT-Thread/rt-thread/blob/master/documentation/quick-start/qui
 
 #### 使用步骤
 
-1. 获取mlibc软件包 
-2. 进入mlibc文件夹，打开env
-3. 依次执行以下命令：
-   - xmake build mlibc
-   - xmake build cortex-a9
-   - xmake run cortex-a9
+1. 进入mlibc文件夹，打开env，然后敲入以下命令
+
+```
+xmake f --board=qemu-vexpress-a9
+xmake
+```
 
 ### cortex-r52裸机
 
@@ -152,12 +152,56 @@ https://github.com/RT-Thread/rt-thread/blob/master/documentation/quick-start/qui
 
 #### 使用步骤
 
-1. 获取mlibc软件包 
-2. 进入mlibc文件夹，打开env
-3. 依次执行以下命令：
-   - xmake build mlibc
-   - xmake build cortex-r52
-   - xmake run cortex-r52
+1. 进入mlibc文件夹，打开env，然后敲入以下命令
+
+```
+xmake f --board=qemu-vexpress-r52
+xmake
+```
+
+### qemu-virt-aarch64裸机
+
+#### 开发环境
+
+> xmake + env
+
+#### 使用步骤
+
+1. 进入mlibc文件夹，打开env，然后敲入以下命令
+
+```
+xmake f --board=qemu-virt-aarch64
+xmake 
+```
+
+#### 问题
+
+1. 测试时会出现地址对齐异常
+2. 目前推测可以通过开启芯片的mmu来解决（不属于mlibc的范畴）
+
+### qemu-virt-riscv64裸机
+
+#### 开发环境
+
+> xmake + env
+
+#### 使用步骤
+
+1. 进入mlibc文件夹，打开env，然后敲入以下命令
+
+```
+xmake f --board=qemu-virt-riscv64
+xmake
+```
+
+#### 问题
+
+1. 使用内存管理的相关函数时无法通过编译
+
+### TODO
+
+1. 提供可重入函数，为RT-Thread的多线程环境提供支持
+2. 提供对riscv32的支持
 
 # 贡献代码
 

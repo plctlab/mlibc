@@ -26,14 +26,8 @@ SECTIONS
         . = ALIGN(4);
         __data_end = .;
     } > RAM
-    .bss : {
-        __bss_start = .;
-        *(.bss)
-        . = ALIGN(4);
-        __bss_end = .;
-    } > RAM
 
-    _fiq_stack_start = ADDR(.bss) + SIZEOF(.bss);
+    _fiq_stack_start = ADDR(.data) + SIZEOF(.data);
     _fiq_stack_end = _fiq_stack_start + 0x1000; /* 64 KB */
 
     _irq_stack_start = _fiq_stack_end;
@@ -44,4 +38,11 @@ SECTIONS
 
     _irq_stack_size = _irq_stack_end - _irq_stack_start;
     _fiq_stack_size = _fiq_stack_end - _fiq_stack_start;
+
+    .bss : {
+        __bss_start = .;
+        *(.bss)
+        . = ALIGN(4);
+        __bss_end = .;
+    } > RAM
 }

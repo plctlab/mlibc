@@ -7,11 +7,19 @@ local mlibc_config = {
     ["arm32"] = {
         target = "arm32",
         toolchain = "arm-none-eabi",
+        arch_flags = " ",
         define_flags = " "
     },
     ["aarch64"] = {
         target = "aarch64",
         toolchain = "aarch64-none-elf",
+        arch_flags = " -mstrict-align ",
+        define_flags = " "
+    },
+    ["riscv64"] = {
+        target = "riscv64",
+        toolchain = "riscv64-unknown-elf",
+        arch_flags = " -mcmodel=medany ",
         define_flags = " "
     }
 }
@@ -37,7 +45,7 @@ target("mlibc")
     -- Set languages standard
     set_languages("c99", "cxx11")
     -- Set compiler flags, including custom Define
-    add_cflags(config.define_flags, "-nostdlib", "-ffreestanding", "-nostdinc", "-Wl,-Map=cc.map", {force = true})
+    add_cflags(config.define_flags, config.arch_flags, "-nostdlib", "-ffreestanding", "-nostdinc", "-Wl,-Map=cc.map", {force = true})
     -- Add all source files
     add_files("src/*.c")
     add_files("src/stdio/*.c")
@@ -86,8 +94,22 @@ local testcase_config = {
         toolchain = "aarch64-none-elf",
         arch = "aarch64", 
         envs = {
-            DEFINE = " -mcpu=cortex-a53 ",
-            DEVICE = " -mstrict-align ",
+            DEFINE = " ",
+            DEVICE = " -mcpu=cortex-a53 -mstrict-align ",
+            DEBUG  = " -gdwarf-2 "
+        },
+        flags = {
+            cflags  = " -O0 ",
+            asflags = " -x assembler-with-cpp ",
+            ldflags = " -nostartfiles -nostdlib -nostdinc -lgcc "
+        }
+    },
+    ["qemu-virt-riscv64"] = {
+        toolchain = "riscv64-unknown-elf",
+        arch = "riscv64", 
+        envs = {
+            DEFINE = " ",
+            DEVICE = " -mcmodel=medany -mstrict-align ",
             DEBUG  = " -gdwarf-2 "
         },
         flags = {
@@ -115,10 +137,13 @@ target("hello")
         local cflags = config.flags.cflags 
                     .. config.envs.DEVICE 
                     .. config.envs.DEFINE 
+                    .. config.envs.DEBUG
         local asflags = config.flags.asflags 
                     .. config.envs.DEVICE 
                     .. config.envs.DEFINE 
+                    .. config.envs.DEBUG
         local ldflags = config.flags.ldflags
+        
         target:add("cflags", cflags)
         target:add("asflags", asflags)
         target:add("ldflags", "-T " .. path.join(board_path, board, "link.ld") .. ldflags)
