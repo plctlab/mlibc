@@ -13,7 +13,7 @@ local mlibc_config = {
     ["aarch64"] = {
         target = "aarch64",
         toolchain = "aarch64-none-elf",
-        arch_flags = " ",
+        arch_flags = " -mstrict-align ",
         define_flags = " "
     },
     ["riscv64"] = {
@@ -94,13 +94,13 @@ local testcase_config = {
         toolchain = "aarch64-none-elf",
         arch = "aarch64", 
         envs = {
-            DEFINE = " -mcpu=cortex-a53 ",
-            DEVICE = " -mstrict-align ",
+            DEFINE = " ",
+            DEVICE = " -mcpu=cortex-a53 -mstrict-align ",
             DEBUG  = " -gdwarf-2 "
         },
         flags = {
             cflags  = " -O0 ",
-            asflags = " ",
+            asflags = " -x assembler-with-cpp ",
             ldflags = " -nostartfiles -nostdlib -nostdinc -lgcc "
         }
     },
