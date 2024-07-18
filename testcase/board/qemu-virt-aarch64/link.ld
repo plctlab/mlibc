@@ -5,6 +5,7 @@ ENTRY(_Reset)
 MEMORY
 {
     ROM (rx)  : ORIGIN = 0x40080000, LENGTH = 1M
+    PAGE_TABLE (rw) : ORIGIN = 0x40200000, LENGTH = 512k
     RAM (rwx) : ORIGIN = 0x50000000, LENGTH = 32M
 }
 
@@ -26,13 +27,14 @@ SECTIONS
         . = ALIGN(16);
         __data_end = .;
     } > RAM
+
+    _stack_start = .;
+    _stack_end = _stack_start + 0x1000; /* 4 KB */
+
     .bss : {
         __bss_start = .;
         *(.bss)
         . = ALIGN(16);
         __bss_end = .;
     } > RAM
-
-    _stack_start = .;
-    _stack_end = _stack_start + 0x1000; /* 4 KB */
 }
