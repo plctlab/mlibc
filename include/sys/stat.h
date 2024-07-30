@@ -61,17 +61,21 @@ struct stat
     uint16_t  st_gid;
     struct rt_device *st_rdev;
     uint32_t  st_size;
-    time_t    st_atime;
+    struct timespec    st_atim;
     long      st_spare1;
-    time_t    st_mtime;
+    struct timespec    st_mtim;
     long      st_spare2;
-    time_t    st_ctime;
+    struct timespec    st_ctim;
     long      st_spare3;
     uint32_t  st_blksize;
     uint32_t  st_blocks;
     long      st_spare4[2];
 };
-    
+
+#define st_atime st_atim.tv_sec
+#define st_mtime st_mtim.tv_sec
+#define st_ctime st_ctim.tv_sec
+
 int mkdir(const char *, mode_t);
 
 #endif /*MLIBC_SYS_STAT_H__*/
