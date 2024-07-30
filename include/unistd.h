@@ -13,9 +13,14 @@
 
 #include <sys/types.h>
 
-#define STDIN_FILENO    (0)
-#define STDOUT_FILENO   (1)
-#define STDERR_FILENO   (2)
+#define STDIN_FILENO    0
+#define STDOUT_FILENO   1
+#define STDERR_FILENO   2
+
+#define	F_OK	0
+#define	R_OK	4
+#define	W_OK	2
+#define	X_OK	1
 
 int creat(const char *path, mode_t mode);
 int close(int d);

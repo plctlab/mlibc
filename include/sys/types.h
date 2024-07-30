@@ -19,6 +19,7 @@ typedef unsigned short   gid_t;
 typedef signed long      off_t;
 typedef int              mode_t;
 typedef unsigned long    size_t;
+typedef unsigned short    ino_t;
 
 #if (defined(__GNUC__) && (__SIZEOF_POINTER__ == 8))
 typedef long signed int  ssize_t;       /* Used for a count of bytes or an error indication. */
