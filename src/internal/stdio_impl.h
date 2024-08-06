@@ -12,6 +12,9 @@
 
 #include <stdio.h>
 
+#define FLOCK(f)
+#define FUNLOCK(f)
+
 typedef struct
 {
     void *buf;
