@@ -16,6 +16,8 @@
 typedef long time_t;
 typedef long clock_t;
 typedef long suseconds_t;
+typedef uint64_t fsblkcnt_t;
+typedef uint64_t fsfilcnt_t;
 
 #define INT_FAST16_MIN  INT32_MIN
 #define INT_FAST32_MIN  INT32_MIN

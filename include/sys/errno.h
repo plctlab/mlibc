@@ -117,6 +117,7 @@
 #define EOVERFLOW 84 /* Value too large to be stored in data type */
 
 /* Program loading errors */
+#define ERESTART        85
 #define EBADEXEC 85 /* Bad executable */
 #define EBADARCH 86 /* Bad CPU type in executable */
 #define ESHLIBVERS 87 /* Shared library version mismatch */

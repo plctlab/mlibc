@@ -10,6 +10,7 @@
 #include "../internal/printf.h"
 #include <stdarg.h>
 #include <compiler.h>
+#include <stdio.h>
 
 mlibc_weak int vsnprintf(char* buffer, size_t count, const char* format, va_list va)
 {

@@ -16,6 +16,10 @@
 #define _FILE_IND_EOF   (1 << 0)
 #define _FILE_IND_ERROR (1 << 1)
 
+#define _IOFBF 0
+#define _IOLBF 1
+#define _IONBF 2
+
 #define BUFSIZ  128     /* buffer size */
 #define EOF     (-1)    /* end-of-file descriptor */
 

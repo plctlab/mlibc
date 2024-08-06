@@ -17,7 +17,7 @@ mlibc_weak int sprintf(char* buffer, const char* format, ...)
     int ret = 0;
 
     va_start(va, format);
-    ret = vsnprintf(buffer, -1, format, va);
+    ret = vsnprintf(buffer, (size_t)(-1), format, va);
     va_end(va);
 
     return ret;

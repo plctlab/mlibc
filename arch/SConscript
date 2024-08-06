@@ -1,12 +1,13 @@
 import os
 from building import *
+import rtconfig
 
 cwd = GetCurrentDir()
 objs = []
 list = os.listdir(cwd)
 
 src     = []
-CPPPATH = [cwd]
+CPPPATH = [cwd + '/generic', cwd + '/' + rtconfig.ARCH]
 
 group = DefineGroup('mlibc', src, depend = [''], CPPPATH = CPPPATH)
 
