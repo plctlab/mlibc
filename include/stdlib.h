@@ -65,8 +65,18 @@ static inline int a_ctz_l(unsigned long x)
     return (x + mask) ^ mask; \
 }
 
-#define EXIT_SUCCESS    (0)
-#define EXIT_FAILURE    (1)
+#define WEXITSTATUS(s)      (((s) & 0xff00) >> 8)
+#define WTERMSIG(s)         ((s) & 0x7f)
+#define WSTOPSIG(s)         WEXITSTATUS(s)
+#define WIFEXITED(s)        (!WTERMSIG(s))
+#define WIFSTOPPED(s)       ((short)((((s)&0xffff)*0x10001U)>>8) > 0x7f00)
+#define WIFSIGNALED(s)      (((s)&0xffff)-1U < 0xffu)
+
+#define WCOREDUMP(s)        ((s) & 0x80)
+#define WIFCONTINUED(s)     ((s) == 0xffff)
+
+#define EXIT_SUCCESS        (0)
+#define EXIT_FAILURE        (1)
 
 typedef unsigned long long ullong_type;
 typedef long long llong_type;

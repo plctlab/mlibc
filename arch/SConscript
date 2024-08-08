@@ -1,5 +1,6 @@
 import os
 from building import *
+import rtconfig
 
 cwd = GetCurrentDir()
 objs = []

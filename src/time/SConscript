@@ -3,7 +3,7 @@ import os
 
 cwd     = GetCurrentDir()
 src     = Glob('*.c')
-CPPPATH = []
+CPPPATH = [cwd]
 
 group = DefineGroup('mlibc', src, depend = [''], CPPPATH = CPPPATH)
 

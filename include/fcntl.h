@@ -74,5 +74,9 @@
 
 #define F_GETOWNER_UIDS 17
 
+#define F_DUPFD_CLOEXEC 1030
+
 int open(const char *file, int flags, ...);
+int openat(int, const char *, int, ...);
+
 #endif /*MLIBC_FCNTL_H__*/

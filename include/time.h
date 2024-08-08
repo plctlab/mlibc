@@ -55,6 +55,7 @@ struct itimerspec {
 
 #define TIMER_ABSTIME 1
 
+struct tm* gmtime(const time_t* t);
 struct tm *gmtime_r(const time_t *timep, struct tm *r);
 struct tm* localtime_r(const time_t* t, struct tm* r);
 size_t strftime(char *s, size_t maxsize, const char *format, const struct tm *tp);
