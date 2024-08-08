@@ -35,32 +35,32 @@ mlibc_inline int flag_Y_handler(char *buffer, size_t buf_size, const struct tm *
 
 mlibc_inline int flag_m_handler(char *buffer, size_t buf_size, const struct tm *tm)
 {
-    return snprintf(buffer, sizeof(buffer), "%02d", tm->tm_mon + 1);
+    return snprintf(buffer, buf_size, "%02d", tm->tm_mon + 1);
 }
 
 mlibc_inline int flag_d_handler(char *buffer, size_t buf_size, const struct tm *tm)
 {
-    return snprintf(buffer, sizeof(buffer), "%02d", tm->tm_mday);
+    return snprintf(buffer, buf_size, "%02d", tm->tm_mday);
 }
 
 mlibc_inline int flag_H_handler(char *buffer, size_t buf_size, const struct tm *tm)
 {
-    return snprintf(buffer, sizeof(buffer), "%02d", tm->tm_hour);
+    return snprintf(buffer, buf_size, "%02d", tm->tm_hour);
 }
 
 mlibc_inline int flag_M_handler(char *buffer, size_t buf_size, const struct tm *tm)
 {
-    return snprintf(buffer, sizeof(buffer), "%02d", tm->tm_min);
+    return snprintf(buffer, buf_size, "%02d", tm->tm_min);
 }
 
 mlibc_inline int flag_S_handler(char *buffer, size_t buf_size, const struct tm *tm)
 {
-    return snprintf(buffer, sizeof(buffer), "%02d", tm->tm_sec);
+    return snprintf(buffer, buf_size, "%02d", tm->tm_sec);
 }
 
 mlibc_inline int flag_percentage_handler(char *buffer, size_t buf_size, const struct tm *tm)
 {
-    return snprintf(buffer, sizeof(buffer), "%%");
+    return snprintf(buffer, buf_size, "%%");
 }
 
 static const flag_handler_pair_t upper_handlers[] = 

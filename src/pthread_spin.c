@@ -52,4 +52,6 @@ int pthread_spin_trylock(pthread_spinlock_t *lock)
 int pthread_spin_unlock(pthread_spinlock_t *lock)
 {
     atomic_store_explicit(&lock->lock, false, memory_order_release);
+
+    return 0;
 }

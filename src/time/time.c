@@ -36,8 +36,6 @@ static const short __spm[13] =
 
 static flag_handler get_flag_handler(char flag)
 {
-    char tmp[100];
-    FILE f;
     const flag_handler_pair_t *handler = islower(flag) ? \
         handler_table.lower_handlers : handler_table.upper_handlers;
     
@@ -144,8 +142,8 @@ size_t strftime(char *s, size_t buf_size, const char *format, const struct tm *t
             format_ptr++;
             entry = get_flag_handler(*format_ptr);
 
-            result = entry == NULL ? sprintf(buffer, "%%c", *format_ptr) \
-                    : entry(buffer, sizeof(buffer), tp);
+            result = entry == NULL ? sprintf(buffer, "%c", *format_ptr) \
+                    : entry(buffer, STRFTIME_BUFFER_SIZE, tp);
             if (result + length > buf_size) {
                 return 0;
             }
