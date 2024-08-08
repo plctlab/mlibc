@@ -52,6 +52,7 @@ target("mlibc")
     add_files("src/stdlib/*.c")
     add_files("src/pthread/*.c")
     add_files("src/semaphore/*.c")
+    add_files("src/time/*.c")
     -- Add header file directory
     add_includedirs("./include", {public = true})
 target_end()
