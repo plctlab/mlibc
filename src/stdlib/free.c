@@ -11,7 +11,14 @@
 #include <compiler.h>
 #include "../internal/mem_impl.h"
 
+void __free_r(void* ptr)
+{
+   LOCK_HEAP;
+   tlsf_free(tlsf, ptr);
+   UNLOCK_HEAP;
+}
+
 mlibc_weak void free(void* ptr)
 {
-   tlsf_free(tlsf, ptr);
+   __free_r(ptr);
 }

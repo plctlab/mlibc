@@ -10,7 +10,18 @@
 #include <compiler.h>
 #include "../internal/mem_impl.h"
 
+void *__realloc_r(void* ptr, size_t size)
+{
+    void* realloc_area = NULL;
+
+    LOCK_HEAP;
+    realloc_area = tlsf_realloc(tlsf, ptr, size);
+    UNLOCK_HEAP;
+
+    return realloc_area;
+}
+
 mlibc_weak void *realloc(void* ptr, size_t size)
 {
-    return tlsf_realloc(tlsf, ptr, size);
+    return __realloc_r(ptr, size);
 }

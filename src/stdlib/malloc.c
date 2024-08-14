@@ -15,8 +15,6 @@
 #define MIN_MALLOC_FROM_SYS (1024)
 #define MLIBC_ALIGN_SIZE    (16)
 
-extern tlsf_t tlsf;
-
 /**
  * @brief Memory allocation functions specifically implemented for
  * bare-metal systems (Currently supports only the GCC compiler)
@@ -41,7 +39,7 @@ mlibc_weak void *sbrk(int incr)
     return (void *)prev_heap_end;
 }
 
-mlibc_weak void *malloc(size_t size)
+void *__malloc_r(size_t size)
 {
     pool_t ret = NULL;
     void *block = NULL;
@@ -50,8 +48,12 @@ mlibc_weak void *malloc(size_t size)
     size_t offset = 0;
 
     size = MLIBC_ALIGN(size, MLIBC_ALIGN_SIZE);
-    if(block = tlsf_malloc(tlsf, size))
+    
+    LOCK_HEAP;
+    block = tlsf_malloc(tlsf, size);
+    if(block)
     {
+        UNLOCK_HEAP;
         return block;
     }
 
@@ -65,15 +67,23 @@ mlibc_weak void *malloc(size_t size)
     malloc_size = (malloc_size + round) & ((~(1U)) << (offset - 1));
 
     /* Allocate memory blocks from system */
-    if((block = sbrk(malloc_size)) != NULL)
+    block = sbrk(malloc_size);
+    if(block != NULL)
     {
         if((ret = tlsf_add_pool(tlsf, block, malloc_size)) == NULL)
         {
+            UNLOCK_HEAP;
             /* When memory allocation succeeds but fails to be added to the memory pool, return the allocated memory. */
             return NULL;
         }
         block = tlsf_malloc(tlsf, size);
     }
-
+    UNLOCK_HEAP;
+    
     return block;
+}
+
+mlibc_weak void *malloc(size_t size)
+{
+    return __malloc_r(size);
 }
