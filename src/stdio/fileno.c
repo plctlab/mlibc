@@ -16,7 +16,7 @@ int fileno(FILE *f)
     int fd = f->fd;
     FUNLOCK(f);
     if (fd < 0) {
-        // errno = EBADF;
+        errno = EBADF;
         return -1;
     }
     return fd;
