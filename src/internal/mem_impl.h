@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) mlibc & plct lab
+ *
+ * SPDX-License-Identifier: MIT
+ *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2024/8/14  0Bitbiscuits the first version
+ */
 #ifndef MLIBC_MEM_IMPL_H__
 #define MLIBC_MEM_IMPL_H__
 

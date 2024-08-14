@@ -61,8 +61,6 @@
 #define SIGSYS    31
 #define SIGUNUSED SIGSYS
 
-#define _NSIG 65
-
 #define SA_NOCLDSTOP    1
 #define SA_NOCLDWAIT    2
 #define SA_SIGINFO      4
@@ -205,4 +203,3 @@ int sigwait(const sigset_t *set, int *sig);
 int raise(int sig);
 
 #endif /*MLIBC_SIGNAL_H__*/
-

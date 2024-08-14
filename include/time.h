@@ -11,8 +11,10 @@
 #ifndef MLIBC_TIME_H__
 #define MLIBC_TIME_H__
 
-#include "alltypes.h"
 #include "sys/types.h"
+
+typedef long time_t;
+typedef long clock_t;
 
 struct tm
 {
