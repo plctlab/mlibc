@@ -11,7 +11,7 @@
 #ifndef MLIBC_LIMITES_H__
 #define MLIBC_LIMITES_H__
 
-#include "alltypes.h"
+#include <stdint.h>
 
 #define CHAR_BIT    8
 #define SCHAR_MIN   (-128)
@@ -23,6 +23,11 @@
 #define INT_MIN     (-1 - 0x7fffffff)
 #define INT_MAX     0x7fffffff
 #define UINT_MAX    0xffffffffU
+#if (defined(__GNUC__) && (__SIZEOF_POINTER__ == 8))
+#define __LONG_MAX INT64_MAX
+#else
+#define __LONG_MAX INT32_MAX
+#endif /* defined(__GUNC__) */
 #define LONG_MAX    __LONG_MAX
 #define LONG_MIN    (-LONG_MAX - 1)
 #define ULONG_MAX   (2UL * LONG_MAX + 1)
