@@ -7,7 +7,7 @@
  * Date           Author       Notes
  * 2024/8/5   0Bitbiscuits the first version
  */
-#include "stdio_impl.h"
+#include "../internal/stdio_impl.h"
 #include <errno.h>
 
 int fileno(FILE *f)

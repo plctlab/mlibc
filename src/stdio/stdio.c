@@ -8,12 +8,11 @@
  * 2023/2/1       linshire     the first version
  * 2024/4/24      bitbiscuits  fix printf bug and realize snprintf
  */
-
-#include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
 #include <unistd.h>
 #include <compiler.h>
+#include "../internal/stdio_impl.h"
 
 mlibc_weak int putchar(int c)
 {

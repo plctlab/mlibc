@@ -21,6 +21,37 @@ typedef struct
     size_t buf_size;
 } iovec_t;
 
+struct __MLIBC_IO_FILE{
+    int fd;
+    unsigned char *wbase;
+    unsigned char *wpos, *wend;
+    unsigned char *rpos, *rend;
+    ssize_t (*write)(FILE *, unsigned char *, size_t);
+    ssize_t (*read)(FILE *, unsigned char *, size_t);
+    off_t (*seek)(FILE *, off_t, int);
+    ssize_t (*close)(FILE *);
+
+    /* buffer */
+    unsigned char *buf;
+    size_t buf_size;
+
+    /* line buffered mode */
+    int lbf;
+    char *getln_buf;
+
+    /* file list */
+    FILE *prev, *next;
+
+    /* file mode */
+    int mode;
+
+    /* file lock */
+    
+    /* file offset */
+    off_t off;
+    unsigned char flags;
+};
+
 ssize_t __mlibc_close(FILE *);
 ssize_t __mlibc_read(FILE *, unsigned char *, size_t);
 ssize_t __mlibc_write(FILE *, unsigned char *, size_t);
