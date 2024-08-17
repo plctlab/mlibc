@@ -11,7 +11,7 @@
 #ifndef MLIBC_WCHAR_H__
 #define MLIBC_WCHAR_H__
 
-#include "alltypes.h"
+#include "sys/types.h"
 
 typedef int wchar_t;
 

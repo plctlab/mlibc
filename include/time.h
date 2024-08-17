@@ -11,8 +11,10 @@
 #ifndef MLIBC_TIME_H__
 #define MLIBC_TIME_H__
 
-#include "alltypes.h"
 #include "sys/types.h"
+
+typedef long time_t;
+typedef long clock_t;
 
 struct tm
 {
@@ -55,6 +57,7 @@ struct itimerspec {
 
 #define TIMER_ABSTIME 1
 
+struct tm* gmtime(const time_t* t);
 struct tm *gmtime_r(const time_t *timep, struct tm *r);
 struct tm* localtime_r(const time_t* t, struct tm* r);
 size_t strftime(char *s, size_t maxsize, const char *format, const struct tm *tp);

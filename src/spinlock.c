@@ -7,10 +7,10 @@
  * Date           Author       Notes
  * 2024/7/22    0Bitbiscuits the first version
  */
-#include <pthread.h>
+#include <spinlock.h>
 #include <sys/errno.h>
 
-int pthread_spin_init(pthread_spinlock_t *lock, int pshared)
+int spin_init(spinlock_t *lock, int pshared)
 {
     if (!lock)
         return EINVAL;
@@ -20,7 +20,7 @@ int pthread_spin_init(pthread_spinlock_t *lock, int pshared)
     return 0;
 }
 
-int pthread_spin_destroy(pthread_spinlock_t *lock)
+int spin_destroy(spinlock_t *lock)
 {
     if (!lock)
         return EINVAL;
@@ -28,7 +28,7 @@ int pthread_spin_destroy(pthread_spinlock_t *lock)
     return 0;
 }
 
-int pthread_spin_lock(pthread_spinlock_t *lock)
+int spin_lock(spinlock_t *lock)
 {
     bool expected = false;
     while (!atomic_compare_exchange_weak_explicit(&lock->lock, &expected, true,
@@ -38,7 +38,7 @@ int pthread_spin_lock(pthread_spinlock_t *lock)
     return 0;
 }
 
-int pthread_spin_trylock(pthread_spinlock_t *lock)
+int spin_trylock(spinlock_t *lock)
 {
     bool expected = false;
     if (!atomic_compare_exchange_weak_explicit(&lock->lock, &expected, true,
@@ -49,7 +49,9 @@ int pthread_spin_trylock(pthread_spinlock_t *lock)
     return EBUSY;
 }
 
-int pthread_spin_unlock(pthread_spinlock_t *lock)
+int spin_unlock(spinlock_t *lock)
 {
     atomic_store_explicit(&lock->lock, false, memory_order_release);
+
+    return 0;
 }

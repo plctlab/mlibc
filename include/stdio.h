@@ -16,6 +16,10 @@
 #define _FILE_IND_EOF   (1 << 0)
 #define _FILE_IND_ERROR (1 << 1)
 
+#define _IOFBF 0
+#define _IOLBF 1
+#define _IONBF 2
+
 #define BUFSIZ  128     /* buffer size */
 #define EOF     (-1)    /* end-of-file descriptor */
 
@@ -34,33 +38,6 @@
 
 struct __MLIBC_IO_FILE;
 typedef struct __MLIBC_IO_FILE FILE;
-struct __MLIBC_IO_FILE{
-    int fd;
-    unsigned char *wbase;
-    unsigned char *wpos, *wend;
-    unsigned char *rpos, *rend;
-    ssize_t (*write)(FILE *, unsigned char *, size_t);
-    ssize_t (*read)(FILE *, unsigned char *, size_t);
-    off_t (*seek)(FILE *, off_t, int);
-    ssize_t (*close)(FILE *);
-
-    /* buffer */
-    unsigned char *buf;
-    size_t buf_size;
-
-    /* line buffered mode */
-    int lbf;
-    char *getln_buf;
-
-    /* file list */
-    FILE *prev, *next;
-
-    /* file mode */
-    int mode;
-    /* file offset */
-    off_t off;
-    unsigned char flags;
-};
 
 extern FILE* stdin;
 extern FILE* stdout;

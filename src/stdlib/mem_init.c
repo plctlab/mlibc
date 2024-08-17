@@ -15,23 +15,24 @@
 #include "../internal/mem_impl.h"
 
 tlsf_t tlsf;
+_LOCK_T heap_lock;
+static void *libc_heap[POOL_SIZE];
 
 static tlsf_t __heap_init(void *mem, size_t size)
 {
-    assert(size >= tlsf_size() && "Need more memory to init heap management");
+    assert(size >= tlsf_size() && "Need more memory to init heap management\n");
     
-    return tlsf_create(mem);
+    return tlsf_create_with_pool(mem, size);
 }
 
 /* Initialize mlibc memory heap */
 mlibc_weak void __mlibc_sys_heap_init(void)
-{
-    void *ret = NULL;
-
+{   
     if(!tlsf)
     {
-        ret = sbrk(tlsf_size());
-        assert(ret && "memory controller init failed");
-        tlsf = __heap_init(ret, tlsf_size());
+        __lock_init(heap_lock);
+        assert(heap_lock != NULL && "Heap lock init failed\n");
+        tlsf = __heap_init(libc_heap, POOL_SIZE);
+        assert(tlsf != NULL && "Heap init failed\n");
     }
 }

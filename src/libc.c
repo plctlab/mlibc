@@ -7,12 +7,12 @@
  * Date           Author       Notes
  * 2023/6/16      bernard      first version
  */
-#include <stdio.h>
 #include <unistd.h>
 #include <libc.h>
 #include <assert.h>
 #include <fcntl.h>
 #include "internal/mem_impl.h"
+#include "internal/stdio_impl.h"
 
 MLIBC mlibc;
 
