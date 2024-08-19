@@ -11,9 +11,9 @@
 #define MLIBC_MEM_IMPL_H__
 
 #include "tlsf.h"
+#include "lock.h"
 #include <stdlib.h>
 #include <sys/types.h>
-#include <lock.h>
 
 extern tlsf_t tlsf;
 extern _LOCK_T heap_lock;

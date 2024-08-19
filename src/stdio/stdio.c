@@ -13,7 +13,7 @@
 #include <unistd.h>
 #include <compiler.h>
 #include "../internal/stdio_impl.h"
-
+/* Nedd to support reentrant(todo) */
 mlibc_weak int putchar(int c)
 {
     fputc(c, stdin);
