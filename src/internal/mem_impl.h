@@ -20,8 +20,8 @@ extern _LOCK_T heap_lock;
 
 #define POOL_SIZE   1728                          /* size of pool head*/
 
-#define LOCK_HEAP   __lock_take(heap_lock)        /* lock heap */
-#define UNLOCK_HEAP __lock_release(heap_lock)   /* unlock heap */
+#define LOCK_HEAP   __lock_take_recursive(heap_lock)        /* lock heap */
+#define UNLOCK_HEAP __lock_release_recursive(heap_lock)   /* unlock heap */
 
 void __mlibc_sys_heap_init(void);
 
