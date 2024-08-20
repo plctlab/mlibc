@@ -19,11 +19,6 @@ mlibc_weak int vfprintf(FILE *f, const char *format, va_list va)
     va_list vap;
     int ret = 0;
 
-    if(f == NULL)
-    {
-        return -EINVAL;
-    }
-
     va_copy(vap, va);
     FLOCK(f);
     ret = vsnprintf((char*)f->buf, BUFSIZ,  format, vap);
