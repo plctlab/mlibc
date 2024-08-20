@@ -31,7 +31,7 @@ int fflush(FILE *f)
         if (__stdout_FILE) r |= fflush(__stdout_FILE);
         if (__stderr_FILE) r |= fflush(__stderr_FILE);
 
-        for (f= *__ofl_lock(); f; f = f->next)
+        for (f = *__ofl_lock(); f; f = f->next)
         {
             FLOCK(f);
             if (f->wpos != f->wbase) r |= fflush(f);

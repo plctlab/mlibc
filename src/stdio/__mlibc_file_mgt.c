@@ -9,10 +9,10 @@
  */
 #include "../internal/stdio_impl.h"
 
-#define FILE_LIST_LOCK_INIT(LOCK) __lock_init(LOCK)
-#define FILE_LIST_LOCK_DEINIT(LOCK) __lock_deinit(LOCK)
-#define FILE_LIST_LOCK_LOCK(LOCK) __lock_init(LOCK)
-#define FILE_LIST_LOCK_UNLOCK(LOCK) __lock_deinit(LOCK)
+#define FILE_LIST_LOCK_INIT(LOCK) __lock_init_recursive(LOCK)
+#define FILE_LIST_LOCK_DEINIT(LOCK) __lock_deinit_recursive(LOCK)
+#define FILE_LIST_LOCK_LOCK(LOCK) __lock_take_recursive(LOCK)
+#define FILE_LIST_LOCK_UNLOCK(LOCK) __lock_release_recursive(LOCK)
 
 static FILE *head = NULL;
 static _LOCK_T FILE_LIST_LOCK;

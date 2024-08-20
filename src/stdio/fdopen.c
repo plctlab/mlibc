@@ -45,7 +45,6 @@ mlibc_weak FILE *fdopen(int fd, const char *mode)
     /* allocate memory for file and buffer */
     if(!(f = malloc(sizeof(FILE) + UNGET + BUFSIZ)))
     {
-        errno = EPERM;
         return NULL;
     }
 
