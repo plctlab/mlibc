@@ -13,7 +13,7 @@
 
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 
-static int __toread(FILE* f)
+int __mlibc_toread(FILE* f)
 {
     // write buffer is dirty then write it into file
     if (f->wpos != f->wbase) f->write(f, f->wpos, f->wpos - f->wbase);
@@ -49,8 +49,8 @@ size_t fread(void *buf, size_t elem_size, size_t elem_cnt, FILE *f)
     }
     
     /* Read the remainder directly */
-    for (; l; l-=k, dest+=k) {
-        k = __toread(f) ? 0 : f->read(f, dest, l);
+    for (; l; l -= k, dest += k) {
+        k = __mlibc_toread(f) ? 0 : f->read(f, dest, l);
         if (!k) {
             FUNLOCK(f);
             return (len - l) / elem_size;

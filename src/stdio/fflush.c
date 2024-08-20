@@ -44,9 +44,9 @@ int fflush(FILE *f)
 
     FLOCK(f);
 
-    /* If writing, flush output */
+    /* If writing, flush buffer */
     if (f->wpos != f->wbase) {
-        f->write(f, f->wpos, f->wpos - f->wbase);
+        f->write(f, 0, 0);
         if (!f->wpos) {
             FUNLOCK(f);
             return EOF;

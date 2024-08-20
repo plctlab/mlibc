@@ -11,7 +11,7 @@
 #include <string.h>
 #include <fcntl.h>
 
-static int __towrite(FILE *f)
+int __mlibc_towrite(FILE *f)
 {
     if (f->flags & F_NOWR) {
         f->flags |= F_ERR;
@@ -31,27 +31,24 @@ static int __towrite(FILE *f)
 size_t __fwrite_unlocked(const unsigned char *restrict s, size_t l, FILE *restrict f)
 {
     size_t i = 0;
-    size_t unused = 0;
-    size_t tmp = 0;
-    size_t origin_length = l;
 
     /* 
     ** if it was a write operation before, continue with the write operation.
     ** if not, then initialize the write buffer
     */
-    if (!f->wend && __towrite(f)) return 0;
+    if (!f->wend && __mlibc_towrite(f)) return 0;
 
-    while (l > f->wend - f->wpos)
-    {
-        unused = f->wend - f->wpos; // calculate the rest of write buffer
-        memcpy(f->wpos, s, unused); // fill the rest of write buffer
-        tmp = f->write(f, f->wbase, f->wend - f->wbase);
-        /* write failure */
-        if(tmp != (f->wend - f->wbase)) return origin_length - l;
-        /* write success then reset write buffer */
-        f->wpos = f->wbase;
-        s += unused;
-        l -= unused;
+    if (l > f->wend - f->wpos) return f->write(f, s, l);
+
+    if (f->lbf >= 0) {
+        /* Match /^(.*\n|)/ */
+        for (i=l; i && s[i-1] != '\n'; i--);
+        if (i) {
+            size_t n = f->write(f, s, i);
+            if (n < i) return n;
+            s += i;
+            l -= i;
+        }
     }
 
     if (f->lbf >= 0) {
