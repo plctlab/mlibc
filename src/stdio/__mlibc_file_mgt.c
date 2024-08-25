@@ -9,11 +9,22 @@
  */
 #include "../internal/stdio_impl.h"
 
-FILE *head = NULL;
+#define FILE_LIST_LOCK_INIT(LOCK) __lock_init_recursive(LOCK)
+#define FILE_LIST_LOCK_DEINIT(LOCK) __lock_deinit_recursive(LOCK)
+#define FILE_LIST_LOCK_LOCK(LOCK) __lock_take_recursive(LOCK)
+#define FILE_LIST_LOCK_UNLOCK(LOCK) __lock_release_recursive(LOCK)
+
+static FILE *head = NULL;
+static _LOCK_T FILE_LIST_LOCK;
+
 FILE *__mlibc_file_add(FILE *f)
 {
     f->next = head;
-    if(head) (head)->prev = f;
+    if(head)
+    {
+        FILE_LIST_LOCK_INIT(FILE_LIST_LOCK);
+        (head)->prev = f;
+    }
     head = f;
     return f;
 }
@@ -22,10 +33,20 @@ void __mlibc_file_remove(FILE *f)
 {
     if (f->prev) f->prev->next = f->next;
     if (f->next) f->next->prev = f->prev;
-    if (head == f) head = f->next;
+    if (head == f)
+    {
+        FILE_LIST_LOCK_DEINIT(FILE_LIST_LOCK);
+        head = f->next;
+    }
 }
 
-FILE *__mlibc_file_head(void)
+FILE **__ofl_lock(void)
 {
-    return head;
+    FILE_LIST_LOCK_LOCK(FILE_LIST_LOCK);
+    return &head;
+}
+
+void __ofl_unlock(void)
+{
+    FILE_LIST_LOCK_UNLOCK(FILE_LIST_LOCK);
 }

@@ -11,6 +11,7 @@
 #include <stdarg.h>
 #include <string.h>
 #include <unistd.h>
+#include <assert.h>
 #include <compiler.h>
 #include "../internal/stdio_impl.h"
 
@@ -47,30 +48,24 @@ mlibc_weak int fputc(int character, FILE* stream)
 
 mlibc_weak int putc (int character, FILE* stream)
 {
-    if(stream == NULL)
-    {
-        return EOF;
-    }
-    return write(stream->fd, &character, 1);
+    int ret = 0;
+
+    FLOCK(stream);
+    ret = putc_unlocked(character, stream);
+    FUNLOCK(stream);
+
+    return ret;
 }
 
 mlibc_weak int getc (FILE* stream)
 {
     int buf = EOF;
 
-    if(stream == NULL)
-    {
-        return EOF;
-    }
+    FLOCK(stream);
+    buf = getc_unlocked(stream);
+    FUNLOCK(stream);
 
-    if(read(stream->fd, &buf, 1) == 1)
-    {
-        return buf;
-    }
-    else
-    {
-        return EOF;
-    }
+    return buf;
 }
 
 mlibc_weak int fgetc (FILE* stream)

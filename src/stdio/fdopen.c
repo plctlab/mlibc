@@ -13,6 +13,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <compiler.h>
+#include <errno.h>
 
 /**
  * @brief This function is not responsible for creating files,
@@ -37,6 +38,7 @@ mlibc_weak FILE *fdopen(int fd, const char *mode)
     if(!strchr("rwa", *mode)) 
     {
         /* error operation */
+        errno = EINVAL;
         return NULL;
     }
 
@@ -72,6 +74,8 @@ mlibc_weak FILE *fdopen(int fd, const char *mode)
     f->lbf = EOF;
     if (!(f->flags & F_NOWR))
         f->lbf = '\n';
+    
+    FLOCK_INIT(f);
 
     /* Initialize op ptrs. No problem if some are unneeded. */
     f->read = __mlibc_read;

@@ -10,10 +10,15 @@
 #include "../internal/stdio_impl.h"
 #include <compiler.h>
 #include <fcntl.h>
+#include <errno.h>
 
 int ferror(FILE *f)
 {
-	int ret = !!(f->flags & F_ERR);
+    int ret = 0;
+    
+    FLOCK(f);
+    ret = !!(f->flags & F_ERR);
+    FUNLOCK(f);
 
-	return ret;
+    return ret;
 }

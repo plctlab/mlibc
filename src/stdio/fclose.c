@@ -13,12 +13,15 @@
 int fclose(FILE *f)
 {
     int res = 0;
-    
+
+    FLOCK(f);
     res = fflush(f);
     res |= f->close(f);
+    FUNLOCK(f);
 
     __mlibc_file_remove(f);
 
+    FLOCK_DEINIT(f);
     free(f->getln_buf);
     free(f);
 
