@@ -11,8 +11,8 @@
 #include <libc.h>
 #include <assert.h>
 #include <fcntl.h>
-#include "internal/mem_impl.h"
-#include "internal/stdio_impl.h"
+#include "../internal/mem_impl.h"
+#include "../internal/stdio_impl.h"
 
 MLIBC mlibc;
 
