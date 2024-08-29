@@ -17,7 +17,7 @@
 
 mlibc_weak int putchar(int c)
 {
-    fputc(c, stdin);
+    fputc(c, stdout);
     return c;
 }
 

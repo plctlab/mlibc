@@ -25,6 +25,10 @@ ssize_t __mlibc_read(FILE *f, unsigned char *buf, size_t buf_size)
     return ret;
 }
 
+/* 
+** return the number has been written
+** if an error occurs, return EOF
+*/
 ssize_t __mlibc_write(FILE *f, const unsigned char *buf, size_t buf_size)
 {
     ssize_t t = 0;
@@ -47,11 +51,13 @@ ssize_t __mlibc_write(FILE *f, const unsigned char *buf, size_t buf_size)
             f->flags = F_ERR;
             // write error then clean the write buffer
             f->wpos = f->wbase = f->wend = 0;
-            return dirty_file_buffer_len - n;
+            return EOF;
         }
         n -= t;
     }
-    f->wpos = 0; // reset write pointer
+    /* reset write buffer */
+    f->wpos = f->wbase = f->buf; 
+    f->wend = f->buf + f->buf_size;
 
     /* Write user buffer */
     n = buf_size;
@@ -61,7 +67,7 @@ ssize_t __mlibc_write(FILE *f, const unsigned char *buf, size_t buf_size)
         if(t < 0)
         {
             f->flags = F_ERR;
-            return buf_size - n + dirty_file_buffer_len;
+            return EOF;
         }
         n -= t;
     }
