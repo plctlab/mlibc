@@ -61,7 +61,20 @@ tlsf_decl int tlsf_ffs(unsigned int word)
 
 tlsf_decl int tlsf_ffs(unsigned int word)
 {
+#ifdef __builtin_ffs
     return __builtin_ffs(word) - 1;
+#else
+    int pos = 1;
+    if(!word) return -1;
+
+    while((word & 1) == 0)
+    {
+        pos++;
+        word >>= 1;
+    }
+
+    return pos;
+#endif
 }
 
 #endif
