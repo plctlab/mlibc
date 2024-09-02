@@ -10,7 +10,6 @@
 #ifndef MLIBC_LOCK_H__
 #define MLIBC_LOCK_H__
 
-#define MLIBC_RETARGETABLE_LOCKING
 #ifndef MLIBC_RETARGETABLE_LOCKING
 typedef int _LOCK_T;
 typedef int _LOCK_RECURSIVE_T;

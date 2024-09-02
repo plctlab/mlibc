@@ -7,10 +7,11 @@ flowchart LR
 mlibc-->src
 mlibc-->include
 mlibc-->arch
-src-->crt
+mlibc-->crt
 src-->internal
 src-->stdio
 src-->stdlib
+src-->misc
 include-->sys
 ```
 
@@ -20,8 +21,7 @@ include-->sys
 
 src目录中有三种类型的文件
 
-- crt：存放c库的运行时初始化源文件
-- internal：存放内部一些工具函数的头文件
+- internal：存放内部一些内部实现相关的头文件，该部分头文件不对外开放
 - 存放其它标准函数的实现的源文件
 
 ### 2. include
