@@ -189,7 +189,7 @@ xmake f --mlibc-arch=arm
 xmake build mlibc
 ```
 
-2. 然后会在mlibc/build/arm目录下生成一份静态库，文件名为`libmlibc.a`
+2. 然后会在mlibc/build/arm目录下生成一份静态库，文件名为`libmlibc.a`（防止与工具链中的libc.a撞名，便于测试），集成工具链时可以把文件名改为`libc.a`进行使用
 
 **编译crt0**
 
@@ -201,7 +201,7 @@ xmake f --crt-arch=arm
 xmake build crt0
 ```
 
-2. 生成的文件在
+2. 生成的文件在`mlibc/build/.objs/crt0`中，文件名为`crt0.c.o`，在继成工具链时需要把文件名改为`crt0.o`进行使用
 
 # 贡献代码
 
