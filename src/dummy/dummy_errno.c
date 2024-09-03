@@ -10,7 +10,7 @@
 #include <errno.h>
 #include <compiler.h>
 
-int internal_errno;
+static int internal_errno;
 
 mlibc_weak int *__errno_location(void)
 {
