@@ -27,7 +27,10 @@ Embedded libc，一个为嵌入式系统和裸机适配的libc库
 │   ├───misc       		-- 杂项，存放单文件就能实现的模块
 |	├───stdio       	-- 标准IO模块
 │   └───stdlib    		-- 标准工具库模块
-├───xscript				-- xmake相关的脚本
+├───helloworld          -- helloworld测试样例
+|	└───qemu			-- qemu裸机测试代码
+|		└───qemu-device	-- 具体到qemu虚拟机设备的相关脚本及头文件
+├───xscript				-- 编译相关的xmake脚本
 └───toolchains		    -- 工具链相关的xmake脚本
 ```
 

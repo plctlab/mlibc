@@ -30,8 +30,7 @@ mlibc_weak void __mlibc_sys_heap_init(void)
 {   
     if(!tlsf)
     {
-        __lock_init(heap_lock);
-        assert(heap_lock != NULL && "Heap lock init failed\n");
+        assert((INIT_HEAP_LOCK == 0) && "Heap lock init failed\n");
         tlsf = __heap_init(libc_heap, POOL_SIZE);
         assert(tlsf != NULL && "Heap init failed\n");
     }

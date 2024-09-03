@@ -27,6 +27,9 @@ Embedded libc, a libc library adapted for embedded systems and bare metal enviro
 │   ├───misc            -- Miscellaneous, contains modules that can be implemented in a single file
 │   ├───stdio           -- Standard IO module
 │   └───stdlib          -- Standard utility library module
+├───helloworld          -- Helloworld testcase
+│	└───qemu			-- QEMU bare-metal config
+│		└───qemu-device	-- Specific to the QEMU virtual machine device, related scripts and header files
 ├───xscript             -- Scripts related to xmake
 └───toolchains          -- xmake scripts related to toolchains
 ```
