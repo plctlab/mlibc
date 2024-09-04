@@ -13,3 +13,4 @@ build/
 *.table
 *.bat
 *.asm
+*.gdb

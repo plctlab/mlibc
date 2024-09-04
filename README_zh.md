@@ -13,29 +13,30 @@ Embedded libc，一个为嵌入式系统和裸机适配的libc库
 + 可扩展
 + 移植性强
 
-## 目录
+## 文件结构
 
 [mlibc文件架构](ARCH.md)
 
 ```
-├───arch            
-├───include         
-│   ├───arch        
-├───src             
-│   ├───crt         
-│   ├───internal    
-│   ├───stdio       
-│   └───stdlib
-└───toolchains      
+├───arch				-- 硬件相关的优化实现	
+├───crt					-- 硬件相关的启动代码
+├───include         	-- 头文件
+│   └───sys        		-- 系统相关的头文件，引用方式一般为 <sys/head.h>
+├───src             	-- 源文件
+│   ├───internal    	-- 一些内部使用的头文件
+│   ├───misc       		-- 杂项，存放单文件就能实现的模块
+|	├───stdio       	-- 标准IO模块
+│   └───stdlib    		-- 标准工具库模块
+├───helloworld          -- helloworld测试样例
+|	└───qemu			-- qemu裸机测试代码
+|		└───qemu-device	-- 具体到qemu虚拟机设备的相关脚本及头文件
+├───xscript				-- 编译相关的xmake脚本
+└───toolchains		    -- 工具链相关的xmake脚本
 ```
 
 ## 背景
 
-
-
-# Why we do
-
-## 我们的期望
+### 我们的期望
 
  ● mlibc可以支持到多种嵌入式工具链，能够使用gcc(arm/risc-v)、甚至LLVM等编译器
 
@@ -47,21 +48,19 @@ Embedded libc，一个为嵌入式系统和裸机适配的libc库
 
 ● reserve
 
-
-
 ## 我们的计划
 
+● 使用QEMU/RISC-V 32GC模拟主机方式，输出第一个hello word（已完成）
 
-
-● 使用QEMU/RISC-V 32GC模拟主机方式，输出第一个hello word
-
-● 针对裸机版本的mlibc，加入最基础的crt.s，string，printf函数
+● 针对裸机版本的mlibc，加入最基础的crt.s，string，printf函数（已完成）
 
 ● 基于此环境，完善mlibc
 
 
 
 # 快速上手
+
+## mlbc开发/测试环境配置
 
 ### QEMU运行RT-Thread
 
@@ -89,7 +88,7 @@ https://github.com/RT-Thread/rt-thread/blob/master/documentation/quick-start/qui
 
 - RT-Thread online packages
   - system packages
-    - 选中当前页面的倒数第六个选项： mlibc: Embedded libc, especially for RISC-V
+    - 选中当前页面的倒数第六个选项： `mlibc: Embedded libc, especially for RISC-V`
 
 完成之后就可以退出配置页面然后在命令行输入**scons -j12**进行编译了。
 
@@ -123,85 +122,89 @@ https://github.com/RT-Thread/rt-thread/blob/master/documentation/quick-start/qui
   - system packages
     - 选中当前页面的倒数第六个选项： mlibc: Embedded libc, especially for RISC-V
 
-### cortex-a9裸机
+### QEMU-裸机开发
 
 #### 开发环境
 
-> xmake + env
+> xmake + qemu + 工具链
+
+目前已经实现了五种qemu的裸机启动代码
+
+| qemu设备                         | 硬件架构 | 工具链                  |
+| -------------------------------- | -------- | ----------------------- |
+| vexpress-a9                      | arm      | arm-none-eabi-gcc       |
+| mps3-an536（要求最新的qemu版本） | arm      | arm-none-eabi-gcc       |
+| virt-aarch64                     | aarch64  | aarch64-unknown-elf-gcc |
+| virt-riscv32                     | riscv32  | riscv32-unknown-elf-gcc |
+| virt-riscv64                     | riscv64  | riscv64-unknown-elf-gcc |
 
 #### 使用步骤
 
-1. 进入mlibc文件夹，打开env，然后敲入以下命令
+1. 进入`mlibc/toolchains`文件夹，选择你想要使用的工具链对应的脚本，然后配置对应的工具链路径即可
+2. 进入`mlibc/helloworld/qemu/{qemu-device}`文件夹打开命令行
 
 ```
-xmake f --board=qemu-vexpress-a9
-xmake
+# 这里使用qemu-vexpress-a9举例
+xmake f --qemu-board=qemu-vexpress-a9
+xmake build qemu-hello
 ```
 
-### cortex-r52裸机
+ 执行完命令之后，mlibc/helloworld/qemu/qemu-vexpress-a9文件夹下会生成一份可执行文件为qemu-vexpress-a9.elf
+
+3. 运行对应文件夹下的脚本`qemu.bat`
+
+```
+# 在命令行敲入下列命令
+qemu.bat
+```
+
+各个虚拟环境对应的信息如下：
+
+| 文件名            | 虚拟设备     | 切换命令                               |
+| ----------------- | ------------ | -------------------------------------- |
+| qemu-vexpress-a9  | vexpress-a9  | xmake f --qemu-board=qemu-vexpress-a9  |
+| qemu-mps3-an536   | mps3-an536   | xmake f --qemu-board=qemu-mps3-an536   |
+| qmeu-virt-aarch64 | virt-aarch64 | xmake f --qemu-board=qemu-virt-aarch64 |
+| qemu-virt-riscv32 | virt-riscv32 | xmake f --qemu-board=qemu-virt-riscv32 |
+| qemu-virt-riscv64 | virt-riscv64 | xmake f --qemu-board=qemu-virt-riscv64 |
+
+> **注意：**切换完设备之后记得要执行`xmake build qemu-hello`命令
+
+## mlibc库编译
 
 #### 开发环境
 
-> xmake + env + qemu-9.0.0
+对于单纯的c库编译来说，开发环境就简单一些了，具备xmake和对应工具链就可以
 
-替换env中原本的qemu文件夹：
+> xmake + 工具链
 
-替换指定路径下的文件夹：`env-windows-1.5.0\tools\qemu\qemu`
+#### 编译步骤
 
-> 注意：文件夹的名字也需要改为对应的名字（qemu/qemu64），具体取决于env的版本
+1. 进入`mlibc/toolchains`文件夹，选择你想要使用的工具链对应的脚本，配置对应工具链的路径
 
-#### 使用步骤
+**编译c库**
 
-1. 进入mlibc文件夹，打开env，然后敲入以下命令
-
-```
-xmake f --board=qemu-vexpress-r52
-xmake
-```
-
-### qemu-virt-aarch64裸机
-
-#### 开发环境
-
-> xmake + env
-
-#### 使用步骤
-
-1. 进入mlibc文件夹，打开env，然后敲入以下命令
+1. 进入mlibc文件夹，打开命令行使用xmake编译静态库
 
 ```
-xmake f --board=qemu-virt-aarch64
-xmake 
+# 这里使用arm架构的静态库举例
+xmake f --mlibc-arch=arm
+xmake build mlibc
 ```
 
-#### 问题
+2. 然后会在mlibc/build/arm目录下生成一份静态库，文件名为`libmlibc.a`（防止与工具链中的libc.a撞名，便于测试），集成工具链时可以把文件名改为`libc.a`进行使用
 
-1. 测试时会出现地址对齐异常
-2. 目前推测可以通过开启芯片的mmu来解决（不属于mlibc的范畴）
+**编译crt0**
 
-### qemu-virt-riscv64裸机
-
-#### 开发环境
-
-> xmake + env
-
-#### 使用步骤
-
-1. 进入mlibc文件夹，打开env，然后敲入以下命令
+1. 进入mlibc文件夹，打开命令行使用xmake编译crt0
 
 ```
-xmake f --board=qemu-virt-riscv64
-xmake
+# 这里使用arm架构的crt0举例
+xmake f --crt-arch=arm
+xmake build crt0
 ```
 
-#### 问题
-
-1. 使用内存管理的相关函数时无法通过编译
-
-### TODO
-
-1. 提供可重入函数，为RT-Thread的多线程环境提供支持
-2. 提供对riscv32的支持
+2. 生成的文件在`mlibc/build/.objs/crt0`中，文件名为`crt0.c.o`，在继成工具链时需要把文件名改为`crt0.o`进行使用
 
 # 贡献代码
 
