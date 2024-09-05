@@ -66,4 +66,10 @@ target("mlibc")
         -- Set compiler flags, including custom Define
         target:add("cflags", config.define_flags, config.arch_flags, "-nostdlib", "-ffreestanding", "-nostdinc", "-Wl,-Map=cc.map", {force = true})
     end)
+
+    after_build(function (target)
+        os.mkdir("mlibc/lib")
+        os.cp(path.join(project_path, "include"), path.join(project_path, "mlibc"))
+        os.cp(path.join(project_path, TARGET_DIR, config.target, "libmlibc.a"), "mlibc/lib/libc.a")
+    end)
 target_end()

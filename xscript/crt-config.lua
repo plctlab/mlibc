@@ -34,14 +34,19 @@ local crt_config = {
 target("crt0")
     local arch = get_config("crt-arch")
     local config = crt_config[arch]
-    local TARGET_DIR = "build"
+    local TARGET_DIR = "build/.objs/crt0/release"
     set_kind("object")
     on_load(function (target)
-        target:set("toolchains", config.toolchain)
-        target:add("files", path.join("crt", config.target, "crt0.c"))
-        target:add("includedirs", path.join("include"))
         target:set("arch", "")
         target:set("plat", "")
         target:set("mode", "release")
+        target:set("toolchains", config.toolchain)
+        target:add("files", path.join("crt", config.target, "crt0.c"))
+        target:add("includedirs", path.join("include"))
+    end)
+    
+    after_build(function (target)
+        os.mkdir("mlibc/lib")
+        os.cp(path.join(project_path, TARGET_DIR, "crt", config.target, "crt0.c.o"), "mlibc/lib/crt0.o")
     end)
 target_end()
