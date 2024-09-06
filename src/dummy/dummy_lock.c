@@ -8,11 +8,12 @@
  * 2024/9/3   0Bitbiscuits the first version
  */
 #include <compiler.h>
+#include "../internal/lock.h"
 
 struct __lock
 {
-    void dummy_lock;
-}
+    void* dummy_lock;
+};
 
 mlibc_weak int __retarget_lock_init(_LOCK_T *lock)
 {

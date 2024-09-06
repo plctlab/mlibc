@@ -50,6 +50,7 @@ target("mlibc")
     -- Set languages standard
     set_languages("c99", "cxx11")
     -- Add all source files
+    add_files(path.join(project_path, "src/dummy/*.c")) 
     add_files(path.join(project_path, "src/misc/*.c"))
     add_files(path.join(project_path, "src/stdio/*.c"))
     add_files(path.join(project_path, "src/stdlib/*.c"))
