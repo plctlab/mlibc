@@ -94,6 +94,7 @@ target("qemu-hello")
     add_imports("core.base.option")
     add_files(path.join(project_path, "helloworld/main.c"))
     -- debug
+    add_files(path.join(project_path, "src/dummy/*.c"))
     add_files(path.join(project_path, "src/misc/*.c"))
     add_files(path.join(project_path, "src/stdio/*.c"))
     add_files(path.join(project_path, "src/stdlib/*.c"))
