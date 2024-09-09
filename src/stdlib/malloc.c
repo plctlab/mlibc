@@ -14,11 +14,12 @@
 
 #define MIN_MALLOC_FROM_SYS (1024)
 #define MLIBC_ALIGN_SIZE    (16)
+#define MLIBC_ALIGN(size, align)           (((size) + (align) - 1) & ~((align) - 1))
 
 /**
  * @brief Memory allocation functions specifically implemented for
  * bare-metal systems (Currently supports only the GCC compiler)
- * 
+ *  
  * @param incr allocate size
  * @return mlibc_weak* 
  */

@@ -50,6 +50,7 @@ target("mlibc")
     -- Set languages standard
     set_languages("c99", "cxx11")
     -- Add all source files
+    add_files(path.join(project_path, "src/dummy/*.c")) 
     add_files(path.join(project_path, "src/misc/*.c"))
     add_files(path.join(project_path, "src/stdio/*.c"))
     add_files(path.join(project_path, "src/stdlib/*.c"))
@@ -65,5 +66,11 @@ target("mlibc")
         target:set("targetdir", TARGET_DIR .. config.target)
         -- Set compiler flags, including custom Define
         target:add("cflags", config.define_flags, config.arch_flags, "-nostdlib", "-ffreestanding", "-nostdinc", "-Wl,-Map=cc.map", {force = true})
+    end)
+
+    after_build(function (target)
+        os.mkdir("mlibc/lib")
+        os.cp(path.join(project_path, "include"), path.join(project_path, "mlibc"))
+        os.cp(path.join(project_path, TARGET_DIR, config.target, "libmlibc.a"), "mlibc/lib/libc.a")
     end)
 target_end()
