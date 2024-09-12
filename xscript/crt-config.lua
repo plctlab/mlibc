@@ -48,5 +48,11 @@ target("crt0")
     after_build(function (target)
         os.mkdir("mlibc/lib")
         os.cp(path.join(project_path, TARGET_DIR, "crt", config.target, "crt0.c.o"), "mlibc/lib/crt0.o")
+        if os.isfile(path.join(project_path, "crt", config.target, "crti.s")) then
+            os.cp(path.join(project_path, "crt", config.target, "crti.s"), "mlibc/lib/crti.s")
+        end
+        if os.isfile(path.join(project_path, "crt", config.target, "crtn.s")) then
+            os.cp(path.join(project_path, "crt", config.target, "crtn.s"), "mlibc/lib/crtn.s")
+        end
     end)
 target_end()

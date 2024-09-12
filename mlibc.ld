@@ -42,13 +42,14 @@ SECTIONS
         *(.text.startup .text.startup.*)
         *(.text .text.* .opd .opd.*)
         *(.gnu.linkonce.t.*)
+        KEEP (*(.init .init.*))
         KEEP (*(.fini .fini.*))
         __text_end = .;
 
         PROVIDE (__etext = __text_end);
         PROVIDE (_etext = __text_end);
         PROVIDE (etext = __text_end);
-
+ 
         /* Need to pre-align so that the symbols come after padding */
         . = ALIGN(DEFAULT_ALIGNMENT);
 
