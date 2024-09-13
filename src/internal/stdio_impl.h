@@ -82,10 +82,10 @@ void __ofl_unlock(void);
 int __mlibc_uflow(FILE *f);
 int __mlibc_overflow(FILE *f, int _c);
 /* read and clean buffer */
-#define getc_unlocked(f) \
+#define __mlibc_getc_unlocked(f) \
     ( ((f)->rpos != (f)->rend) ? *(f)->rpos++ : __mlibc_uflow((f)) )
 /* write and flush buffer */
-#define putc_unlocked(c, f) \
+#define __mlibc_putc_unlocked(c, f) \
     ( (((unsigned char)(c) != (f)->lbf && (f)->wpos != (f)->wend)) \
     ? *(f)->wpos++ = (unsigned char)(c) \
     : __mlibc_overflow((f),(unsigned char)(c)) )
