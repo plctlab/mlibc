@@ -23,6 +23,10 @@
     }while(0)
 #define FUNLOCK(f)      __lock_release_recursive(f->_flock)
 
+#define STDOUT  stdout
+#define STDIN   stdin
+#define STDERR  stderr
+
 /* Definition of FILE */
 struct __MLIBC_IO_FILE{
     int fd;
