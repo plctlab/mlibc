@@ -1,6 +1,5 @@
 local project_path = os.projectdir()
 local TARGET_DIR = "build/"
-add_rules("mode.debug", "mode.release")
 
 option("mlibc-arch")
     set_default("arm")

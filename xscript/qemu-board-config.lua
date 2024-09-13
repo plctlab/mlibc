@@ -1,5 +1,4 @@
 local project_path = os.projectdir()
-add_rules("mode.debug", "mode.release")
 
 option("qemu-board")
     set_default("qemu-vexpress-a9")
@@ -122,13 +121,12 @@ target("qemu-hello")
         
         target:add("cflags", cflags)
         target:add("asflags", asflags)
-        target:add("ldflags", "-T " .. path.join("helloworld/qemu", board, "link.ld") .. ldflags, {force = true})
+        target:add("ldflags", "-T " .. path.join(board_path, board, "link.ld") .. ldflags, {force = true})
 
         target:add("includedirs", path.join(board_path, board))
         target:add("files", path.join("crt", config.crt, "crt0.c"))
-        target:add("linkfiles", "helloworld/crt0.o")
 
-        target:set("targetdir", "helloworld/qemu/" .. board)
+        target:set("targetdir", path.join(board_path, board))
         target:set("filename", board .. ".elf")
     end)
 target_end()

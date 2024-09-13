@@ -1,5 +1,4 @@
 local project_path = os.projectdir()
-add_rules("mode.debug", "mode.release")
 
 option("crt-arch")
     set_default("arm")
