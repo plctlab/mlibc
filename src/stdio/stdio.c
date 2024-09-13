@@ -75,5 +75,5 @@ mlibc_weak int fgetc (FILE* stream)
 
 mlibc_weak int getchar(void)
 {
-    return fgetc(stdout);
+    return fgetc(stdin);
 }
