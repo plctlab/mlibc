@@ -110,3 +110,8 @@ void funlockfile(FILE *f)
 {
     FUNLOCK(f);
 }
+
+int ftrylockfile(FILE *f)
+{
+    FTRYLOCK(f);
+}
