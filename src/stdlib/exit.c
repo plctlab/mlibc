@@ -12,6 +12,6 @@
 
 mlibc_weak void exit(int status)
 {
-    fflush();
+    fflush(NULL);
     abort();
 }

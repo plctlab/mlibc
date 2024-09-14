@@ -54,7 +54,7 @@ mlibc_weak int putc_unlocked(int character, FILE *stream)
 
 mlibc_weak int putchar_unlocked(int character)
 {
-    putc_unlocked(stdout);
+    putc_unlocked(character, stdout);
 }
 
 mlibc_weak int putc (int character, FILE* stream)
@@ -109,9 +109,4 @@ void flockfile(FILE *f)
 void funlockfile(FILE *f)
 {
     FUNLOCK(f);
-}
-
-void funlockfile(FILE *f)
-{
-    (void)f;
 }
