@@ -15,14 +15,14 @@ LIBS = ['gcc']
 CCFLAGS   = "-nostdinc"
 LINKFLAGS = " -nostdlib"
 
-AddDepend(['RT_USING_MLIBC', 'RT_USING_LIBC'])
+if GetDepend('PKG_USING_MLIBC'):
+    AddDepend(['RT_USING_MLIBC', 'RT_USING_LIBC'])
+    group = DefineGroup('Compiler', src, depend = ['PKG_USING_MLIBC'], CPPPATH = CPPPATH, LINKFLAGS = LINKFLAGS, CPPDEFINES = CPPDEFINES, LIBS = LIBS, CCFLAGS=CCFLAGS)
 
-group = DefineGroup('Compiler', src, depend = ['PKG_USING_MLIBC'], CPPPATH = CPPPATH, LINKFLAGS = LINKFLAGS, CPPDEFINES = CPPDEFINES, LIBS = LIBS, CCFLAGS=CCFLAGS)
-
-objs += group
-for d in list:
-    path = os.path.join(cwd, d)
-    if os.path.isfile(os.path.join(path, 'SConscript')):
-        objs = objs + SConscript(os.path.join(d, 'SConscript'))
+    objs += group
+    for d in list:
+        path = os.path.join(cwd, d)
+        if os.path.isfile(os.path.join(path, 'SConscript')):
+            objs = objs + SConscript(os.path.join(d, 'SConscript'))
 
 Return('objs')
