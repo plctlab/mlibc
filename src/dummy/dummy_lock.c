@@ -45,6 +45,16 @@ mlibc_weak int __retarget_lock_take_recursive(_LOCK_T lock)
     return 0;
 }
 
+mlibc_weak int __retarget_lock_trytake(_LOCK_T lock)
+{
+    return 0;
+}
+
+mlibc_weak int __retarget_lock_trytake_recursive(_LOCK_T lock)
+{
+    return 0;
+}
+
 mlibc_weak int __retarget_lock_release(_LOCK_T lock)
 {
     return 0;

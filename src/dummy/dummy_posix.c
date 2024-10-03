@@ -69,3 +69,9 @@ mlibc_weak int ioctl(int fildes, int cmd, ...)
 
     return -EPERM;
 }
+
+mlibc_weak int raise(int sig)
+{
+    (void)sig;
+    return -EPERM;
+}

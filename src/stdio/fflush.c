@@ -10,11 +10,11 @@
 #include "../internal/stdio_impl.h"
 #include <fcntl.h>
 
-#ifndef __stdout_FILE
-static FILE *volatile __stdout_FILE = 0;
+#ifndef STDOUT
+STDOUT 0
 #endif
-#ifndef __stderr_FILE
-static FILE *volatile __stderr_FILE = 0;
+#ifndef STDERR
+STDERR 0
 #endif
 
 /**
@@ -28,8 +28,8 @@ int fflush(FILE *f)
 {
     if (!f) {
         int r = 0;
-        if (__stdout_FILE) r |= fflush(__stdout_FILE);
-        if (__stderr_FILE) r |= fflush(__stderr_FILE);
+        if (STDOUT) r |= fflush(STDOUT);
+        if (STDERR) r |= fflush(STDERR);
 
         for (f = *__ofl_lock(); f; f = f->next)
         {

@@ -16,13 +16,13 @@
 
 tlsf_t tlsf;
 _LOCK_T heap_lock;
-static void *libc_heap[POOL_SIZE];
+static char libc_heap[POOL_SIZE];
 
 static tlsf_t __heap_init(void *mem, size_t size)
 {
     assert(size >= tlsf_size() && "Need more memory to init heap management\n");
     
-    return tlsf_create_with_pool(mem, size);
+    return tlsf_create(mem);
 }
 
 /* Initialize mlibc memory heap */

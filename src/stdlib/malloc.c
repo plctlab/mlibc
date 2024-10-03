@@ -16,30 +16,6 @@
 #define MLIBC_ALIGN_SIZE    (16)
 #define MLIBC_ALIGN(size, align)           (((size) + (align) - 1) & ~((align) - 1))
 
-/**
- * @brief Memory allocation functions specifically implemented for
- * bare-metal systems (Currently supports only the GCC compiler)
- *  
- * @param incr allocate size
- * @return mlibc_weak* 
- */
-mlibc_weak void *sbrk(int incr)
-{
-    extern int __bss_end;
-    static int *heap_end = NULL;
-    int *prev_heap_end = NULL;
-
-    if(heap_end == 0)
-    {
-        heap_end = &__bss_end;
-    }
-
-    prev_heap_end = heap_end;
-    heap_end += incr;
-
-    return (void *)prev_heap_end;
-}
-
 void *__malloc_r(size_t size)
 {
     pool_t ret = NULL;
@@ -68,6 +44,7 @@ void *__malloc_r(size_t size)
     malloc_size = (malloc_size + round) & ((~(1U)) << (offset - 1));
 
     /* Allocate memory blocks from system */
+    extern void *sbrk(int incr);
     block = sbrk(malloc_size);
     if(block != NULL)
     {

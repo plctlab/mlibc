@@ -58,6 +58,20 @@ extern int __retarget_lock_take_recursive(_LOCK_T lock);
 #define __lock_take_recursive(lock) __retarget_lock_take_recursive(lock)
 
 /**
+ * @brief Reentrant Lock Try Take Interface
+ * 
+ * @param lock Reentrant Lock pointer
+ * @return int 
+ * Return the operation status. ONLY When the return value is EOK, the operation is successful.
+ * If the return value is any other values, it means that the mutex take failed.
+ */
+extern int __retarget_lock_trytake(_LOCK_T lock);
+#define __lock_trytake(lock) __retarget_lock_trytake(lock)
+extern int __retarget_lock_trytake_recursive(_LOCK_T lock);
+#define __lock_trytake_recursive(lock) __retarget_lock_trytake_recursive(lock)
+
+
+/**
  * @brief Reentrant Lock Release Interface
  * 
  * @param lock Reentrant Lock pointer

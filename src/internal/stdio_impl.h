@@ -21,7 +21,16 @@
         if(!f->_flock) __lock_init_recursive(f->_flock);    \
         __lock_take_recursive(f->_flock);           \
     }while(0)
+#define FTRYLOCK(f)                                    \
+    do{                                             \
+        if(!f->_flock) __lock_init_recursive(f->_flock);    \
+        __lock_trytake_recursive(f->_flock);           \
+    }while(0)
 #define FUNLOCK(f)      __lock_release_recursive(f->_flock)
+
+#define STDOUT  stdout
+#define STDIN   stdin
+#define STDERR  stderr
 
 /* Definition of FILE */
 struct __MLIBC_IO_FILE{
@@ -78,10 +87,10 @@ void __ofl_unlock(void);
 int __mlibc_uflow(FILE *f);
 int __mlibc_overflow(FILE *f, int _c);
 /* read and clean buffer */
-#define getc_unlocked(f) \
+#define __mlibc_getc_unlocked(f) \
     ( ((f)->rpos != (f)->rend) ? *(f)->rpos++ : __mlibc_uflow((f)) )
 /* write and flush buffer */
-#define putc_unlocked(c, f) \
+#define __mlibc_putc_unlocked(c, f) \
     ( (((unsigned char)(c) != (f)->lbf && (f)->wpos != (f)->wend)) \
     ? *(f)->wpos++ = (unsigned char)(c) \
     : __mlibc_overflow((f),(unsigned char)(c)) )
