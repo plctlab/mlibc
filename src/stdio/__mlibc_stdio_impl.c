@@ -16,28 +16,34 @@ ssize_t __mlibc_read(FILE *f, unsigned char *buf, size_t buf_size)
 {
     ssize_t user_buffer_cnt = 0;
     ssize_t file_buffer_cnt = 0;
+    ssize_t ret = 0;
 
     /* Read to the user buffer */
     user_buffer_cnt = read(f->fd, buf, buf_size);
     if(user_buffer_cnt <= 0)
     {
         f->flags |= user_buffer_cnt ? F_ERR : F_EOF;
-		return 0;
+        ret = 0;
     }
     else if(user_buffer_cnt < buf_size)
     {
-        return user_buffer_cnt;
+        ret = user_buffer_cnt;
     }
-
-    /* Read to the file buffer */
-    file_buffer_cnt = f->buf_size > 0 ? read(f->fd, f->buf, f->buf_size) : 0;
-    if(file_buffer_cnt <= 0)
+    else
     {
-        f->flags |= file_buffer_cnt ? F_ERR : F_EOF;
-		return user_buffer_cnt;
+        /* Read to the file buffer */
+        file_buffer_cnt = f->buf_size > 0 ? read(f->fd, f->buf, f->buf_size) : 0;
+        if(file_buffer_cnt <= 0)
+        {
+            f->flags |= file_buffer_cnt ? F_ERR : F_EOF;
+            ret = user_buffer_cnt;
+        }
+        else
+        {
+            f->rpos = f->buf;
+            f->rend = f->buf + file_buffer_cnt;
+        }
     }
-    f->rpos = f->buf;
-	f->rend = f->buf + file_buffer_cnt;
 
     return user_buffer_cnt;
 }
