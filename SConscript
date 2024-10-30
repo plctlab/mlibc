@@ -12,8 +12,8 @@ CPPPATH += [cwd + '/src/internal']
 CPPDEFINES = ['RT_USING_MLIBC', 'RT_USING_LIBC']
 
 LIBS = ['gcc']
-CCFLAGS   = "-nostdinc"
-LINKFLAGS = " -nostdlib"
+CCFLAGS   = ""
+LINKFLAGS = " -nostartfiles -nostdlib -nostdinc -lgcc "
 
 if GetDepend('PKG_USING_MLIBC'):
     AddDepend(['RT_USING_MLIBC', 'RT_USING_LIBC'])
