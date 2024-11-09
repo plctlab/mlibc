@@ -58,8 +58,8 @@ LIB_PATH := mlibc/lib
 OBJ_DIR := $(TARGET_DIR_ARCH)/obj
 CRTOBJ_DIR := $(TARGET_DIR_ARCH)/crtobj
 OBJ_FILES := $(patsubst %.c,$(OBJ_DIR)/%.o,$(notdir $(SRC_FILES)))
-CRTOBJ_FILES := $(patsubst %.c,$(CRTOBJ_DIR)/%.o,$(notdir $(CRT_FILES)))
-CRTOBJ_FILES := $(patsubst %.s,$(CRTOBJ_DIR)/%.o,$(CRTOBJ_FILES))
+CRTOBJ_FILE := $(patsubst %.c,$(CRTOBJ_DIR)/%.o,$(notdir $(CRT_FILES)))
+CRTOBJ_FILES := $(patsubst %.s,$(CRTOBJ_DIR)/%.o,$(CRTOBJ_FILE))
 
 # Build rules
 .PHONY: all clean after_build
