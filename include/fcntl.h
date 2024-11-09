@@ -76,6 +76,20 @@
 
 #define F_DUPFD_CLOEXEC 1030
 
+#define F_RDLCK 0
+#define F_WRLCK 1
+#define F_UNLCK 2
+
+
+struct flock {
+    short l_type;
+    short l_whence;
+    off_t l_start;
+    off_t l_len;
+    pid_t l_pid;
+};
+
+
 int open(const char *file, int flags, ...);
 int openat(int, const char *, int, ...);
 
