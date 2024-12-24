@@ -11,6 +11,8 @@
 #ifndef MLIBC_FCNTL_H__
 #define MLIBC_FCNTL_H__
 
+#include <sys/types.h>
+
 #define UNGET 8
 
 #define F_PERM 1
