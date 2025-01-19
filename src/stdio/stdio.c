@@ -113,5 +113,10 @@ void funlockfile(FILE *f)
 
 int ftrylockfile(FILE *f)
 {
-    FTRYLOCK(f);
+    if(!f->_flock)
+    {
+        __lock_init_recursive(f->_flock);
+    }
+
+    return __lock_trytake_recursive(f->_flock);
 }

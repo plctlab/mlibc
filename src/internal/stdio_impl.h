@@ -21,11 +21,6 @@
         if(!f->_flock) __lock_init_recursive(f->_flock);    \
         __lock_take_recursive(f->_flock);           \
     }while(0)
-#define FTRYLOCK(f)                                    \
-    do{                                             \
-        if(!f->_flock) __lock_init_recursive(f->_flock);    \
-        return __lock_trytake_recursive(f->_flock);           \
-    }while(0)
 #define FUNLOCK(f)      __lock_release_recursive(f->_flock)
 
 #define STDOUT  stdout
