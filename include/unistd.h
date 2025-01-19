@@ -28,9 +28,8 @@ int pipe(int [2]);
 int pipe2(int [2], int);
 int creat(const char *path, mode_t mode);
 int close(int d);
-int read(int fd, void *buf, size_t len);
 int fsync(int fildes);
-
+ssize_t read(int fd, void *buf, size_t len);
 ssize_t write(int fd, const void *buf, size_t count);
 
 /*
