@@ -13,8 +13,11 @@
 
 #include <stdint.h>
 
-typedef signed long long    intmax_t;
-typedef unsigned long long  uintmax_t;
+typedef signed long long        intmax_t;
+typedef unsigned long long      uintmax_t;
+
+typedef signed long long        int_fast64_t;
+typedef unsigned long long      uint_fast64_t;
 
 typedef struct
 {

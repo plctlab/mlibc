@@ -12,6 +12,7 @@
 #define MLIBC_LIMITES_H__
 
 #include <stdint.h>
+#include <inttypes.h>
 
 #define CHAR_BIT    8
 #define SCHAR_MIN   (-128)
