@@ -8,19 +8,16 @@
  * 2023/06/16     bernard      the first verison
  */
 
-#ifndef MLIBC_ASSERT_H__
-#define MLIBC_ASSERT_H__
+#include <compiler.h>
+
+#undef assert
 
 #ifdef NDEBUG
-#define assert(expr)((void) 0)
+#define assert(expr) ((void)0)
 #else
-void __assert_fail (const char* expr, const char* file, int line);
-void __assert_func(const char *file, int line, const char *func, const char *failedexpr);
+mlibc_noreturn void __assert_fail(const char* expr, const char* file, int line);
+mlibc_noreturn void __assert_func(const char *file, int line, const char *func, const char *failedexpr);
 
 #define assert(expr) \
-    if (!(expr)) \
-        __assert_fail(#expr, __FILE__, __LINE__)
+    ((expr) ? (void)0 : __assert_fail(#expr, __FILE__, __LINE__))
 #endif
-
-#endif /*MLIBC_ASSERT_H__*/
-

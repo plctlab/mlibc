@@ -10,12 +10,10 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 
-void __assert_fail (const char* expr, const char* file, int line)
+mlibc_noreturn void __assert_fail(const char* expr, const char* file, int line)
 {
     fprintf(stderr, "%s:%d: Assertion failed: %s\n", file, line, expr);
-    while(1)
-    {
-        ;
-    }
+    abort(); 
 }
