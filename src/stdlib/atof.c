@@ -9,14 +9,8 @@
  * 2025/2/1   Chris-godz   the second version
  */
 #include <stdlib.h>
-#include <compiler.h>
-#include <signal.h>
 
-mlibc_weak void abort(void)
+double atof (const char *s)
 {
-    while(1)
-    {
-        raise(SIGABRT);
-        exit(EXIT_FAILURE);
-    }
+  return strtod (s, NULL);
 }

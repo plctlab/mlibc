@@ -9,14 +9,19 @@
  * 2025/2/1   Chris-godz   the second version
  */
 #include <stdlib.h>
-#include <compiler.h>
-#include <signal.h>
+#include <ctype.h>
 
-mlibc_weak void abort(void)
+int atoi (const char *s)
 {
-    while(1)
-    {
-        raise(SIGABRT);
-        exit(EXIT_FAILURE);
-    }
+  return (int) strtol (s, NULL, 10);
+}
+
+long atol (const char *s)
+{
+  return strtol (s, NULL, 10);
+}
+
+long long atoll (const char *str)
+{
+	return strtoll(str, (char **)NULL, 10);
 }

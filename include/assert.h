@@ -6,6 +6,7 @@
  * Change Logs:
  * Date           Author       Notes
  * 2023/06/16     bernard      the first verison
+ * 2025/2/1      Chris-godz    the second version
  */
 
 #include <compiler.h>
