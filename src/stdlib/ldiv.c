@@ -9,14 +9,8 @@
  * 2025/2/1   Chris-godz   the second version
  */
 #include <stdlib.h>
-#include <compiler.h>
-#include <signal.h>
 
-mlibc_weak void abort(void)
+ldiv_t ldiv(long num, long den)
 {
-    while(1)
-    {
-        raise(SIGABRT);
-        exit(EXIT_FAILURE);
-    }
+    return (ldiv_t){ num/den, num%den };
 }

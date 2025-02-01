@@ -9,14 +9,8 @@
  * 2025/2/1   Chris-godz   the second version
  */
 #include <stdlib.h>
-#include <compiler.h>
-#include <signal.h>
 
-mlibc_weak void abort(void)
+int abs(int a)
 {
-    while(1)
-    {
-        raise(SIGABRT);
-        exit(EXIT_FAILURE);
-    }
+    return a > 0 ? a : -a;
 }

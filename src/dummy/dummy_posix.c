@@ -75,3 +75,9 @@ mlibc_weak int raise(int sig)
     (void)sig;
     return -EPERM;
 }
+
+mlibc_weak void _exit(int status)
+{
+    (void)status;
+    while (1);
+}

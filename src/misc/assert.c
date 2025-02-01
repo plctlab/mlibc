@@ -6,16 +6,16 @@
  * Change Logs:
  * Date           Author       Notes
  * 2023/7/03      bernard      first version
+ * 2025/2/1      Chris-godz    the second version
  */
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 
-void __assert_fail (const char* expr, const char* file, int line)
+mlibc_noreturn void __assert_fail(const char* expr, const char* file, int line)
 {
     fprintf(stderr, "%s:%d: Assertion failed: %s\n", file, line, expr);
-    while(1)
-    {
-        ;
-    }
+    abort();
+    while(1);
 }

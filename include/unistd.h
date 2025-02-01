@@ -54,7 +54,7 @@ int truncate(const char *, off_t);
 int ftruncate(int, off_t);
 int access(const char *, int);
 int faccessat(int, const char *, int, int);
-
+void _exit(int status);
 #include <sys/stat.h>
 
 #endif /*MLIBC_UNISTD_H__*/
