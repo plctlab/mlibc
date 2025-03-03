@@ -13,7 +13,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <sys/types.h>
-
+#include <limits.h>
 void *memset(void *s, int c, size_t count)
 {
     char *xs = (char *)s;

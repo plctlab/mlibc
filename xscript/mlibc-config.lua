@@ -53,6 +53,7 @@ target("mlibc")
     add_files(path.join(project_path, "src/misc/*.c"))
     add_files(path.join(project_path, "src/stdio/*.c"))
     add_files(path.join(project_path, "src/stdlib/*.c"))
+    add_files(path.join(project_path, "src/string/*.c"))
     add_files(path.join(project_path, "src/time/*.c"))
     -- Add header file directory
     add_includedirs(path.join(project_path, "./include"), {public = true})
@@ -72,4 +73,23 @@ target("mlibc")
         os.cp(path.join(project_path, "include"), path.join(project_path, "mlibc"))
         os.cp(path.join(project_path, TARGET_DIR, config.target, "libmlibc.a"), "mlibc/lib/libc.a")
     end)
+target_end()
+
+target("mlibc_hosted")
+    -- Set target file type as static library
+    set_kind("static")
+    -- Strip all information
+    set_strip("all")
+    -- Set as default target
+    set_default(true)
+    -- Set languages standard
+    set_languages("c99", "cxx11")
+    -- Add all source files
+    add_files(path.join(project_path, "test/string/*.c"))
+    -- Add header file directory
+    add_includedirs(path.join(project_path, "test/include"), {public = true})
+    on_load(function (target)
+        target:set("targetdir", TARGET_DIR .. config.target)
+    end)
+
 target_end()
