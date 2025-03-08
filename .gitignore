@@ -1,5 +1,4 @@
-# Xmake cache
-.xmake/
+# Build files
 build/
 
 # MacOS Cache
@@ -14,4 +13,3 @@ build/
 *.bat
 *.asm
 *.gdb
-mlibc
