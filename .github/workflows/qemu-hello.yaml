@@ -1,0 +1,157 @@
+name: Qemu-hello RUN
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - '**/README.md'
+      - '**/README_zh.md'
+  pull_request:
+    branches: [ main ]
+    paths-ignore:
+      - '**/README.md'
+      - '**/README_zh.md'
+
+permissions:
+    contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    name: ${{ matrix.platform.QEMU_HELLO }}
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - { QEMU_BOARD: "qemu-mps3-an536"  , ARCH: "arm" , QEMU_HELLO: "qemu-hello run on qemu-mps3-an536"}
+          - { QEMU_BOARD: "qemu-vexpress-a9" , ARCH: "arm" , QEMU_HELLO: "qemu-hello run on qemu-vexpress-a9"}
+          - { QEMU_BOARD: "qemu-virt-aarch64", ARCH: "aarch64" , QEMU_HELLO: "qemu-hello run on qemu-virt-aarch64"}
+          - { QEMU_BOARD: "qemu-virt-riscv32", ARCH: "riscv32" , QEMU_HELLO: "qemu-hello run on qemu-virt-riscv32"}
+          - { QEMU_BOARD: "qemu-virt-riscv64", ARCH: "riscv64" , QEMU_HELLO: "qemu-hello run on qemu-virt-riscv64"}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Qemu
+        shell: bash
+        run: |
+          wget -q https://github.com/Chris-godz/mlibc/releases/download/CI/qemu-9.2.2.tar.zst
+          cat *.tar.zst | zstd -d -T0 | tar -xf - > /dev/null 2>&1
+          chmod +x ./qemu-9.2.2/qemu_install.sh
+          sudo ./qemu-9.2.2/qemu_install.sh
+
+      - name: Verify QEMU installation
+        shell: bash
+        run: |
+          qemu-system-arm --version
+
+      - name: Install Arm ToolChains
+        if: ${{ matrix.platform.ARCH == 'arm'}}
+        shell: bash
+        run: |
+           wget -q https://github.com/RT-Thread/toolchains-ci/releases/download/v1.3/gcc-arm-none-eabi-10-2020-q4-major-x86_64-linux.tar.bz2
+           sudo tar xjf gcc-arm-none-eabi-10-2020-q4-major-x86_64-linux.tar.bz2 -C /opt
+           /opt/gcc-arm-none-eabi-10-2020-q4-major/bin/arm-none-eabi-gcc --version
+           echo "MLIBC_TOOLCHAIN_CC=/opt/gcc-arm-none-eabi-10-2020-q4-major/bin/arm-none-eabi-gcc" >> $GITHUB_ENV
+           echo "MLIBC_TOOLCHAIN_AR=/opt/gcc-arm-none-eabi-10-2020-q4-major/bin/arm-none-eabi-gcc-ar" >> $GITHUB_ENV
+
+      - name: Install AArch64 ToolChains
+        if: ${{ matrix.platform.ARCH == 'aarch64'}}
+        shell: bash
+        run: |
+           wget -q https://github.com/RT-Thread/toolchains-ci/releases/download/v1.6/gcc-arm-10.2-2020.11-x86_64-aarch64-none-elf.tar.xz
+           sudo tar -xf gcc-arm-10.2-2020.11-x86_64-aarch64-none-elf.tar.xz -C /opt
+           /opt/gcc-arm-10.2-2020.11-x86_64-aarch64-none-elf/bin/aarch64-none-elf-gcc --version
+           echo "MLIBC_TOOLCHAIN_CC=/opt/gcc-arm-10.2-2020.11-x86_64-aarch64-none-elf/bin/aarch64-none-elf-gcc" >> $GITHUB_ENV
+           echo "MLIBC_TOOLCHAIN_AR=/opt/gcc-arm-10.2-2020.11-x86_64-aarch64-none-elf/bin/aarch64-none-elf-ar" >> $GITHUB_ENV
+
+      - name: Install RV32 ToolChains
+        if: ${{ matrix.platform.ARCH == 'riscv32'}}
+        shell: bash
+        run: |
+           wget -q https://github.com/hpmicro/riscv-gnu-toolchain/releases/download/2022.05.15/riscv32-unknown-elf-newlib-multilib_2022.05.15_linux.tar.gz
+           sudo tar zxf riscv32-unknown-elf-newlib-multilib_2022.05.15_linux.tar.gz -C /opt
+           /opt/riscv32-unknown-elf-newlib-multilib/bin/riscv32-unknown-elf-gcc --version
+           echo "MLIBC_TOOLCHAIN_CC=/opt/riscv32-unknown-elf-newlib-multilib/bin/riscv32-unknown-elf-gcc" >> $GITHUB_ENV
+           echo "MLIBC_TOOLCHAIN_AR=/opt/riscv32-unknown-elf-newlib-multilib/bin/riscv32-unknown-elf-ar" >> $GITHUB_ENV
+
+      - name: Install RV64 ToolChains
+        if: ${{ matrix.platform.ARCH == 'riscv64'}}
+        shell: bash
+        run: |
+           wget -q https://github.com/RT-Thread/toolchains-ci/releases/download/v1.4/riscv64-unknown-elf-toolchain-10.2.0-2020.12.8-x86_64-linux-ubuntu14.tar.gz
+           sudo tar zxf riscv64-unknown-elf-toolchain-10.2.0-2020.12.8-x86_64-linux-ubuntu14.tar.gz -C /opt
+           /opt/riscv64-unknown-elf-toolchain-10.2.0-2020.12.8-x86_64-linux-ubuntu14/bin/riscv64-unknown-elf-gcc --version
+           echo "MLIBC_TOOLCHAIN_CC=/opt/riscv64-unknown-elf-toolchain-10.2.0-2020.12.8-x86_64-linux-ubuntu14/bin/riscv64-unknown-elf-gcc" >> $GITHUB_ENV
+           echo "MLIBC_TOOLCHAIN_AR=/opt/riscv64-unknown-elf-toolchain-10.2.0-2020.12.8-x86_64-linux-ubuntu14/bin/riscv64-unknown-elf-ar" >> $GITHUB_ENV
+
+      - name: qemu-hello test
+        shell: bash
+        if: ${{ env.MLIBC_TOOLCHAIN_AR != '' && success() }}
+        env:
+            ARCH : ${{ matrix.platform.ARCH }}
+            QEMU_BOARD : ${{ matrix.platform.QEMU_BOARD }}
+        run: |
+          if [[ "${{ matrix.platform.QEMU_BOARD }}"  == "qemu-mps3-an536" ]]; then
+            make qemu-hello
+            qemu-system-arm -M mps3-an536 \
+            -kernel ./helloworld/qemu/${{ matrix.platform.QEMU_BOARD }}/${{ matrix.platform.QEMU_BOARD }}.elf \
+            -nographic -m 512 \
+            > qemu_output_$QEMU_BOARD.log  2>&1 &
+
+          elif [[ "${{ matrix.platform.QEMU_BOARD }}"  == "qemu-vexpress-a9" ]]; then 
+            make qemu-hello
+            qemu-system-arm -M vexpress-a9 \
+            -kernel ./helloworld/qemu/${{ matrix.platform.QEMU_BOARD }}/${{ matrix.platform.QEMU_BOARD }}.elf \
+            -nographic -m 512 \
+            > qemu_output_$QEMU_BOARD.log  2>&1 &
+
+          elif [[ "${{ matrix.platform.QEMU_BOARD }}"  == "qemu-virt-aarch64" ]]; then 
+            make qemu-hello
+            qemu-system-aarch64 -M virt \
+            -cpu cortex-a53 \
+            -kernel ./helloworld/qemu/${{ matrix.platform.QEMU_BOARD }}/${{ matrix.platform.QEMU_BOARD }}.elf \
+            -nographic -m 512 \
+            > qemu_output_$QEMU_BOARD.log  2>&1 &
+
+          elif [[ "${{ matrix.platform.QEMU_BOARD }}"  == "qemu-virt-riscv32" ]]; then
+            make qemu-hello
+            qemu-system-riscv32 -machine virt \
+            -nographic -m 256M \
+            -kernel ./helloworld/qemu/${{ matrix.platform.QEMU_BOARD }}/${{ matrix.platform.QEMU_BOARD }}.elf \
+            > qemu_output_$QEMU_BOARD.log  2>&1 &
+
+          elif [[ "${{ matrix.platform.QEMU_BOARD }}"  == "qemu-virt-riscv64" ]]; then
+            make qemu-hello
+            qemu-system-riscv64 -machine virt \
+            -nographic -m 512M \
+            -kernel ./helloworld/qemu/${{ matrix.platform.QEMU_BOARD }}/${{ matrix.platform.QEMU_BOARD }}.elf \
+            > qemu_output_$QEMU_BOARD.log  2>&1 &
+          fi
+
+          QEMU_PID=$!
+          disown $QEMU_PID
+          echo "QEMU_SETUP_READY=true" >> $GITHUB_ENV
+
+      - name: Monitor qemu log
+        if: ${{ env.QEMU_SETUP_READY == 'true' && success() }}
+        shell: bash
+        run: |
+          # wait for qemu finish
+          sleep 10
+          echo "=========================================================================================="
+          echo " ||                                                                                    || "
+          echo " ||                          Start automatic running of qemu-hello                     || "
+          echo " VV                                                                                    VV "
+          echo "=========================================================================================="
+          LAST_TWO_LINES=$(tail -n 2 qemu_output_${{ matrix.platform.QEMU_BOARD }}.log)
+          echo "$LAST_TWO_LINES"
+          
+          if grep -q "Uart Test" qemu_output_${{ matrix.platform.QEMU_BOARD }}.log && grep -q "Hello mlibc" qemu_output_${{ matrix.platform.QEMU_BOARD }}.log; then
+            echo "=========================================================================================="
+            echo "                  Successed: qemu-hello run completed. Exiting log monitoring             "
+            echo "=========================================================================================="
+          else
+            echo "=========================================================================================="
+            echo "                  Failed: qemu-hello run not completed. Exiting log monitoring            "
+            echo "=========================================================================================="
+            exit 1
+          fi
