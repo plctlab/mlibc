@@ -33,7 +33,7 @@ QCFLAGS := $(QCFLAGS) $(DEVICE) $(DEFINE) $(DEBUG)
 ASFLAGS := $(ASFLAGS) $(DEVICE) $(DEFINE) $(DEBUG)
 LDFLAGS := -T $(BOARD_PATH)/qemu/$(QEMU_BOARD)/link.ld $(LDFLAGS)
 
-TARGET := $(QEMU_BOARD).elf
+QEMU_TARGET := $(QEMU_BOARD).elf
 
 $(QEMU_CRTOBJ_DIR)/%.o: $(PROJECT_PATH)/crt/$(ARCH)/%.c
 	$(CC) -c $(QEMU_INC) $(QCFLAGS) -o $@ $<
@@ -45,7 +45,7 @@ $(QEMU_OBJ_DIR)/%.o: $(BOARD_PATH)/%.c
 	$(CC) -c $(QEMU_INC) $(QCFLAGS) -o $@ $<
 
 .PHONY:qemu-hello
-qemu-hello: creat_qdir $(BOARD_PATH)/qemu/$(QEMU_BOARD)/$(TARGET)
+qemu-hello: creat_qdir $(BOARD_PATH)/qemu/$(QEMU_BOARD)/$(QEMU_TARGET)
 
 .PHONY: creat_qdir
 creat_qdir:
@@ -57,5 +57,5 @@ else
 	@mkdir -p $(QEMU_OBJ_DIR)
 endif
 
-$(BOARD_PATH)/qemu/$(QEMU_BOARD)/$(TARGET): $(QEMU_CRTOBJ_FILES) $(QEMU_OBJ_FILES)
+$(BOARD_PATH)/qemu/$(QEMU_BOARD)/$(QEMU_TARGET): $(QEMU_CRTOBJ_FILES) $(QEMU_OBJ_FILES)
 	$(CC) -o $@ $(QEMU_OBJ_FILES) $(QEMU_CRTOBJ_FILES) $(LDFLAGS)
