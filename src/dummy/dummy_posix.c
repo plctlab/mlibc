@@ -12,7 +12,7 @@
 #include <errno.h>
 #include <fcntl.h>
 
-mlibc_weak int read(int fd, void *buf, size_t len)
+mlibc_weak ssize_t read(int fd, void *buf, size_t len)
 {
     (void)fd;
     (void)buf;
