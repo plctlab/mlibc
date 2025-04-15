@@ -4,8 +4,8 @@ endif
 
 PROJECT_PATH := .
 
-CC := $(MLIBC_TOOLCHAIN_CC)
-AR := $(MLIBC_TOOLCHAIN_AR)
+CC := $(MLIBC_TOOLCHAIN)gcc
+AR := $(MLIBC_TOOLCHAIN)ar
 
 # Select architecture (you can set this manually or through environment variables)
 ARCH ?= arm
