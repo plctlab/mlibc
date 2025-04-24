@@ -141,19 +141,17 @@ Currently, five types of QEMU bare metal startup codes have been supported.
 1. Configure the environment variables corresponding to the toolchain
 
 **Linux：** Add the following environment variables to the `~/.bashrc` file through commands. Replace `YOUR_PATH_TO_TOOLCHAIN` with the corresponding path of your toolchain.
+
+Note: If your toolchain path is "/opt/gcc-arm-none-eabi-10-2020-q4-major/arm-none-eabi-gcc" , then `YOUR_PATH_TO_TOOLCHAIN` should be "/opt/gcc-arm-none-eabi-10-2020-q4-major/arm-none-eabi-".
 ```
 echo "" >> ~/.bashrc    #Append a a line break to prevent content merging
-
-echo "export MLIBC_TOOLCHAIN_CC='YOUR_PATH_TO_TOOLCHAIN'" >> ~/.bashrc
-echo "export MLIBC_TOOLCHAIN_AR='YOUR_PATH_TO_TOOLCHAIN'" >> ~/.bashrc
-
+echo "export MLIBC_TOOLCHAIN='YOUR_PATH_TO_TOOLCHAIN'" >> ~/.bashrc
 source ~/.bashrc
 ```
 
 **Windows：** Open PowerShell and replace `YOUR_PATH_TO_TOOLCHAIN` with the corresponding path of your toolchain.
 ```
-[System.Environment]::SetEnvironmentVariable("MLIBC_TOOLCHAIN_CC", "YOUR_PATH_TO_TOOLCHAIN", "User")
-[System.Environment]::SetEnvironmentVariable("MLIBC_TOOLCHAIN_AR", "YOUR_PATH_TO_TOOLCHAIN", "User")
+[System.Environment]::SetEnvironmentVariable("YOUR_PATH_TO_TOOLCHAIN", "YOUR_PATH_TO_TOOLCHAIN", "User")
 ```
 **\#**:After the configuration is completed, you need to restart the terminal for the changes to take effect.
 
