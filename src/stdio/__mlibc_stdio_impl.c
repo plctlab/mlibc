@@ -31,12 +31,12 @@ ssize_t __mlibc_read(FILE *f, unsigned char *buf, size_t buf_size)
     }
     else
     {
+        ret = user_buffer_cnt;
         /* Read to the file buffer */
         file_buffer_cnt = f->buf_size > 0 ? read(f->fd, f->buf, f->buf_size) : 0;
         if(file_buffer_cnt <= 0)
         {
             f->flags |= file_buffer_cnt ? F_ERR : F_EOF;
-            ret = user_buffer_cnt;
         }
         else
         {
@@ -45,7 +45,7 @@ ssize_t __mlibc_read(FILE *f, unsigned char *buf, size_t buf_size)
         }
     }
 
-    return user_buffer_cnt;
+    return ret;
 }
 
 /* 
