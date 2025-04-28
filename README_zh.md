@@ -142,20 +142,18 @@ https://github.com/RT-Thread/rt-thread/blob/master/documentation/quick-start/qui
 
 1. 配置工具链对应的环境变量
 
-**Linux：** 通过命令向 `~/.bashrc`文件中添加以下环境变量，`YOUR_PATH_TO_TOOLCHAIN`替换为你对应的工具链路径
+**Linux：** 通过命令向 `~/.bashrc`文件中添加以下环境变量，`YOUR_PATH_TO_TOOLCHAIN`替换为你对应的工具链路径。
+
+注意：如果你工具链的路经是 "/opt/gcc-arm-none-eabi-10-2020-q4-major/arm-none-eabi-gcc" ，则 `YOUR_PATH_TO_TOOLCHAIN` 对应为 "/opt/gcc-arm-none-eabi-10-2020-q4-major/arm-none-eabi-"
 ```
 echo "" >> ~/.bashrc    #追加一个空行 防止内容合并
-
-echo "export MLIBC_TOOLCHAIN_CC='YOUR_PATH_TO_TOOLCHAIN'" >> ~/.bashrc
-echo "export MLIBC_TOOLCHAIN_AR='YOUR_PATH_TO_TOOLCHAIN'" >> ~/.bashrc
-
+echo "export MLIBC_TOOLCHAIN='YOUR_PATH_TO_TOOLCHAIN'" >> ~/.bashrc
 source ~/.bashrc
 ```
 
 **Windows：** 打开 PowellShell，`YOUR_PATH_TO_TOOLCHAIN`替换为你对应的工具链路径
 ```
-[System.Environment]::SetEnvironmentVariable("MLIBC_TOOLCHAIN_CC", "YOUR_PATH_TO_TOOLCHAIN", "User")
-[System.Environment]::SetEnvironmentVariable("MLIBC_TOOLCHAIN_AR", "YOUR_PATH_TO_TOOLCHAIN", "User")
+[System.Environment]::SetEnvironmentVariable("MLIBC_TOOLCHAIN", "YOUR_PATH_TO_TOOLCHAIN", "User")
 ```
 **\#**:配置完后需要重启终端生效
 
