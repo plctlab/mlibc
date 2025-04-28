@@ -1,0 +1,13 @@
+diff --git a/libgcc/config/aarch64/lse.S b/libgcc/config/aarch64/lse.S
+index 9c29cf08b59..5553bc4aaed 100644
+--- a/libgcc/config/aarch64/lse.S
++++ b/libgcc/config/aarch64/lse.S
+@@ -168,7 +168,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+ 	.text
+ 	.balign	16
+ 	.globl	\name
+-	.hidden	\name
++	.weak	\name
+ 	.type	\name, %function
+ 	.cfi_startproc
+ \name:
