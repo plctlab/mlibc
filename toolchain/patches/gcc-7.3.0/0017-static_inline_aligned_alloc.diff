@@ -1,0 +1,20 @@
+--- gcc-7.3.0/libstdc++-v3/libsupc++/new_opa.cc	2017-01-26 22:30:45.014860000 +0800
++++ gcc-7.3.0/libstdc++-v3/libsupc++/new_opa.cc	2019-07-20 16:48:13.604531840 +0800
+@@ -35,7 +35,7 @@
+ #if _GLIBCXX_HAVE__ALIGNED_MALLOC
+ #define aligned_alloc(al,sz) _aligned_malloc(sz,al)
+ #elif _GLIBCXX_HAVE_POSIX_MEMALIGN
+-static inline void*
++void*
+ aligned_alloc (std::size_t al, std::size_t sz)
+ {
+   void *ptr;
+@@ -58,7 +58,7 @@
+ #include <stdint.h>
+ // The C library doesn't provide any aligned allocation functions, define one.
+ // This is a modified version of code from gcc/config/i386/gmm_malloc.h
+-static inline void*
++void*
+ aligned_alloc (std::size_t al, std::size_t sz)
+ {
+   // Alignment must be a power of two.
