@@ -103,6 +103,6 @@ ifeq ($(OS),Windows_NT)
 	@rmdir /s/q $(subst /,\,$(PROJECT_PATH))\build
 else
 	@rm -rf $(PROJECT_PATH)/build
-       @echo ${CRTOBJ_FILES}
-       @echo ${CRTOBJ_FILE}
+	@echo ${CRTOBJ_FILES}
+	@echo ${CRTOBJ_FILE}
 endif
