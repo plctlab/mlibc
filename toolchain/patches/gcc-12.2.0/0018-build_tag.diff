@@ -1,0 +1,28 @@
+diff --git a/gcc/gcc.cc b/gcc/gcc.cc
+index bb07cc2..d4f5b51 100644
+--- a/gcc/gcc.cc
++++ b/gcc/gcc.cc
+@@ -7585,6 +7585,11 @@ print_configuration (FILE *file)
+     fnotice (file, "gcc driver version %s %sexecuting gcc version %s\n",
+ 	     version_string, pkgversion_string, compiler_version);
+ 
++    fnotice (file, "build date: %s %s\n", __DATE__, __TIME__);
++    fnotice (file, "musl  sha: %s\n", "CI_COMMIT_SHA");
++    fnotice (file, "build sha: %s\n", "CI_COMMIT_SHA");
++    fnotice (file, "build job: %s\n", "CI_JOB_ID");
++    fnotice (file, "build pipeline: %s\n", "CI_PIPELINE_ID");
+ }
+ 
+ #define RETRY_ICE_ATTEMPTS 3
+@@ -8785,6 +8789,11 @@ driver::maybe_print_and_exit () const
+       fputs (_("This is free software; see the source for copying conditions.  There is NO\n\
+ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n"),
+ 	     stdout);
++      printf("build date: %s %s\n", __DATE__, __TIME__);
++      printf("musl  sha: %s\n", "CI_COMMIT_SHA");
++      printf("build sha: %s\n", "CI_COMMIT_SHA");
++      printf("build job: %s\n", "CI_JOB_ID");
++      printf("build pipeline: %s\n", "CI_PIPELINE_ID");
+       if (! verbose_flag)
+ 	return 0;
+ 
