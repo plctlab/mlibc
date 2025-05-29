@@ -54,14 +54,12 @@ LIB_PATH := $(PROJECT_PATH)/mlibc/lib
 OBJ_DIR := $(TARGET_DIR_ARCH)/obj
 CRTOBJ_DIR := $(TARGET_DIR_ARCH)/crtobj
 OBJ_FILES := $(patsubst %.c,$(OBJ_DIR)/%.o,$(notdir $(SRC_FILES)))
-CRTOBJ_FILES := $(patsubst %.c,$(CRTOBJ_DIR)/%.o,$(notdir $(CRT_FILES)))
-CRTOBJ_FILES := $(patsubst %.s,$(CRTOBJ_DIR)/%.o,$(CRTOBJ_FILES))
+CRTOBJ_FILE := $(patsubst %.c,$(CRTOBJ_DIR)/%.o,$(notdir $(CRT_FILES)))
+CRTOBJ_FILES := $(patsubst %.S,$(CRTOBJ_DIR)/%.o,$(CRTOBJ_FILE))
 
 # Build rules
 .PHONY: all
-all : mlibc crt0 qemu-hello
-
-include $(PROJECT_PATH)/mkconfigs/qemu/qemu-hello.mk
+all : mlibc crt
 
 .PHONY: mlibc
 mlibc: creat_mdir $(TARGET_DIR_ARCH)/$(TARGET)
@@ -69,7 +67,7 @@ mlibc: creat_mdir $(TARGET_DIR_ARCH)/$(TARGET)
 $(OBJ_DIR)/%.o: $(PROJECT_PATH)/src/*/%.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-$(TARGET_DIR_ARCH)/$(TARGET): $(OBJ_FILES) $(CRTOBJ_FILES)
+$(TARGET_DIR_ARCH)/$(TARGET): $(OBJ_FILES) 
 	$(AR) rcs $@ $(OBJ_FILES)
 
 .PHONY: creat_mdir
@@ -82,8 +80,8 @@ else
 	@mkdir -p $(CRTOBJ_DIR)
 endif
 
-.PHONY: crt0
-crt0: creat_cdir $(CRTOBJ_DIR)/crt0.o
+.PHONY: crt
+crt: creat_cdir $(CRTOBJ_FILES)
 
 $(CRTOBJ_DIR)/%.o: $(PROJECT_PATH)/crt/$(ARCH)/%.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
@@ -105,4 +103,6 @@ ifeq ($(OS),Windows_NT)
 	@rmdir /s/q $(subst /,\,$(PROJECT_PATH))\build
 else
 	@rm -rf $(PROJECT_PATH)/build
+	@echo ${CRTOBJ_FILES}
+	@echo ${CRTOBJ_FILE}
 endif
