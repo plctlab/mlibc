@@ -61,7 +61,7 @@
    ```
    # 进入工具链目录（容器内路径已映射）
    cd ~/workspace/toolchain
-   make  # 执行编译，生成ARM工具链
+   make arch=arm abi=linux-eabi  # 执行编译，生成ARM工具链，如果是riscv，使用`make arch=riscv64 abi=unkwown-elf`
    ```
 
 5. **验证编译结果**
