@@ -1,4 +1,8 @@
-target            =             arm-linux-eabi
+arch              =             arm
+abi               =             linux-eabi
+#arch              =             riscv64
+#abi               =             unknown-elf
+target            =             ${arch}-${abi}
 build             =             x86_64-pc-linux-gnu
 ENABLE_MULTILIB   ?= 			1
 
@@ -56,7 +60,10 @@ GCC_CONFIG       +=             --enable-languages=c
 ifeq (${ENABLE_MULTILIB}, 1)
 GCC_CONFIG       +=             --enable-multiarch
 GCC_CONFIG       +=             --enable-multilib
+GCC_CONFIG       +=             --without-newlib
+ifeq (${target}, "arm-linux-eabi")
 GCC_CONFIG       +=             --with-multilib-list=rmprofile
+endif
 else
 GCC_CONFIG       +=             --disable-multilib
 endif
@@ -183,17 +190,33 @@ build_all_target_libgcc:
 	cd ${BUILDDIR}/obj_gcc && ${MAKE}  all-target-libgcc > ${LOGDIR}/log.all-target-libgcc.${host}.make
 
 build_mlibc:
+	(cd "${BUILDDIR}/src_mlibc" && \
+			make \
+			ARCH="${arch}" \
+			CC='${BUILDDIR}/obj_gcc/gcc/xgcc -B ${BUILDDIR}/obj_gcc/gcc' \
+			AR='${BUILDDIR}/obj_binutils/binutils/ar' \
+			TARGET_DIR_ARCH="build/") || exit 1; \
+		mkdir -p "${sysroot}/lib/"; \
+		cp "${BUILDDIR}/src_mlibc/build/libmlibc.a" "${sysroot}/lib/libc.a"; \
+		cp "${BUILDDIR}/src_mlibc/build/crtobj/"*.o "${sysroot}/lib/";
 	@for mlib in ${MULTILIBS}; do \
 		[ $${mlib} = ".;" ] && continue; \
 		mlib_dir=$$(echo "$${mlib}" | cut -d';' -f1); \
 		mlib_flags=$$(echo "$${mlib}" | cut -d';' -f2 | sed 's/@/ -/g'); \
 		raw_arch=$$(echo "$${mlib_dir}" | cut -d'/' -f1); \
-		arch=$$([ "$${raw_arch}" = "thumb" ] && echo "arm" || echo "$${raw_arch}"); \
-		echo "Building $${mlib_dir} (ARCH=$${arch}) with flags: $${mlib_flags}"; \
+		march=$$( \
+		    case $${raw_arch} in \
+		        rv64*) echo "riscv64" ;; \
+		        rv32*) echo "riscv32" ;; \
+		        thumb) echo "arm" ;; \
+		        *)     echo "$${raw_arch}" ;; \
+		    esac \
+		); \
+		echo "Building $${mlib_dir} (ARCH=$${march}) with flags: $${mlib_flags}"; \
 		mkdir -p "${BUILDDIR}/src_mlibc/build/$${mlib_dir}"; \
 		(cd "${BUILDDIR}/src_mlibc" && \
 			make \
-			ARCH="$${arch}" \
+			ARCH="$${march}" \
 			CC='${BUILDDIR}/obj_gcc/gcc/xgcc -B ${BUILDDIR}/obj_gcc/gcc' \
 			AR='${BUILDDIR}/obj_binutils/binutils/ar' \
 			ARCH_FLAGS="$${mlib_flags}" \
@@ -229,6 +252,8 @@ install:
 	cp -r ${BUILDDIR}/src_mlibc/include ${INSTALLDIR}/${target}
 	cd ${BUILDDIR}/obj_gcc       && ${MAKE} DESTDIR=${INSTALLDIR}/            install-strip         > ${LOGDIR}/log.gcc.${host}.install
 	#@echo "Installing multilib libraries..."
+	cp -f ${sysroot}/lib/libc.a ${INSTALLDIR}/${target}/lib/libc.a
+	cp -f ${sysroot}/lib/*.o ${INSTALLDIR}/${target}/lib/
 	@for mlib in ${MULTILIBS}; do \
 		[ $${mlib} = ".;" ] && continue; \
 		mlib_dir=$$(echo "$${mlib}" | cut -d';' -f1); \
