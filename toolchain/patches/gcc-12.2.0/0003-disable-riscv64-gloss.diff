@@ -1,0 +1,13 @@
+diff --git a/toolchain/gcc-12.2.0/gcc/config/riscv/elf.h b/toolchain/gcc-12.2.0/gcc/config/riscv/elf.h
+index f0e865d..026b9d9 100644
+--- a/gcc/config/riscv/elf.h
++++ b/gcc/config/riscv/elf.h
+@@ -27,7 +27,7 @@ along with GCC; see the file COPYING3.  If not see
+ /* Link against Newlib libraries, because the ELF backend assumes Newlib.
+    Handle the circular dependence between libc and libgloss. */
+ #undef  LIB_SPEC
+-#define LIB_SPEC "--start-group -lc %{!specs=nosys.specs:-lgloss} --end-group"
++#define LIB_SPEC "--start-group -lc --end-group"
+ 
+ #undef  STARTFILE_SPEC
+ #define STARTFILE_SPEC "crt0%O%s crtbegin%O%s"
