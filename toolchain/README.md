@@ -24,7 +24,7 @@
 2. **解决网络问题（国内用户推荐，可选）**
 
    ```
-   cd mlibc/toolchain/docker  # 进入工具链的docker配置目录
+   cd mlibc/toolchain  # 进入工具链配置目录
    sudo cp daemon.json /etc/docker/
    sudo systemctl restart docker
    ```

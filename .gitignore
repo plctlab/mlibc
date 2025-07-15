@@ -1,5 +1,13 @@
 # Build files
 build/
+toolchain/arm-linux-eabi_for_x86_64-pc-linux-gnu
+toolchain/riscv64-unkwown-elf_for_x86_64-pc-linux-gnu
+toolchain/binutils-*
+toolchain/gcc-*
+toolchain/gmp-*
+toolchain/mpc-*
+toolchain/mpfr-*
+toolchain/log
 
 # MacOS Cache
 .DS_Store
