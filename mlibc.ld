@@ -144,10 +144,14 @@ SECTIONS
         . += (DEFINED(__stack_size) ? __stack_size : DEFAULT_STACK_SIZE);
     } >ram :ram
 
+    /* Exception handling frames - keep them but place in flash */
+    .eh_frame : {
+        KEEP(*(.eh_frame .eh_frame.*))
+    } >flash AT>flash :text
+
     /* @C_START@ */
     /DISCARD/ : {
         *(.note .note.*)
-        *(.eh_frame .eh_frame.*)
         *(.ARM.extab* .gnu.linkonce.armextab.*)
         *(.ARM.exidx*)
     }
