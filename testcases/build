@@ -1,0 +1,84 @@
+#!/bin/bash
+# Build script for mlibc test cases
+# Usage: ./build [pc|embedded|all|clean]
+
+# Color definitions
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m'
+
+# Default target
+TARGET=${1:-all}
+
+show_usage() {
+    echo "Usage: ./build [pc|embedded|all|clean]"
+    echo "  pc       - Build PC tests only"
+    echo "  embedded - Build embedded tests only"
+    echo "  all      - Build both PC and embedded tests (default)"
+    echo "  clean    - Clean all build artifacts"
+}
+
+build_pc() {
+    echo -e "${BLUE}Building PC tests...${NC}"
+    if make pc-build > build.log 2>&1; then
+        echo -e "${GREEN}✓ PC tests built successfully${NC}"
+        return 0
+    else
+        echo -e "${RED}✗ PC build failed! Check build.log for details${NC}"
+        return 1
+    fi
+}
+
+build_embedded() {
+    echo -e "${BLUE}Building embedded tests...${NC}"
+    if make embedded-build >> build.log 2>&1; then
+        echo -e "${GREEN}✓ Embedded tests built successfully${NC}"
+        return 0
+    else
+        echo -e "${RED}✗ Embedded build failed! Check build.log for details${NC}"
+        return 1
+    fi
+}
+
+# Main execution
+case "$TARGET" in
+    pc)
+        build_pc
+        ;;
+    embedded)
+        build_embedded
+        ;;
+    all)
+        build_pc && build_embedded
+        ;;
+    clean)
+        echo -e "${BLUE}Cleaning build artifacts...${NC}"
+        
+        # Clean PC builds
+        make pc-clean > /dev/null 2>&1
+        
+        # Clean embedded builds
+        make embedded-clean > /dev/null 2>&1
+        
+        # Clean test outputs and temporary files
+        rm -f build.log
+        rm -f test_*.txt test_*.tmp
+        find . -name "*.o" -delete
+        find . -name "*.out" -delete
+        find . -name "test_results" -type d -exec rm -rf {} + 2>/dev/null
+        find . -name "build" -type d -exec rm -rf {} + 2>/dev/null
+        find . -name "*.log" -delete
+        
+        echo -e "${GREEN}✓ Clean completed${NC}"
+        ;;
+    -h|--help|help)
+        show_usage
+        ;;
+    *)
+        echo -e "${RED}Unknown target: $TARGET${NC}"
+        show_usage
+        exit 1
+        ;;
+esac

@@ -1,0 +1,440 @@
+[0;34mBuilding all PC tests...[0m
+[1;33mBuilding assert...[0m
+cc -Wall -Wextra -g -std=c99 -D_POSIX_C_SOURCE=200112L -o test_results/test_assert test_assert.c
+In file included from test_assert.c:8:
+test_assert.c: In function ‘test_assert_side_effects’:
+test_assert.c:172:19: warning: zero-length gnu_printf format string [-Wformat-zero-length]
+  172 |     assert(printf("") >= 0); /* printf returns number of chars printed */
+      |                   ^~
+test_assert.c: In function ‘test_assert_patterns’:
+test_assert.c:296:9: warning: variable ‘arr’ set but not used [-Wunused-but-set-variable]
+  296 |     int arr[100];
+      |         ^~~
+cc -Wall -Wextra -g -std=c99 -D_POSIX_C_SOURCE=200112L -DNDEBUG -o test_results/test_assert_ndebug test_assert.c
+test_assert.c: In function ‘test_assert_basic’:
+test_assert.c:41:9: warning: unused variable ‘x’ [-Wunused-variable]
+   41 |     int x = 5;
+      |         ^
+test_assert.c: In function ‘test_assert_failure’:
+test_assert.c:77:13: warning: unused variable ‘x’ [-Wunused-variable]
+   77 |         int x = 5;
+      |             ^
+test_assert.c: In function ‘test_assert_side_effects’:
+test_assert.c:161:9: warning: variable ‘counter’ set but not used [-Wunused-but-set-variable]
+  161 |     int counter = 0;
+      |         ^~~~~~~
+test_assert.c: In function ‘test_assert_contexts’:
+test_assert.c:216:11: warning: unused variable ‘ptr’ [-Wunused-variable]
+  216 |     char *ptr = "test";
+      |           ^~~
+test_assert.c: In function ‘test_assert_complex’:
+test_assert.c:250:18: warning: unused variable ‘flags’ [-Wunused-variable]
+  250 |     unsigned int flags = 0x5;
+      |                  ^~~~~
+test_assert.c:244:10: warning: unused variable ‘str’ [-Wunused-variable]
+  244 |     char str[] = "Hello";
+      |          ^~~
+test_assert.c:238:7: warning: unused variable ‘point’ [-Wunused-variable]
+  238 |     } point = {3, 4};
+      |       ^~~~~
+test_assert.c:228:9: warning: variable ‘arr’ set but not used [-Wunused-but-set-variable]
+  228 |     int arr[10] = {0};
+      |         ^~~
+test_assert.c: In function ‘test_assert_in_functions’:
+test_assert.c:268:9: warning: unused variable ‘result’ [-Wunused-variable]
+  268 |     int result = divide(10, 2);
+      |         ^~~~~~
+test_assert.c: In function ‘test_assert_patterns’:
+test_assert.c:322:9: warning: unused variable ‘debug_counter’ [-Wunused-variable]
+  322 |     int debug_counter = 0;
+      |         ^~~~~~~~~~~~~
+test_assert.c:302:50: warning: variable ‘state’ set but not used [-Wunused-but-set-variable]
+  302 |     enum { STATE_INIT, STATE_READY, STATE_DONE } state = STATE_INIT;
+      |                                                  ^~~~~
+test_assert.c:296:9: warning: variable ‘arr’ set but not used [-Wunused-but-set-variable]
+  296 |     int arr[100];
+      |         ^~~
+test_assert.c:292:11: warning: unused variable ‘str’ [-Wunused-variable]
+  292 |     char *str = "test";
+      |           ^~~
+[1;33mBuilding ctype...[0m
+cc -Wall -Wextra -g -std=c99 -D_POSIX_C_SOURCE=200112L -o test_results/test_ctype test_ctype.c
+test_ctype.c: In function ‘test_isspace’:
+test_ctype.c:244:12: warning: unused variable ‘i’ [-Wunused-variable]
+  244 |     size_t i, j;
+      |            ^
+test_ctype.c: In function ‘test_edge_cases’:
+test_ctype.c:643:9: warning: statement with no effect [-Wunused-value]
+  643 |         tolower(uc);
+      |         ^~~~~~~~~~~
+test_ctype.c:644:9: warning: statement with no effect [-Wunused-value]
+  644 |         toupper(uc);
+      |         ^~~~~~~~~~~
+In file included from test_ctype.c:11:
+test_ctype.c: In function ‘test_common_patterns’:
+test_ctype.c:674:12: warning: implicit declaration of function ‘strcmp’ [-Wimplicit-function-declaration]
+  674 |     assert(strcmp(lower, "hello world 123!") == 0);
+      |            ^~~~~~
+test_ctype.c:691:12: warning: implicit declaration of function ‘strncmp’ [-Wimplicit-function-declaration]
+  691 |     assert(strncmp(p, "Hello", 5) == 0);
+      |            ^~~~~~~
+test_ctype.c:691:32: warning: ‘strncmp’ argument 3 type is ‘int’ where ‘long unsigned int’ is expected in a call to built-in function declared without prototype [-Wbuiltin-declaration-mismatch]
+  691 |     assert(strncmp(p, "Hello", 5) == 0);
+      |                                ^
+<built-in>: note: built-in ‘strncmp’ declared here
+[1;33mBuilding fcntl...[0m
+cc -Wall -Wextra -g -std=c99 -D_POSIX_C_SOURCE=200112L -o test_results/test_fcntl test_fcntl.c
+[1;33mBuilding locale...[0m
+cc -Wall -Wextra -g -std=c99 -D_POSIX_C_SOURCE=200112L -o test_results/test_locale test_locale.c
+test_locale.c: In function ‘test_setlocale’:
+test_locale.c:30:20: warning: implicit declaration of function ‘strdup’; did you mean ‘strcmp’? [-Wimplicit-function-declaration]
+   30 |     saved_locale = strdup(result);
+      |                    ^~~~~~
+      |                    strcmp
+test_locale.c:30:18: warning: assignment to ‘char *’ from ‘int’ makes pointer from integer without a cast [-Wint-conversion]
+   30 |     saved_locale = strdup(result);
+      |                  ^
+test_locale.c: In function ‘test_localeconv’:
+test_locale.c:107:16: warning: assignment to ‘char *’ from ‘int’ makes pointer from integer without a cast [-Wint-conversion]
+  107 |     old_locale = strdup(old_locale);
+      |                ^
+test_locale.c: In function ‘test_locale_behavior’:
+test_locale.c:241:19: warning: variable ‘lc’ set but not used [-Wunused-but-set-variable]
+  241 |     struct lconv *lc;
+      |                   ^~
+test_locale.c: In function ‘test_locale_thread_safety’:
+test_locale.c:266:21: warning: variable ‘locale2’ set but not used [-Wunused-but-set-variable]
+  266 |     char *locale1, *locale2;
+      |                     ^~~~~~~
+test_locale.c:266:11: warning: variable ‘locale1’ set but not used [-Wunused-but-set-variable]
+  266 |     char *locale1, *locale2;
+      |           ^~~~~~~
+test_locale.c: In function ‘test_locale_patterns’:
+test_locale.c:338:18: warning: assignment to ‘char *’ from ‘int’ makes pointer from integer without a cast [-Wint-conversion]
+  338 |     saved_locale = strdup(saved_locale);
+      |                  ^
+test_locale.c:350:18: warning: assignment to ‘char *’ from ‘int’ makes pointer from integer without a cast [-Wint-conversion]
+  350 |     saved_locale = strdup(saved_locale);
+      |                  ^
+[1;33mBuilding signal...[0m
+cc -Wall -Wextra -g -std=c99 -D_POSIX_C_SOURCE=200112L -o test_results/test_signal test_signal.c
+[1;33mBuilding stat...[0m
+cc -Wall -Wextra -g -std=c99 -D_POSIX_C_SOURCE=200112L -o test_results/test_stat test_stat.c
+In file included from test_stat.c:14:
+test_stat.c: In function ‘test_stat’:
+test_stat.c:83:22: warning: comparison of unsigned expression >= 0 is always true [-Wtype-limits]
+   83 |     assert(st.st_uid >= 0);
+      |                      ^~
+test_stat.c:84:22: warning: comparison of unsigned expression >= 0 is always true [-Wtype-limits]
+   84 |     assert(st.st_gid >= 0);
+      |                      ^~
+test_stat.c:114:11: warning: null argument where non-null required (argument 1) [-Wnonnull]
+  114 |     ret = stat(NULL, &st);
+      |           ^~~~
+test_stat.c:119:11: warning: null argument where non-null required (argument 2) [-Wnonnull]
+  119 |     ret = stat(TEST_FILE, NULL);
+      |           ^~~~
+test_stat.c: In function ‘test_fstat’:
+test_stat.c:183:11: warning: null argument where non-null required (argument 2) [-Wnonnull]
+  183 |     ret = fstat(fd, NULL);
+      |           ^~~~~
+test_stat.c: In function ‘test_chmod’:
+test_stat.c:300:11: warning: null argument where non-null required (argument 1) [-Wnonnull]
+  300 |     ret = chmod(NULL, 0644);
+      |           ^~~~~
+test_stat.c: In function ‘test_mkdir’:
+test_stat.c:395:11: warning: null argument where non-null required (argument 1) [-Wnonnull]
+  395 |     ret = mkdir(NULL, 0755);
+      |           ^~~~~
+test_stat.c: In function ‘test_mkfifo’:
+test_stat.c:447:11: warning: null argument where non-null required (argument 1) [-Wnonnull]
+  447 |     ret = mkfifo(NULL, 0644);
+      |           ^~~~~~
+[1;33mBuilding stdio...[0m
+cc -Wall -Wextra -g -O0 -I../../include -c -o test_file_operations.o test_file_operations.c
+test_file_operations.c: In function ‘cleanup_files’:
+test_file_operations.c:23:5: warning: implicit declaration of function ‘unlink’ [-Wimplicit-function-declaration]
+   23 |     unlink(TEST_FILE);
+      |     ^~~~~~
+test_file_operations.c: In function ‘test_fseek_ftell_rewind’:
+test_file_operations.c:172:11: warning: implicit declaration of function ‘ftell’ [-Wimplicit-function-declaration]
+  172 |     pos = ftell(fp);
+      |           ^~~~~
+In file included from test_file_operations.c:11:
+test_file_operations.c:178:16: warning: implicit declaration of function ‘fseek’ [-Wimplicit-function-declaration]
+  178 |         assert(fseek(fp, 5, SEEK_SET) == 0);
+      |                ^~~~~
+../../include/assert.h:21:11: note: in definition of macro ‘assert’
+   21 |     if (!(expr)) \
+      |           ^~~~
+test_file_operations.c:197:9: warning: implicit declaration of function ‘rewind’ [-Wimplicit-function-declaration]
+  197 |         rewind(fp);
+      |         ^~~~~~
+test_file_operations.c: In function ‘test_feof_ferror’:
+test_file_operations.c:256:9: warning: implicit declaration of function ‘clearerr’ [-Wimplicit-function-declaration]
+  256 |         clearerr(fp);
+      |         ^~~~~~~~
+cc -Wall -Wextra -g -O0 -I../../include -o test_file_operations.out test_file_operations.o 
+cc -Wall -Wextra -g -O0 -I../../include -c -o test_formatted_io.o test_formatted_io.c
+test_formatted_io.c: In function ‘test_scanf_family’:
+test_formatted_io.c:310:11: warning: implicit declaration of function ‘fscanf’ [-Wimplicit-function-declaration]
+  310 |     ret = fscanf(fp, "%d %u", &i1, &u1);
+      |           ^~~~~~
+test_formatted_io.c:310:11: warning: incompatible implicit declaration of built-in function ‘fscanf’
+test_formatted_io.c:20:1: note: include ‘<stdio.h>’ or provide a declaration of ‘fscanf’
+   19 | #include "../test_colors.h"
+  +++ |+#include <stdio.h>
+   20 | #define BUFFER_SIZE 1024
+test_formatted_io.c: In function ‘test_format_edge_cases’:
+test_formatted_io.c:339:27: warning: zero-length gnu_printf format string [-Wformat-zero-length]
+  339 |     ret = sprintf(buffer, "");
+      |                           ^~
+test_formatted_io.c: In function ‘test_printf_family’:
+test_formatted_io.c:133:67: warning: ‘Hello, World!’ directive output truncated writing 13 bytes into a region of size 10 [-Wformat-truncation=]
+  133 |     ret = snprintf(small_buffer, sizeof(small_buffer), "Hello, World!");
+      |                                                         ~~~~~~~~~~^~~
+test_formatted_io.c:133:11: note: ‘snprintf’ output 14 bytes into a destination of size 10
+  133 |     ret = snprintf(small_buffer, sizeof(small_buffer), "Hello, World!");
+      |           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+test_formatted_io.c: In function ‘test_format_edge_cases’:
+test_formatted_io.c:359:11: warning: ‘%s’ directive argument is null [-Wformat-overflow=]
+  359 |     ret = sprintf(buffer, "%s", (char *)NULL);
+      |           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+test_formatted_io.c: In function ‘test_buffer_safety’:
+test_formatted_io.c:409:60: warning: ‘Hello World!’ directive output truncated writing 12 bytes into a region of size 5 [-Wformat-truncation=]
+  409 |     ret = snprintf(tiny_buffer, sizeof(tiny_buffer), "Hello World!");
+      |                                                       ~~~~~^~~~~~~
+test_formatted_io.c:409:11: note: ‘snprintf’ output 13 bytes into a destination of size 5
+  409 |     ret = snprintf(tiny_buffer, sizeof(tiny_buffer), "Hello World!");
+      |           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+test_formatted_io.c:420:38: warning: ‘Hello’ directive output truncated writing 5 bytes into a region of size 1 [-Wformat-truncation=]
+  420 |     ret = snprintf(tiny_buffer, 1, "Hello");
+      |                                     ~^~~~
+test_formatted_io.c:420:11: note: ‘snprintf’ output 6 bytes into a destination of size 1
+  420 |     ret = snprintf(tiny_buffer, 1, "Hello");
+      |           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+cc -Wall -Wextra -g -O0 -I../../include -o test_formatted_io.out test_formatted_io.o 
+cc -Wall -Wextra -g -O0 -I../../include -c -o test_char_io.o test_char_io.c
+test_char_io.c: In function ‘test_ungetc’:
+test_char_io.c:212:5: warning: implicit declaration of function ‘rewind’ [-Wimplicit-function-declaration]
+  212 |     rewind(fp);
+      |     ^~~~~~
+test_char_io.c:223:5: warning: implicit declaration of function ‘fseek’; did you mean ‘lseek’? [-Wimplicit-function-declaration]
+  223 |     fseek(fp, 0, SEEK_END);
+      |     ^~~~~
+      |     lseek
+test_char_io.c: In function ‘test_char_io_modes’:
+test_char_io.c:320:9: warning: unused variable ‘c’ [-Wunused-variable]
+  320 |     int c;
+      |         ^
+cc -Wall -Wextra -g -O0 -I../../include -o test_char_io.out test_char_io.o 
+cc -Wall -Wextra -g -O0 -I../../include -c -o test_string_io.o test_string_io.c
+test_string_io.c: In function ‘test_fgets’:
+test_string_io.c:186:24: warning: embedded ‘\0’ in format [-Wformat-contains-nul]
+  186 |     fprintf(fp, "Binary\x00\x01\x02\nData");
+      |                        ^~~~
+cc -Wall -Wextra -g -O0 -I../../include -o test_string_io.out test_string_io.o 
+cc -Wall -Wextra -g -O0 -I../../include -c -o test_misc_stdio.o test_misc_stdio.c
+test_misc_stdio.c: In function ‘test_fflush’:
+test_misc_stdio.c:27:10: warning: unused variable ‘buffer’ [-Wunused-variable]
+   27 |     char buffer[BUFFER_SIZE];
+      |          ^~~~~~
+test_misc_stdio.c: In function ‘test_setvbuf’:
+test_misc_stdio.c:89:11: warning: implicit declaration of function ‘setvbuf’ [-Wimplicit-function-declaration]
+   89 |     ret = setvbuf(fp, NULL, _IOFBF, BUFFER_SIZE);
+      |           ^~~~~~~
+test_misc_stdio.c:80:10: warning: unused variable ‘buffer’ [-Wunused-variable]
+   80 |     char buffer[BUFFER_SIZE];
+      |          ^~~~~~
+test_misc_stdio.c: In function ‘test_remove’:
+test_misc_stdio.c:255:11: warning: implicit declaration of function ‘remove’; did you mean ‘memmove’? [-Wimplicit-function-declaration]
+  255 |     ret = remove(TEST_FILE);
+      |           ^~~~~~
+      |           memmove
+test_misc_stdio.c: In function ‘test_tmpfile’:
+test_misc_stdio.c:286:10: warning: implicit declaration of function ‘tmpfile’ [-Wimplicit-function-declaration]
+  286 |     fp = tmpfile();
+      |          ^~~~~~~
+test_misc_stdio.c:286:8: warning: assignment to ‘FILE *’ {aka ‘struct __MLIBC_IO_FILE *’} from ‘int’ makes pointer from integer without a cast [-Wint-conversion]
+  286 |     fp = tmpfile();
+      |        ^
+test_misc_stdio.c:298:9: warning: implicit declaration of function ‘rewind’ [-Wimplicit-function-declaration]
+  298 |         rewind(fp);
+      |         ^~~~~~
+test_misc_stdio.c:307:21: warning: initialization of ‘FILE *’ {aka ‘struct __MLIBC_IO_FILE *’} from ‘int’ makes pointer from integer without a cast [-Wint-conversion]
+  307 |         FILE *fp1 = tmpfile();
+      |                     ^~~~~~~
+test_misc_stdio.c:308:21: warning: initialization of ‘FILE *’ {aka ‘struct __MLIBC_IO_FILE *’} from ‘int’ makes pointer from integer without a cast [-Wint-conversion]
+  308 |         FILE *fp2 = tmpfile();
+      |                     ^~~~~~~
+test_misc_stdio.c: In function ‘test_tmpnam’:
+test_misc_stdio.c:328:13: warning: implicit declaration of function ‘tmpnam’ [-Wimplicit-function-declaration]
+  328 |     name1 = tmpnam(NULL);
+      |             ^~~~~~
+test_misc_stdio.c:328:11: warning: assignment to ‘char *’ from ‘int’ makes pointer from integer without a cast [-Wint-conversion]
+  328 |     name1 = tmpnam(NULL);
+      |           ^
+test_misc_stdio.c:340:15: warning: assignment to ‘char *’ from ‘int’ makes pointer from integer without a cast [-Wint-conversion]
+  340 |         name2 = tmpnam(NULL);
+      |               ^
+test_misc_stdio.c:346:15: warning: assignment to ‘char *’ from ‘int’ makes pointer from integer without a cast [-Wint-conversion]
+  346 |         name1 = tmpnam(buffer);
+      |               ^
+test_misc_stdio.c: In function ‘test_combined_operations’:
+test_misc_stdio.c:513:10: warning: unused variable ‘buffer’ [-Wunused-variable]
+  513 |     char buffer[BUFFER_SIZE];
+      |          ^~~~~~
+cc -Wall -Wextra -g -O0 -I../../include -o test_misc_stdio.out test_misc_stdio.o 
+/usr/bin/ld: test_misc_stdio.o: in function `test_tmpnam':
+/home/bernard/workspace/mlibc/testcases/stdio/test_misc_stdio.c:328: 警告： the use of `tmpnam' is dangerous, better use `mkstemp'
+[1;33mBuilding stdlib...[0m
+cc -Wall -Wextra -g -std=c99 -D_POSIX_C_SOURCE=200112L -o test_results/test_memory test_memory.c -lm
+test_memory.c: In function ‘test_realloc’:
+test_memory.c:315:23: warning: argument 2 value ‘18446744073709551615’ exceeds maximum object size 9223372036854775807 [-Walloc-size-larger-than=]
+  315 |     new_ptr = (char *)realloc(ptr, (size_t)-1); /* Likely to fail */
+      |                       ^~~~~~~~~~~~~~~~~~~~~~~~
+In file included from test_memory.c:8:
+/usr/include/stdlib.h:550:14: note: in a call to allocation function ‘realloc’ declared here
+  550 | extern void *realloc (void *__ptr, size_t __size)
+      |              ^~~~~~~
+cc -Wall -Wextra -g -std=c99 -D_POSIX_C_SOURCE=200112L -o test_results/test_string_conversion test_string_conversion.c -lm
+cc -Wall -Wextra -g -std=c99 -D_POSIX_C_SOURCE=200112L -o test_results/test_random test_random.c -lm
+test_random.c: In function ‘test_srand’:
+test_random.c:94:9: warning: unused variable ‘val1’ [-Wunused-variable]
+   94 |     int val1 = rand();
+      |         ^~~~
+cc -Wall -Wextra -g -std=c99 -D_POSIX_C_SOURCE=200112L -o test_results/test_integer_math test_integer_math.c -lm
+test_integer_math.c: In function ‘test_edge_cases’:
+test_integer_math.c:346:13: warning: unused variable ‘lldiv_result’ [-Wunused-variable]
+  346 |     lldiv_t lldiv_result;
+      |             ^~~~~~~~~~~~
+cc -Wall -Wextra -g -std=c99 -D_POSIX_C_SOURCE=200112L -o test_results/test_program_control test_program_control.c -lm
+test_program_control.c:19:12: warning: ‘atexit_called’ defined but not used [-Wunused-variable]
+   19 | static int atexit_called = 0;
+      |            ^~~~~~~~~~~~~
+cc -Wall -Wextra -g -std=c99 -D_POSIX_C_SOURCE=200112L -o test_results/test_environment_utils test_environment_utils.c -lm
+test_environment_utils.c: In function ‘test_getenv’:
+test_environment_utils.c:82:11: warning: unused variable ‘value2’ [-Wunused-variable]
+   82 |     char *value2 = getenv("path");
+      |           ^~~~~~
+test_environment_utils.c: In function ‘test_qsort’:
+test_environment_utils.c:303:19: warning: comparison of integer expressions of different signedness: ‘int’ and ‘size_t’ {aka ‘long unsigned int’} [-Wsign-compare]
+  303 |     for (i = 0; i < n1; i++) {
+      |                   ^
+test_environment_utils.c:310:19: warning: comparison of integer expressions of different signedness: ‘int’ and ‘size_t’ {aka ‘long unsigned int’} [-Wsign-compare]
+  310 |     for (i = 0; i < n1; i++) {
+      |                   ^
+In file included from test_environment_utils.c:12:
+test_environment_utils.c:311:24: warning: comparison of integer expressions of different signedness: ‘int’ and ‘size_t’ {aka ‘long unsigned int’} [-Wsign-compare]
+  311 |         assert(arr1[i] == (n1 - 1 - i));
+      |                        ^~
+test_environment_utils.c: In function ‘test_sort_search_edge_cases’:
+test_environment_utils.c:529:5: warning: null argument where non-null required (argument 1) [-Wnonnull]
+  529 |     qsort(NULL, 0, sizeof(int), int_compare);
+      |     ^~~~~
+test_environment_utils.c:532:20: warning: null argument where non-null required (argument 2) [-Wnonnull]
+  532 |     void *result = bsearch(&key, NULL, 0, sizeof(int), int_compare);
+      |                    ^~~~~~~
+[1;33mBuilding string...[0m
+cc -Wall -Wextra -g -std=c99 -D_POSIX_C_SOURCE=200112L -o test_results/test_memory_ops test_memory_ops.c -pthread
+test_memory_ops.c: In function ‘test_memset’:
+test_memory_ops.c:57:5: warning: ‘memset’ used with constant zero length parameter; this could be due to transposed parameters [-Wmemset-transposed-args]
+   57 |     memset(buffer, 0x99, 0);
+      |     ^~~~~~
+In file included from test_memory_ops.c:11:
+test_memory_ops.c: In function ‘test_memmove’:
+test_memory_ops.c:276:23: warning: comparison of integer expressions of different signedness: ‘int’ and ‘size_t’ {aka ‘long unsigned int’} [-Wsign-compare]
+  276 |         assert(arr[i] == i);
+      |                       ^~
+test_memory_ops.c:279:23: warning: comparison of integer expressions of different signedness: ‘int’ and ‘size_t’ {aka ‘long unsigned int’} [-Wsign-compare]
+  279 |         assert(arr[i] == (i - 5));
+      |                       ^~
+test_memory_ops.c: In function ‘test_memcmp’:
+test_memory_ops.c:369:25: warning: unused variable ‘s2’ [-Wunused-variable]
+  369 |     } s1 = {1, 'A', 3}, s2 = {1, 'A', 3};
+      |                         ^~
+test_memory_ops.c:369:7: warning: unused variable ‘s1’ [-Wunused-variable]
+  369 |     } s1 = {1, 'A', 3}, s2 = {1, 'A', 3};
+      |       ^~
+cc -Wall -Wextra -g -std=c99 -D_POSIX_C_SOURCE=200112L -o test_results/test_string_copy test_string_copy.c -pthread
+test_string_copy.c: In function ‘test_copy_patterns’:
+test_string_copy.c:277:10: warning: unused variable ‘temp’ [-Wunused-variable]
+  277 |     char temp[256];
+      |          ^~~~
+test_string_copy.c: In function ‘test_strncpy’:
+test_string_copy.c:156:14: warning: ‘strncpy’ destination unchanged after copying no bytes from a string of length 5 [-Wstringop-truncation]
+  156 |     result = strncpy(dst, "Hello", 0);
+      |              ^~~~~~~~~~~~~~~~~~~~~~~~
+cc -Wall -Wextra -g -std=c99 -D_POSIX_C_SOURCE=200112L -o test_results/test_string_concat test_string_concat.c -pthread
+test_string_concat.c: In function ‘test_strncat’:
+test_string_concat.c:116:12: warning: unused variable ‘i’ [-Wunused-variable]
+  116 |     size_t i;
+      |            ^
+test_string_concat.c: In function ‘test_concat_patterns’:
+test_string_concat.c:289:10: warning: unused variable ‘temp’ [-Wunused-variable]
+  289 |     char temp[256];
+      |          ^~~~
+test_string_concat.c: In function ‘test_strncat’:
+test_string_concat.c:122:14: warning: ‘strncat’ specified bound 8 equals source length [-Wstringop-overflow=]
+  122 |     result = strncat(dst, ", World!", 8);
+      |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+test_string_concat.c:147:14: warning: ‘strncat’ specified bound 5 equals source length [-Wstringop-overflow=]
+  147 |     result = strncat(dst, "Hello", 5);
+      |              ^~~~~~~~~~~~~~~~~~~~~~~~
+test_string_concat.c:185:5: warning: ‘strncat’ specified bound 3 equals source length [-Wstringop-overflow=]
+  185 |     strncat(dst, "123", 3);
+      |     ^~~~~~~~~~~~~~~~~~~~~~
+cc -Wall -Wextra -g -std=c99 -D_POSIX_C_SOURCE=200112L -o test_results/test_string_search test_string_search.c -pthread
+test_string_search.c: In function ‘test_strpbrk’:
+test_string_search.c:351:12: warning: assignment discards ‘const’ qualifier from pointer target type [-Wdiscarded-qualifiers]
+  351 |     result = strpbrk("", "abc");
+      |            ^
+cc -Wall -Wextra -g -std=c99 -D_POSIX_C_SOURCE=200112L -o test_results/test_string_compare test_string_compare.c -pthread
+test_string_compare.c: In function ‘test_compare_patterns’:
+test_string_compare.c:422:17: warning: unused variable ‘file2’ [-Wunused-variable]
+  422 |     const char *file2 = "document.doc";
+      |                 ^~~~~
+test_string_compare.c:378:17: warning: unused variable ‘s2’ [-Wunused-variable]
+  378 |     const char *s2 = "HELLO";
+      |                 ^~
+test_string_compare.c:377:17: warning: unused variable ‘s1’ [-Wunused-variable]
+  377 |     const char *s1 = "Hello";
+      |                 ^~
+test_string_compare.c:371:10: warning: unused variable ‘buffer’ [-Wunused-variable]
+  371 |     char buffer[BUFFER_SIZE];
+      |          ^~~~~~
+cc -Wall -Wextra -g -std=c99 -D_POSIX_C_SOURCE=200112L -o test_results/test_string_misc test_string_misc.c -pthread
+[1;33mBuilding time...[0m
+cc -Wall -Wextra -g -std=c99 -D_POSIX_C_SOURCE=200112L -o test_results/test_time test_time.c -lrt -lpthread
+test_time.c: In function ‘test_localtime’:
+test_time.c:159:16: warning: unused variable ‘gm_ptr’ [-Wunused-variable]
+  159 |     struct tm *gm_ptr = gmtime(&t);
+      |                ^~~~~~
+test_time.c: In function ‘test_strftime’:
+test_time.c:445:38: warning: zero-length gnu_strftime format string [-Wformat-zero-length]
+  445 |     ret = strftime(buf, sizeof(buf), "", &tm_buf);
+      |                                      ^~
+[1;33mBuilding unistd...[0m
+cc -Wall -Wextra -g -std=c99 -D_POSIX_C_SOURCE=200112L -o test_results/test_unistd test_unistd.c
+In file included from test_unistd.c:16:
+test_unistd.c: In function ‘test_process_ids’:
+test_unistd.c:643:16: warning: comparison of unsigned expression >= 0 is always true [-Wtype-limits]
+  643 |     assert(uid >= 0);
+      |                ^~
+test_unistd.c:644:17: warning: comparison of unsigned expression >= 0 is always true [-Wtype-limits]
+  644 |     assert(euid >= 0);
+      |                 ^~
+test_unistd.c:649:16: warning: comparison of unsigned expression >= 0 is always true [-Wtype-limits]
+  649 |     assert(gid >= 0);
+      |                ^~
+test_unistd.c:650:17: warning: comparison of unsigned expression >= 0 is always true [-Wtype-limits]
+  650 |     assert(egid >= 0);
+      |                 ^~
+[1;33mBuilding utsname...[0m
+cc -Wall -Wextra -g -std=c99 -D_POSIX_C_SOURCE=200112L -o test_results/test_utsname test_utsname.c
+In file included from test_utsname.c:13:
+test_utsname.c: In function ‘test_uname’:
+test_utsname.c:49:33: warning: comparison of unsigned expression >= 0 is always true [-Wtype-limits]
+   49 |     assert(strlen(uts.nodename) >= 0); /* Can be empty */
+      |                                 ^~
+[0;32mAll PC tests built successfully![0m
