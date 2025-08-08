@@ -122,4 +122,3 @@ sudo apt-get install gcc-riscv64-unknown-elf qemu-system-misc
 ## 相关文档
 
 - [PSE51.md](PSE51.md) - PSE51 标准接口实现状态
-- [mlibc CLAUDE.md](../CLAUDE.md) - mlibc 项目概述
