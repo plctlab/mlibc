@@ -569,7 +569,7 @@ void test_environment_patterns(void) {
     TEST_PASSED("Environment pattern");
 }
 
-int main(void) {
+void run_tests(void) {
     printf(COLOR_BOLD_BLUE "=== PSE51 stdlib.h Environment and Utilities Test Suite ===" COLOR_RESET "\n\n");
     
     /* Run tests */
@@ -583,5 +583,4 @@ int main(void) {
     test_environment_patterns();
     
     TEST_SUITE_PASSED("environment and utility");
-    return 0;
 }

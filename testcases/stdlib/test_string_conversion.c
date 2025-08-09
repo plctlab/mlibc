@@ -572,7 +572,7 @@ void test_locale_behavior(void) {
     TEST_PASSED("Locale behavior");
 }
 
-int main(void) {
+void run_tests(void) {
     printf(COLOR_BOLD_BLUE "=== PSE51 stdlib.h String Conversion Test Suite ===" COLOR_RESET "\n\n");
     
     /* Run tests */
@@ -589,5 +589,4 @@ int main(void) {
     test_locale_behavior();
     
     TEST_SUITE_PASSED("string conversion");
-    return 0;
 }

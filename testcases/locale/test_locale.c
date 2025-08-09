@@ -5,6 +5,7 @@
  * This test suite covers POSIX.13 (PSE51) requirements for locale support
  */
 
+#define _GNU_SOURCE  /* For strdup */
 #include <locale.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,6 +15,19 @@
 #include <errno.h>
 
 #include "../test_colors.h"
+
+/* Simple strdup implementation if not available */
+#ifndef strdup
+static char* my_strdup(const char *s) {
+    size_t len = strlen(s) + 1;
+    char *dup = malloc(len);
+    if (dup) {
+        memcpy(dup, s, len);
+    }
+    return dup;
+}
+#define strdup my_strdup
+#endif
 /* Test setlocale() function */
 void test_setlocale(void) {
     char *result;
@@ -416,10 +430,12 @@ void test_locale_strings(void) {
     TEST_PASSED("Locale string");
 }
 
-int main(void) {
+
+
+/* Run all tests */
+void run_tests(void) {
     printf(COLOR_BOLD_BLUE "=== PSE51 locale.h Test Suite ===" COLOR_RESET "\n\n");
     
-    /* Run tests */
     test_setlocale();
     test_localeconv();
     test_locale_categories();
@@ -430,5 +446,4 @@ int main(void) {
     test_locale_strings();
     
     TEST_SUITE_PASSED("locale.h");
-    return 0;
 }

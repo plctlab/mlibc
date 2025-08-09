@@ -636,7 +636,7 @@ void test_search_patterns(void) {
     TEST_PASSED("Pattern");
 }
 
-int main(void) {
+void run_tests(void) {
     printf(COLOR_BOLD_BLUE "=== PSE51 string.h String Search Test Suite ===" COLOR_RESET "\n\n");
     
     /* Run tests */
@@ -651,5 +651,4 @@ int main(void) {
     test_search_patterns();
     
     TEST_SUITE_PASSED("string search");
-    return 0;
 }

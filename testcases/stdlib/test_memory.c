@@ -561,7 +561,7 @@ void test_memory_bookkeeping(void) {
     TEST_PASSED("Memory bookkeeping");
 }
 
-int main(void) {
+void run_tests(void) {
     printf(COLOR_BOLD_BLUE "=== PSE51 stdlib.h Memory Management Test Suite ===" COLOR_RESET "\n\n");
     
     /* Run tests */
@@ -576,5 +576,4 @@ int main(void) {
     test_memory_bookkeeping();
     
     TEST_SUITE_PASSED("memory management");
-    return 0;
 }

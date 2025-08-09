@@ -381,7 +381,7 @@ void test_unicode_copy(void) {
     TEST_PASSED("Unicode copy");
 }
 
-int main(void) {
+void run_tests(void) {
     printf(COLOR_BOLD_BLUE "=== PSE51 string.h String Copy Test Suite ===" COLOR_RESET "\n\n");
     
     /* Run tests */
@@ -392,5 +392,4 @@ int main(void) {
     test_unicode_copy();
     
     TEST_SUITE_PASSED("string copy");
-    return 0;
 }

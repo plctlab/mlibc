@@ -1,44 +1,61 @@
-# Makefile for PSE51 ctype.h test suite
+# Makefile for TEST_NAME tests
 
-CC ?= gcc
-CFLAGS = -Wall -Wextra -g -std=c99 -D_POSIX_C_SOURCE=200112L
+TEST_NAME := $(notdir $(CURDIR))
+include ../common/Makefile.common
 
-# Test programs
-TESTS = test_ctype
+# Test source files
+TEST_SRC = test_$(TEST_NAME).c
+MAIN_SRC = $(COMMON_DIR)/main.c
 
-# Output directory
-TEST_RESULTS_DIR = test_results
+# PC build
+PC_TARGET = $(TEST_RESULTS_DIR)/test_$(TEST_NAME)
 
-# All test executables
-TEST_EXES = $(TESTS:%=$(TEST_RESULTS_DIR)/%)
+# Embedded build  
+EMBEDDED_TARGET = test_$(TEST_NAME)_embedded.elf
+
+# Embedded object files
+EMBEDDED_OBJS = $(BUILD_DIR)/embedded_startup.o \
+                $(BUILD_DIR)/test_$(TEST_NAME).o \
+                $(BUILD_DIR)/main.o
 
 # Default target
-all: $(TEST_RESULTS_DIR) $(TEST_EXES)
+all: pc
 
-# Create output directory
-$(TEST_RESULTS_DIR):
-	@mkdir -p $(TEST_RESULTS_DIR)
+pc: $(TEST_RESULTS_DIR) $(PC_TARGET)
 
-# Build rules
-$(TEST_RESULTS_DIR)/test_ctype: test_ctype.c
-	$(CC) $(CFLAGS) -o $@ $<
+embedded: $(BUILD_DIR) $(EMBEDDED_TARGET)
 
-# Run all tests
-test: all
-	@echo "Running all ctype.h tests..."
-	@$(TEST_RESULTS_DIR)/test_ctype && echo "✓ All tests passed" || echo "✗ Tests failed"
+# PC test build
+$(PC_TARGET): $(TEST_SRC) $(MAIN_SRC)
+	@echo "Building PC test..."
+	$(PC_CC) $(PC_CFLAGS) -o $@ $^ $(PC_LDFLAGS)
+	@echo "$(GREEN)✓ PC test built$(NC)"
 
-# Clean build artifacts
-clean:
-	rm -rf $(TEST_RESULTS_DIR)
+# Embedded test build
+$(BUILD_DIR)/embedded_startup.o: $(COMMON_DIR)/embedded_startup.c
+	@echo "Building embedded startup..."
+	$(EMBEDDED_CC) $(EMBEDDED_CFLAGS) -c -o $@ $<
 
-# Help target
-help:
-	@echo "PSE51 ctype.h Test Suite"
-	@echo ""
-	@echo "Usage:"
-	@echo "  make      - Build tests"
-	@echo "  make test - Build and run tests"
-	@echo "  make clean - Clean build artifacts"
+$(BUILD_DIR)/test_$(TEST_NAME).o: test_$(TEST_NAME).c
+	@echo "Building test_$(TEST_NAME).o..."
+	$(EMBEDDED_CC) $(EMBEDDED_CFLAGS) -c -o $@ $<
 
-.PHONY: all test clean help
+$(BUILD_DIR)/main.o: $(MAIN_SRC)
+	@echo "Building main.o..."
+	$(EMBEDDED_CC) $(EMBEDDED_CFLAGS) -c -o $@ $<
+
+$(EMBEDDED_TARGET): $(EMBEDDED_OBJS)
+	@echo "Linking embedded test..."
+	$(EMBEDDED_CC) $(EMBEDDED_CFLAGS) -o $@ $^ $(EMBEDDED_LDFLAGS)
+	@echo "$(GREEN)✓ Embedded test built$(NC)"
+
+# Run targets
+test: $(PC_TARGET)
+	@echo "Running PC test..."
+	@./$(PC_TARGET)
+
+run: $(EMBEDDED_TARGET)
+	@echo "Running embedded test in QEMU ($(EMBEDDED_ARCH))..."
+	@$(QEMU_SYSTEM) $(QEMU_ARGS) -kernel $(EMBEDDED_TARGET)
+
+.PHONY: all pc embedded test run clean

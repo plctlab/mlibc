@@ -629,7 +629,7 @@ void test_misc_patterns(void) {
     TEST_PASSED("Pattern");
 }
 
-int main(void) {
+void run_tests(void) {
     printf(COLOR_BOLD_BLUE "=== PSE51 string.h Miscellaneous Test Suite ===" COLOR_RESET "\n\n");
     
     /* Run tests */
@@ -642,5 +642,4 @@ int main(void) {
     test_misc_patterns();
     
     TEST_SUITE_PASSED("miscellaneous string");
-    return 0;
 }

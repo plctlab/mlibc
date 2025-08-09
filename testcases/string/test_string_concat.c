@@ -441,7 +441,7 @@ void test_concat_performance(void) {
     TEST_PASSED("Performance pattern");
 }
 
-int main(void) {
+void run_tests(void) {
     printf(COLOR_BOLD_BLUE "=== PSE51 string.h String Concatenation Test Suite ===" COLOR_RESET "\n\n");
     
     /* Run tests */
@@ -453,5 +453,4 @@ int main(void) {
     test_concat_performance();
     
     TEST_SUITE_PASSED("string concatenation");
-    return 0;
 }

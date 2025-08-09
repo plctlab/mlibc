@@ -720,10 +720,10 @@ void test_common_patterns(void) {
     printf("  Common pattern tests passed!\n");
 }
 
-int main(void) {
-    printf("=== PSE51 ctype.h Test Suite ===\n\n");
+/* Run all tests */
+void run_tests(void) {
+    printf(COLOR_BOLD_BLUE "=== PSE51 ctype.h Test Suite ===" COLOR_RESET "\n\n");
     
-    /* Run tests */
     test_isalpha();
     test_isdigit();
     test_isalnum();
@@ -741,6 +741,5 @@ int main(void) {
     test_edge_cases();
     test_common_patterns();
     
-    printf("\n=== All ctype.h tests passed! ===\n");
-    return 0;
+    TEST_SUITE_PASSED("ctype.h");
 }

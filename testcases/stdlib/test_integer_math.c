@@ -482,7 +482,7 @@ void test_mathematical_properties(void) {
     TEST_PASSED("Mathematical property");
 }
 
-int main(void) {
+void run_tests(void) {
     printf(COLOR_BOLD_BLUE "=== PSE51 stdlib.h Integer Math Test Suite ===" COLOR_RESET "\n\n");
     
     /* Run tests */
@@ -497,5 +497,4 @@ int main(void) {
     test_mathematical_properties();
     
     TEST_SUITE_PASSED("integer math");
-    return 0;
 }

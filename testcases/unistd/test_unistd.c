@@ -954,13 +954,13 @@ void test_sysconf(void) {
     TEST_PASSED("sysconf()");
 }
 
-int main(void) {
+
+
+
+/* Run all tests */
+void run_tests(void) {
     printf(COLOR_BOLD_BLUE "=== PSE51 unistd.h Test Suite ===" COLOR_RESET "\n\n");
     
-    /* Clean up any leftover files */
-    cleanup_files();
-    
-    /* Run tests */
     test_read_write();
     test_lseek();
     test_close();
@@ -979,9 +979,5 @@ int main(void) {
     test_pathconf();
     test_sysconf();
     
-    /* Final cleanup */
-    cleanup_files();
-    
     TEST_SUITE_PASSED("unistd.h");
-    return 0;
 }

@@ -434,7 +434,7 @@ void cleanup_files(void) {
     unlink(TEST_FILE);
 }
 
-int main(void) {
+void run_tests(void) {
     printf(COLOR_BOLD_BLUE "=== PSE51 stdio.h Formatted I/O Test Suite ===" COLOR_RESET "\n\n");
     
     /* Clean up any existing test files */
@@ -452,5 +452,4 @@ int main(void) {
     cleanup_files();
     
     TEST_SUITE_PASSED("formatted I/O");
-    return 0;
 }

@@ -484,10 +484,13 @@ void test_edge_cases(void) {
     TEST_PASSED("Edge case");
 }
 
-int main(void) {
+
+
+
+/* Run all tests */
+void run_tests(void) {
     printf(COLOR_BOLD_BLUE "=== PSE51 fcntl.h Test Suite ===" COLOR_RESET "\n\n");
     
-    /* Run tests */
     test_open();
     test_creat();
     test_fcntl();
@@ -495,9 +498,5 @@ int main(void) {
     test_locking_patterns();
     test_edge_cases();
     
-    /* Final cleanup */
-    cleanup_files();
-    
     TEST_SUITE_PASSED("fcntl.h");
-    return 0;
 }

@@ -1,15 +1,6 @@
-# Makefile for PSE51 stdio.h test suite
-# This makefile builds and runs all stdio tests for mlibc
+# Makefile for stdio tests (multiple test files)
 
-# Compiler settings
-CC ?= gcc
-CFLAGS = -Wall -Wextra -g -O0
-CFLAGS += -I../../include
-# For PC tests, use system libc
-LDFLAGS =
-
-# Architecture (default: current system)
-ARCH ?= $(shell uname -m)
+include ../common/Makefile.common
 
 # Test programs
 TESTS = test_file_operations \
@@ -18,105 +9,58 @@ TESTS = test_file_operations \
         test_string_io \
         test_misc_stdio
 
-TEST_OBJS = $(TESTS:%=%.o)
-TEST_BINS = $(TESTS:%=%.out)
-
-# Test output directory
-TEST_OUTPUT_DIR = test_results
-
-.PHONY: all clean test run help
+PC_TARGETS = $(TESTS:%=$(TEST_RESULTS_DIR)/%)
+EMBEDDED_TARGETS = $(TESTS:%=%_embedded.elf)
 
 # Default target
-all: $(TEST_BINS)
+all: pc
 
-# Build rules
-%.out: %.o
-	$(CC) $(CFLAGS) -o $@ $< $(LDFLAGS)
+pc: $(TEST_RESULTS_DIR) $(PC_TARGETS)
 
-%.o: %.c
-	$(CC) $(CFLAGS) -c -o $@ $<
+embedded: $(BUILD_DIR) $(EMBEDDED_TARGETS)
 
-# Run all tests
-test: $(TEST_BINS)
-	@echo "=== Running PSE51 stdio.h Test Suite ==="
-	@mkdir -p $(TEST_OUTPUT_DIR)
-	@failed=0; \
-	for test in $(TEST_BINS); do \
-		echo "\n--- Running $$test ---"; \
-		if ./$$test > $(TEST_OUTPUT_DIR)/$$test.log 2>&1; then \
-			echo "✓ $$test PASSED"; \
-			cat $(TEST_OUTPUT_DIR)/$$test.log | grep "=== All"; \
-		else \
-			echo "✗ $$test FAILED (see $(TEST_OUTPUT_DIR)/$$test.log)"; \
-			failed=$$((failed + 1)); \
-		fi; \
-	done; \
-	echo "\n=== Test Summary ==="; \
-	echo "Total tests: $(words $(TEST_BINS))"; \
-	echo "Failed: $$failed"; \
-	if [ $$failed -eq 0 ]; then \
-		echo "All tests PASSED!"; \
-	else \
-		echo "Some tests FAILED!"; \
-		exit 1; \
-	fi
+# Build rules for each PC test with main.c
+$(TEST_RESULTS_DIR)/%: %.c $(COMMON_DIR)/main.c
+	@echo "Building $@..."
+	$(PC_CC) $(PC_CFLAGS) -o $@ $^ $(PC_LDFLAGS)
+	@echo "$(GREEN)✓ PC test $@ built$(NC)"
 
-# Run individual tests
-run-%: %.out
-	@echo "Running $<..."
-	./$<
+# Embedded build rules for each test
+$(BUILD_DIR)/embedded_startup.o: $(COMMON_DIR)/embedded_startup.c
+	@echo "Building embedded startup..."
+	$(EMBEDDED_CC) $(EMBEDDED_CFLAGS) -c -o $@ $<
 
-# Clean up
-clean:
-	rm -f $(TEST_OBJS) $(TEST_BINS)
-	rm -rf $(TEST_OUTPUT_DIR)
-	rm -f test_*.txt  # Clean up test files
+$(BUILD_DIR)/main.o: $(COMMON_DIR)/main.c
+	@echo "Building main.o..."
+	$(EMBEDDED_CC) $(EMBEDDED_CFLAGS) -c -o $@ $<
 
-# Help
-help:
-	@echo "PSE51 stdio.h Test Suite Makefile"
-	@echo ""
-	@echo "Usage:"
-	@echo "  make            - Build all tests"
-	@echo "  make test       - Build and run all tests"
-	@echo "  make run-NAME   - Run specific test (e.g., make run-test_file_operations)"
-	@echo "  make clean      - Remove all build artifacts"
-	@echo "  make help       - Show this help message"
-	@echo ""
-	@echo "Variables:"
-	@echo "  CC=compiler     - Set C compiler (default: gcc)"
-	@echo "  ARCH=arch       - Set architecture (default: current system)"
-	@echo ""
-	@echo "Available tests:"
-	@for test in $(TESTS); do echo "  - $$test"; done
+$(BUILD_DIR)/%.o: %.c
+	@echo "Building $@..."
+	$(EMBEDDED_CC) $(EMBEDDED_CFLAGS) -c -o $@ $<
 
-# Individual test targets for convenience
-test-file: test_file_operations.out
-	./test_file_operations.out
+%_embedded.elf: $(BUILD_DIR)/embedded_startup.o $(BUILD_DIR)/%.o $(BUILD_DIR)/main.o
+	@echo "Linking $@..."
+	$(EMBEDDED_CC) $(EMBEDDED_CFLAGS) -o $@ $^ $(EMBEDDED_LDFLAGS)
+	@echo "$(GREEN)✓ Embedded test $@ built$(NC)"
 
-test-format: test_formatted_io.out
-	./test_formatted_io.out
-
-test-char: test_char_io.out
-	./test_char_io.out
-
-test-string: test_string_io.out
-	./test_string_io.out
-
-test-misc: test_misc_stdio.out
-	./test_misc_stdio.out
-
-# Verbose test run (shows all output)
-test-verbose: $(TEST_BINS)
-	@echo "=== Running PSE51 stdio.h Test Suite (Verbose) ==="
-	@for test in $(TEST_BINS); do \
-		echo "\n--- Running $$test ---"; \
-		./$$test || true; \
+# Run all PC tests
+test: $(PC_TARGETS)
+	@echo "Running stdio tests..."
+	@for test in $(PC_TARGETS); do \
+		echo "Running $$test..."; \
+		$$test || true; \
 	done
 
-# Dependencies
-test_file_operations.o: test_file_operations.c
-test_formatted_io.o: test_formatted_io.c
-test_char_io.o: test_char_io.c
-test_string_io.o: test_string_io.c
-test_misc_stdio.o: test_misc_stdio.c
+# Run specific embedded test
+run: test_file_operations_embedded.elf
+	@echo "Running embedded test in QEMU ($(EMBEDDED_ARCH))..."
+	@$(QEMU_SYSTEM) $(QEMU_ARGS) -kernel $<
+
+# Clean - use parent clean rule
+clean:
+	@rm -rf $(TEST_RESULTS_DIR) $(BUILD_DIR)
+	@rm -f *.o *.out *.elf
+	@rm -f test_*.txt test_*.tmp
+	@echo "$(GREEN)✓ stdio clean completed$(NC)"
+
+.PHONY: all pc embedded test run clean

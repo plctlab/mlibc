@@ -662,10 +662,13 @@ void test_signal_patterns(void) {
     TEST_PASSED("Signal pattern");
 }
 
-int main(void) {
+
+
+
+/* Run all tests */
+void run_tests(void) {
     printf(COLOR_BOLD_BLUE "=== PSE51 signal.h Test Suite ===" COLOR_RESET "\n\n");
     
-    /* Run tests */
     test_sigset_functions();
     test_signal();
     test_sigaction();
@@ -680,5 +683,4 @@ int main(void) {
     test_signal_patterns();
     
     TEST_SUITE_PASSED("signal.h");
-    return 0;
 }

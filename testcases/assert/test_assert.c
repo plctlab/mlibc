@@ -360,10 +360,12 @@ void test_assert_with_signals(void) {
     TEST_PASSED("Signal handling");
 }
 
-int main(void) {
-    printf("=== PSE51 assert.h Test Suite ===\n\n");
+
+
+/* Run all tests */
+void run_tests(void) {
+    printf(COLOR_BOLD_BLUE "=== PSE51 assert.h Test Suite ===" COLOR_RESET "\n\n");
     
-    /* Run tests */
     test_assert_basic();
     test_assert_failure();
     test_assert_ndebug();
@@ -376,5 +378,4 @@ int main(void) {
     test_assert_with_signals();
     
     TEST_SUITE_PASSED("assert.h");
-    return 0;
 }

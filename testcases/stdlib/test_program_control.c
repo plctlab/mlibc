@@ -559,7 +559,7 @@ void test_cleanup(void) {
 }
 
 /* Main test runner */
-int main(void) {
+void run_tests(void) {
     printf(COLOR_BOLD_BLUE "=== PSE51 stdlib.h Program Control Test Suite ===" COLOR_RESET "\n\n");
     
     /* Note: These tests use fork() to test program termination
@@ -575,5 +575,4 @@ int main(void) {
     test_cleanup();
     
     TEST_SUITE_PASSED("program control");
-    return 0;
 }

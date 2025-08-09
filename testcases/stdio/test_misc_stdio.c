@@ -546,7 +546,7 @@ void cleanup_files(void) {
     unlink(TEST_FILE2);
 }
 
-int main(void) {
+void run_tests(void) {
     printf(COLOR_BOLD_BLUE "=== PSE51 stdio.h Miscellaneous Functions Test Suite ===" COLOR_RESET "\n\n");
     
     /* Clean up any existing test files */
@@ -570,5 +570,4 @@ int main(void) {
     cleanup_files();
     
     TEST_SUITE_PASSED("miscellaneous stdio");
-    return 0;
 }

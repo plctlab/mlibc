@@ -720,13 +720,13 @@ void test_time_updates(void) {
     TEST_PASSED("Time update");
 }
 
-int main(void) {
-    printf(COLOR_BOLD_BLUE "=== PSE51 sys/stat.h Test Suite ===" COLOR_RESET "\n\n");
+
+
+
+/* Run all tests */
+void run_tests(void) {
+    printf(COLOR_BOLD_BLUE "=== PSE51 stat.h Test Suite ===" COLOR_RESET "\n\n");
     
-    /* Clean up any leftover test files */
-    cleanup_test_files();
-    
-    /* Run tests */
     test_stat();
     test_fstat();
     test_lstat();
@@ -740,9 +740,5 @@ int main(void) {
     test_edge_cases();
     test_time_updates();
     
-    /* Final cleanup */
-    cleanup_test_files();
-    
-    TEST_SUITE_PASSED("sys/stat.h");
-    return 0;
+    TEST_SUITE_PASSED("stat.h");
 }

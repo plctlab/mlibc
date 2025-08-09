@@ -390,10 +390,13 @@ void test_field_sizes(void) {
     TEST_PASSED("Field size");
 }
 
-int main(void) {
-    printf(COLOR_BOLD_BLUE "=== PSE51 sys/utsname.h Test Suite ===" COLOR_RESET "\n\n");
+
+
+
+/* Run all tests */
+void run_tests(void) {
+    printf(COLOR_BOLD_BLUE "=== PSE51 utsname.h Test Suite ===" COLOR_RESET "\n\n");
     
-    /* Run tests */
     test_uname();
     test_field_validation();
     test_consistency();
@@ -404,6 +407,5 @@ int main(void) {
     test_usage_patterns();
     test_field_sizes();
     
-    TEST_SUITE_PASSED("sys/utsname.h");
-    return 0;
+    TEST_SUITE_PASSED("utsname.h");
 }

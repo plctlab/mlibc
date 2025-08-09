@@ -375,7 +375,7 @@ void test_large_file_operations(void) {
     TEST_PASSED("Large file operations");
 }
 
-int main(void) {
+void run_tests(void) {
     printf(COLOR_BOLD_BLUE "=== PSE51 stdio.h File Operations Test Suite ===" COLOR_RESET "\n\n");
     
     /* Clean up any existing test files */
@@ -395,5 +395,4 @@ int main(void) {
     cleanup_files();
     
     TEST_SUITE_PASSED("file operations");
-    return 0;
 }

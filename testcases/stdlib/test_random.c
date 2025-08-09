@@ -422,7 +422,7 @@ void test_thread_safety(void) {
     TEST_PASSED("Thread safety");
 }
 
-int main(void) {
+void run_tests(void) {
     printf(COLOR_BOLD_BLUE "=== PSE51 stdlib.h Random Number Test Suite ===" COLOR_RESET "\n\n");
     
     /* Run tests */
@@ -436,5 +436,4 @@ int main(void) {
     test_thread_safety();
     
     TEST_SUITE_PASSED("random number");
-    return 0;
 }

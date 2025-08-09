@@ -50,7 +50,7 @@ pc-build:
 	@for dir in $(TEST_DIRS); do \
 		if [ -f $$dir/Makefile ]; then \
 			echo "$(YELLOW)Building $$dir...$(NC)"; \
-			$(MAKE) -C $$dir --no-print-directory || exit 1; \
+			$(MAKE) -C $$dir pc --no-print-directory || exit 1; \
 		fi; \
 	done
 	@echo "$(GREEN)All PC tests built successfully!$(NC)"
