@@ -99,7 +99,7 @@ embedded-build: check-mlibc
 .PHONY: embedded-test
 embedded-test: embedded-build
 	@echo "$(BLUE)Running embedded tests...$(NC)"
-	@./run_all_embedded_tests.sh
+	@./test
 
 .PHONY: embedded-clean
 embedded-clean:
@@ -143,8 +143,8 @@ pc-test-$(1):
 .PHONY: embedded-test-$(1)
 embedded-test-$(1): check-mlibc
 	@echo "$(BLUE)Testing $(1) (embedded)...$(NC)"
-	@if [ -f $(1)/run_embedded_test.sh ]; then \
-		cd $(1) && ./run_embedded_test.sh; \
+	@if [ -f $(1)/test ]; then \
+		cd $(1) && ./test; \
 	else \
 		echo "$(RED)No embedded tests for $(1)$(NC)"; \
 	fi
@@ -155,11 +155,20 @@ $(foreach dir,$(TEST_DIRS),$(eval $(call INDIVIDUAL_TEST_RULES,$(dir))))
 # Check if mlibc is built
 .PHONY: check-mlibc
 check-mlibc:
-	@if [ ! -f ../build/riscv32/libmlibc.a ]; then \
-		echo "$(YELLOW)Building mlibc for RISC-V 32-bit...$(NC)"; \
-		$(MAKE) -C .. ARCH=riscv32 || { \
+	@ARCH=$${EMBEDDED_ARCH:-riscv32}; \
+	if [ ! -f ../build/$$ARCH/libmlibc.a ]; then \
+		if [ "$$ARCH" = "arm" ]; then \
+			echo "$(YELLOW)Building mlibc for ARM...$(NC)"; \
+		elif [ "$$ARCH" = "aarch64" ]; then \
+			echo "$(YELLOW)Building mlibc for AArch64...$(NC)"; \
+		elif [ "$$ARCH" = "riscv64" ]; then \
+			echo "$(YELLOW)Building mlibc for RISC-V 64-bit...$(NC)"; \
+		else \
+			echo "$(YELLOW)Building mlibc for RISC-V 32-bit...$(NC)"; \
+		fi; \
+		$(MAKE) -C .. ARCH=$$ARCH || { \
 			echo "$(RED)Failed to build mlibc!$(NC)"; \
-			echo "Please ensure you have the RISC-V toolchain installed."; \
+			echo "Please ensure you have the $$ARCH toolchain installed."; \
 			echo "Set MLIBC_TOOLCHAIN environment variable if needed."; \
 			exit 1; \
 		}; \

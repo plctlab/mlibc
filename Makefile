@@ -4,6 +4,11 @@ endif
 
 PROJECT_PATH := .
 
+# Set default toolchain if MLIBC_TOOLCHAIN is not set
+ifeq ($(MLIBC_TOOLCHAIN),)
+    MLIBC_TOOLCHAIN := $(PROJECT_PATH)/toolchain/arm-linux-eabi_for_x86_64-pc-linux-gnu/bin/arm-linux-eabi-
+endif
+
 CC := $(MLIBC_TOOLCHAIN)gcc
 AR := $(MLIBC_TOOLCHAIN)ar
 

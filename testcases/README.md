@@ -77,7 +77,7 @@ EMBEDDED_ARCH=arm make embedded
 EMBEDDED_ARCH=aarch64 make embedded
 
 # 运行嵌入式测试
-EMBEDDED_ARCH=arm make run
+EMBEDDED_ARCH=arm make test
 ```
 
 ### 文件组织特点
