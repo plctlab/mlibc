@@ -1,5 +1,8 @@
 # Build files
 build/
+build.log
+test_results
+
 toolchain/arm-linux-eabi_for_x86_64-pc-linux-gnu
 toolchain/riscv64-unkwown-elf_for_x86_64-pc-linux-gnu
 toolchain/binutils-*

@@ -1,0 +1,101 @@
+# Common Makefile definitions for all tests
+
+# Paths
+MLIBC_ROOT ?= ../..
+TESTCASES_ROOT = ..
+COMMON_DIR = $(TESTCASES_ROOT)/common
+QEMU_DIR = $(MLIBC_ROOT)/helloworld/qemu
+
+# Color definitions
+GREEN = \033[0;32m
+RED = \033[0;31m
+NC = \033[0m
+
+# PC build settings
+PC_CC ?= gcc
+PC_CFLAGS = -Wall -Wextra -g -std=c99 -D_POSIX_C_SOURCE=200112L
+PC_CFLAGS += -I..
+PC_LDFLAGS ?=
+
+# Embedded build settings
+EMBEDDED_ARCH ?= riscv32
+EMBEDDED_QEMU_MACHINE ?= virt
+
+# Architecture-specific settings
+ifeq ($(EMBEDDED_ARCH),riscv32)
+    EMBEDDED_PREFIX ?= riscv32-unknown-elf-
+    EMBEDDED_CFLAGS_ARCH = -march=rv32imac -mabi=ilp32 -mcmodel=medany
+    EMBEDDED_QEMU_DIR = $(QEMU_DIR)/qemu-$(EMBEDDED_QEMU_MACHINE)-riscv32
+    EMBEDDED_DEFINE = -D__riscv
+    QEMU_SYSTEM = qemu-system-riscv32
+    QEMU_ARGS = -M $(EMBEDDED_QEMU_MACHINE) -nographic -bios none
+else ifeq ($(EMBEDDED_ARCH),riscv64)
+    EMBEDDED_PREFIX ?= riscv64-unknown-elf-
+    EMBEDDED_CFLAGS_ARCH = -march=rv64imac -mabi=lp64 -mcmodel=medany
+    EMBEDDED_QEMU_DIR = $(QEMU_DIR)/qemu-$(EMBEDDED_QEMU_MACHINE)-riscv64
+    EMBEDDED_DEFINE = -D__riscv -D__riscv64
+    QEMU_SYSTEM = qemu-system-riscv64
+    QEMU_ARGS = -M $(EMBEDDED_QEMU_MACHINE) -nographic -bios none
+else ifeq ($(EMBEDDED_ARCH),arm)
+    EMBEDDED_PREFIX ?= arm-none-eabi-
+    EMBEDDED_CFLAGS_ARCH = -mcpu=arm926ej-s -mthumb-interwork
+    EMBEDDED_QEMU_DIR = $(QEMU_DIR)/qemu-$(EMBEDDED_QEMU_MACHINE)-arm
+    EMBEDDED_DEFINE = -D__arm__
+    QEMU_SYSTEM = qemu-system-arm
+    QEMU_ARGS = -M $(EMBEDDED_QEMU_MACHINE) -nographic
+else ifeq ($(EMBEDDED_ARCH),aarch64)
+    EMBEDDED_PREFIX ?= aarch64-none-elf-
+    EMBEDDED_CFLAGS_ARCH = -march=armv8-a
+    EMBEDDED_QEMU_DIR = $(QEMU_DIR)/qemu-$(EMBEDDED_QEMU_MACHINE)-aarch64
+    EMBEDDED_DEFINE = -D__aarch64__
+    QEMU_SYSTEM = qemu-system-aarch64
+    QEMU_ARGS = -M $(EMBEDDED_QEMU_MACHINE) -nographic
+else
+    $(error Unsupported EMBEDDED_ARCH: $(EMBEDDED_ARCH))
+endif
+
+# Common embedded toolchain
+EMBEDDED_CC = $(EMBEDDED_PREFIX)gcc
+EMBEDDED_AR = $(EMBEDDED_PREFIX)ar
+EMBEDDED_OBJCOPY = $(EMBEDDED_PREFIX)objcopy
+
+# Common embedded flags
+EMBEDDED_CFLAGS = $(EMBEDDED_CFLAGS_ARCH)
+EMBEDDED_CFLAGS += -nostdlib -nostdinc -ffreestanding
+EMBEDDED_CFLAGS += -O2 -g -Wall
+EMBEDDED_CFLAGS += -I$(MLIBC_ROOT)/libc/include
+EMBEDDED_CFLAGS += -I$(EMBEDDED_QEMU_DIR)
+EMBEDDED_CFLAGS += -I$(TESTCASES_ROOT)
+EMBEDDED_CFLAGS += -I$(COMMON_DIR)
+EMBEDDED_CFLAGS += $(EMBEDDED_DEFINE)
+
+EMBEDDED_LDFLAGS = -T$(EMBEDDED_QEMU_DIR)/link.ld
+EMBEDDED_LDFLAGS += -L$(MLIBC_ROOT)/build/$(EMBEDDED_ARCH)
+EMBEDDED_LDFLAGS += -lmlibc
+
+# Common rules
+.PHONY: all clean pc embedded help
+
+help:
+	@echo "Available targets:"
+	@echo "  make         - Build PC tests"
+	@echo "  make pc      - Build PC tests"
+	@echo "  make embedded - Build embedded tests"
+	@echo "  make test    - Run PC tests"
+	@echo "  make run     - Run embedded tests in QEMU"
+	@echo "  make clean   - Clean all builds"
+
+# Test result directory
+TEST_RESULTS_DIR = test_results
+$(TEST_RESULTS_DIR):
+	@mkdir -p $(TEST_RESULTS_DIR)
+
+# Build directories
+BUILD_DIR = build
+$(BUILD_DIR):
+	@mkdir -p $(BUILD_DIR)
+
+clean:
+	@rm -rf $(TEST_RESULTS_DIR) $(BUILD_DIR)
+	@rm -f *.o *.out *.bin *.elf
+	@echo "$(GREEN)✓ Clean completed$(NC)"
