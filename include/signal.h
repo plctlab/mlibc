@@ -8,6 +8,7 @@
  * 2023/06/16     bernard      the first verison
  */
 
+#ifndef __SYS_SIGNAL_H__
 #ifndef MLIBC_SIGNAL_H__
 #define MLIBC_SIGNAL_H__
 
@@ -203,3 +204,4 @@ int sigwait(const sigset_t *set, int *sig);
 int raise(int sig);
 
 #endif /*MLIBC_SIGNAL_H__*/
+#endif /*__SYS_SIGNAL_H__*/
