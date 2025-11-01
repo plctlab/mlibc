@@ -143,7 +143,7 @@ jobs:
           
           if grep -q "Uart Test" qemu_output_${{ matrix.platform.QEMU_BOARD }}.log && grep -q "Hello mlibc" qemu_output_${{ matrix.platform.QEMU_BOARD }}.log; then
             echo "=========================================================================================="
-            echo "                  Successed: qemu-hello run completed. Exiting log monitoring             "
+            echo "                  Succeeded: qemu-hello run completed. Exiting log monitoring             "
             echo "=========================================================================================="
           else
             echo "=========================================================================================="
