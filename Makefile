@@ -111,3 +111,6 @@ else
 	@echo ${CRTOBJ_FILES}
 	@echo ${CRTOBJ_FILE}
 endif
+
+# Include qemu-hello target
+-include $(PROJECT_PATH)/mkconfigs/qemu/qemu-hello.mk
