@@ -87,39 +87,39 @@ jobs:
             QEMU_BOARD : ${{ matrix.platform.QEMU_BOARD }}
         run: |
           if [[ "${{ matrix.platform.QEMU_BOARD }}"  == "qemu-mps3-an536" ]]; then
-            make qemu-hello
+            make qemu-hello ARCH=$ARCH QEMU_BOARD=$QEMU_BOARD
             qemu-system-arm -M mps3-an536 \
-            -kernel ./helloworld/qemu/${{ matrix.platform.QEMU_BOARD }}/${{ matrix.platform.QEMU_BOARD }}.elf \
+            -kernel ./build/$ARCH/qemu/$QEMU_BOARD/$QEMU_BOARD.elf \
             -nographic -m 512 \
             > qemu_output_$QEMU_BOARD.log  2>&1 &
 
           elif [[ "${{ matrix.platform.QEMU_BOARD }}"  == "qemu-vexpress-a9" ]]; then 
-            make qemu-hello
+            make qemu-hello ARCH=$ARCH QEMU_BOARD=$QEMU_BOARD
             qemu-system-arm -M vexpress-a9 \
-            -kernel ./helloworld/qemu/${{ matrix.platform.QEMU_BOARD }}/${{ matrix.platform.QEMU_BOARD }}.elf \
+            -kernel ./build/$ARCH/qemu/$QEMU_BOARD/$QEMU_BOARD.elf \
             -nographic -m 512 \
             > qemu_output_$QEMU_BOARD.log  2>&1 &
 
           elif [[ "${{ matrix.platform.QEMU_BOARD }}"  == "qemu-virt-aarch64" ]]; then 
-            make qemu-hello
+            make qemu-hello ARCH=$ARCH QEMU_BOARD=$QEMU_BOARD
             qemu-system-aarch64 -M virt \
             -cpu cortex-a53 \
-            -kernel ./helloworld/qemu/${{ matrix.platform.QEMU_BOARD }}/${{ matrix.platform.QEMU_BOARD }}.elf \
+            -kernel ./build/$ARCH/qemu/$QEMU_BOARD/$QEMU_BOARD.elf \
             -nographic -m 512 \
             > qemu_output_$QEMU_BOARD.log  2>&1 &
 
           elif [[ "${{ matrix.platform.QEMU_BOARD }}"  == "qemu-virt-riscv32" ]]; then
-            make qemu-hello
+            make qemu-hello ARCH=$ARCH QEMU_BOARD=$QEMU_BOARD
             qemu-system-riscv32 -machine virt \
             -nographic -m 256M \
-            -kernel ./helloworld/qemu/${{ matrix.platform.QEMU_BOARD }}/${{ matrix.platform.QEMU_BOARD }}.elf \
+            -kernel ./build/$ARCH/qemu/$QEMU_BOARD/$QEMU_BOARD.elf \
             > qemu_output_$QEMU_BOARD.log  2>&1 &
 
           elif [[ "${{ matrix.platform.QEMU_BOARD }}"  == "qemu-virt-riscv64" ]]; then
-            make qemu-hello
+            make qemu-hello ARCH=$ARCH QEMU_BOARD=$QEMU_BOARD
             qemu-system-riscv64 -machine virt \
             -nographic -m 512M \
-            -kernel ./helloworld/qemu/${{ matrix.platform.QEMU_BOARD }}/${{ matrix.platform.QEMU_BOARD }}.elf \
+            -kernel ./build/$ARCH/qemu/$QEMU_BOARD/$QEMU_BOARD.elf \
             > qemu_output_$QEMU_BOARD.log  2>&1 &
           fi
 
