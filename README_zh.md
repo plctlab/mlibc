@@ -60,6 +60,40 @@ Embedded libc，一个为嵌入式系统和裸机适配的libc库
 
 # 快速上手
 
+## mlibc库编译
+
+### 开发环境
+
+对于单纯的c库编译来说，开发环境就简单一些了，具备make和对应工具链就可以
+
+> make + 工具链
+
+### 编译步骤
+
+1. 配置工具链对应的环境变量
+（请参考下文"QEMU-裸机开发"一节的详细步骤）
+
+**编译c库**
+
+1. 进入 mlibc 文件夹，打开命令行使用 make 编译静态库
+```
+# 这里使用 arm 架构的静态库举例
+make mlibc ARCH=arm
+```
+
+2. 然后会在 mlibc/build/arm 目录下生成一份静态库，文件名为`libmlibc.a`（防止与工具链中的libc.a撞名，便于测试），集成工具链时可以把文件名改为`libc.a`进行使用
+
+**编译crt0**
+
+1. 进入mlibc文件夹，打开命令行使用 make 编译 crt0
+
+```
+# 这里使用 arm 架构的 crt0 举例
+make crt0 ARCH=arm
+```
+
+2. 生成的文件在`mlibc/build/$(ARCH)/crtobj`中，文件名为`crt0.o`
+
 ## mlbc开发/测试环境配置
 
 ### QEMU运行RT-Thread
@@ -68,9 +102,9 @@ Embedded libc，一个为嵌入式系统和裸机适配的libc库
 
 windows下的环境配置教程：
 
-https://github.com/RT-Thread/rt-thread/blob/master/documentation/quick-start/quick_start_qemu/quick_start_qemu_windows.md
+**注意**：原RT-Thread文档链接已失效。请参考RT-Thread官方网站（https://www.rt-thread.org/）或代码仓库（https://github.com/RT-Thread/rt-thread）获取最新的开发环境配置文档。
 
-通过这个教程我们就可以在 windows 环境下运行 RT-Thread 了。
+通过官方教程我们就可以在 windows 环境下运行 RT-Thread 了。
 
 ### vexpress-a9 + RT-Thread
 
@@ -90,13 +124,27 @@ https://github.com/RT-Thread/rt-thread/blob/master/documentation/quick-start/qui
   - system packages
     - 选中当前页面的倒数第六个选项： `mlibc: Embedded libc, especially for RISC-V`
 
-完成之后就可以退出配置页面然后在命令行输入**scons -j12**进行编译了。
+完成menuconfig配置后，需要先下载mlibc软件包再进行编译：
+
+```bash
+# 加载RT-Thread环境
+. ~/.env/env.sh
+
+# 更新软件包以下载mlibc
+pkgs --update
+```
+
+这将会把mlibc下载到`bsp/qemu-vexpress-a9/packages/mlibc-latest`目录。
+
+然后就可以在命令行输入**scons -j12**进行编译了。
+
+**注意**：vexpress-a9 + RT-Thread 集成存在已知的编译问题。这可能是由于当前RT-Thread版本的兼容性问题。请关注RT-Thread代码仓库获取更新。
 
 ### 星火一号 + RT-Thread
 
 #### 开发环境
 
-不知道哪里下载源码的同学可以参考上面 windows 环境配置教程
+不知道哪里下载源码的同学可以参考RT-Thread官方文档
 
 进入`rt-thread\bsp\stm32\stm32f407-rt-spark`目录，然后打开**env**，在命令行输入**menuconfig**，进入配置界面
 
@@ -121,6 +169,18 @@ https://github.com/RT-Thread/rt-thread/blob/master/documentation/quick-start/qui
 - RT-Thread online packages
   - system packages
     - 选中当前页面的倒数第六个选项： mlibc: Embedded libc, especially for RISC-V
+
+完成menuconfig配置后，需要先下载mlibc软件包再进行编译：
+
+```bash
+# 加载RT-Thread环境
+. ~/.env/env.sh
+
+# 更新软件包以下载mlibc
+pkgs --update
+```
+
+这将会把mlibc下载到packages目录。
 
 ### QEMU-裸机开发
 
@@ -151,72 +211,40 @@ echo "export MLIBC_TOOLCHAIN='YOUR_PATH_TO_TOOLCHAIN'" >> ~/.bashrc
 source ~/.bashrc
 ```
 
-**Windows：** 打开 PowellShell，`YOUR_PATH_TO_TOOLCHAIN`替换为你对应的工具链路径
+**Windows：** 打开 PowerShell，`YOUR_PATH_TO_TOOLCHAIN`替换为你对应的工具链路径
 ```
 [System.Environment]::SetEnvironmentVariable("MLIBC_TOOLCHAIN", "YOUR_PATH_TO_TOOLCHAIN", "User")
 ```
 **\#**:配置完后需要重启终端生效
 
-2. 进入`mlibc/helloworld/qemu/{qemu-device}`文件夹打开命令行
+2. 进入 `mlibc` 根目录打开命令行
 
 ```
 # 这里使用 qemu-vexpress-a9 举例
-make QEMU_BOARD=qemu-vexpress-a9 ARCH=arm
+make qemu-hello QEMU_BOARD=qemu-vexpress-a9 ARCH=arm
 ```
 
- 执行完命令之后，mlibc/helloworld/qemu/qemu-vexpress-a9 文件夹下会生成一份可执行文件为 qemu-vexpress-a9.elf
+执行完命令之后，`mlibc/build/arm/qemu/qemu-vexpress-a9` 文件夹下会生成一份可执行文件为 qemu-vexpress-a9.elf
 
-3. 运行对应文件夹下的脚本`qemu.bat`
+3. 运行对应文件夹 `mlibc/helloworld/qemu/{qemu-device}` 下的脚本`qemu.bat`
 
 ```
+# 进入qemu设备文件夹
+cd helloworld/qemu/qemu-vexpress-a9
+
 # 在命令行敲入下列命令
 qemu.bat
 ```
 
 各个虚拟环境对应的信息如下：
 
-| 文件名            | 虚拟设备     | 切换命令                               |
-| ----------------- | ------------ | -------------------------------------- |
-| qemu-vexpress-a9  | vexpress-a9    | make QEMU_BOARD=qemu-vexpress-a9 ARCH=arm  |
-| qemu-mps3-an536   | mps3-an536     | make QEMU_BOARD=qemu-mps3-an536 ARCH=arm   |
-| qemu-virt-aarch64 | virt-aarch64   | make QEMU_BOARD=qemu-virt-aarch64 ARCH=aarch64 |
-| qemu-virt-riscv32 | virt-riscv32   | make QEMU_BOARD=qemu-virt-riscv32 ARCH=riscv32 |
-| qemu-virt-riscv64 | virt-riscv64   | make QEMU_BOARD=qemu-virt-riscv64 ARCH=riscv64 |
-
-
-## mlibc库编译
-
-#### 开发环境
-
-对于单纯的c库编译来说，开发环境就简单一些了，具备make和对应工具链就可以
-
-> make + 工具链
-
-#### 编译步骤
-
-1. 配置工具链对应的环境变量
-:请参考上一节的详细步骤）
-
-**编译c库**
-
-1. 进入 mlibc 文件夹，打开命令行使用 make 编译静态库
-```
-# 这里使用 arm 架构的静态库举例
-make mlibc ARCH=arm
-```
-
-2. 然后会在 mlibc/build/arm 目录下生成一份静态库，文件名为`libmlibc.a`（防止与工具链中的libc.a撞名，便于测试），集成工具链时可以把文件名改为`libc.a`进行使用
-
-**编译crt0**
-
-1. 进入mlibc文件夹，打开命令行使用 make 编译 crt0
-
-```
-# 这里使用 arm 架构的 crt0 举例
-make crt0 ARCH=arm
-```
-
-2. 生成的文件在`mlibc/build/$(ARCH)/crtobj`中，文件名为`crt0.o`
+| 文件名            | 虚拟设备     | 编译命令                                            |
+| ----------------- | ------------ | --------------------------------------------------- |
+| qemu-vexpress-a9  | vexpress-a9    | make qemu-hello QEMU_BOARD=qemu-vexpress-a9 ARCH=arm      |
+| qemu-mps3-an536   | mps3-an536     | make qemu-hello QEMU_BOARD=qemu-mps3-an536 ARCH=arm       |
+| qemu-virt-aarch64 | virt-aarch64   | make qemu-hello QEMU_BOARD=qemu-virt-aarch64 ARCH=aarch64 |
+| qemu-virt-riscv32 | virt-riscv32   | make qemu-hello QEMU_BOARD=qemu-virt-riscv32 ARCH=riscv32 |
+| qemu-virt-riscv64 | virt-riscv64   | make qemu-hello QEMU_BOARD=qemu-virt-riscv64 ARCH=riscv64 |
 
 # 贡献代码
 
