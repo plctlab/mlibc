@@ -14,6 +14,9 @@
 extern "C" {
 #endif
 
+#define __NEED_fsblkcnt_t
+#define __NEED_fsfilcnt_t
+
 #include <features.h>
 #include <alltypes.h>
 
