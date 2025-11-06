@@ -62,6 +62,9 @@ OBJ_FILES := $(patsubst %.c,$(OBJ_DIR)/%.o,$(notdir $(SRC_FILES)))
 CRTOBJ_FILE := $(patsubst %.c,$(CRTOBJ_DIR)/%.o,$(notdir $(CRT_FILES)))
 CRTOBJ_FILES := $(patsubst %.S,$(CRTOBJ_DIR)/%.o,$(CRTOBJ_FILE))
 
+# Include QEMU hello world build configuration
+include $(PROJECT_PATH)/mkconfigs/qemu/qemu-hello.mk
+
 # Build rules
 .PHONY: all
 all : mlibc crt
