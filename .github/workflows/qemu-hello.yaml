@@ -111,6 +111,7 @@ jobs:
           elif [[ "${{ matrix.platform.QEMU_BOARD }}"  == "qemu-virt-riscv32" ]]; then
             make qemu-hello ARCH=$ARCH QEMU_BOARD=$QEMU_BOARD
             qemu-system-riscv32 -machine virt \
+            -bios none \
             -nographic -m 256M \
             -kernel ./build/$ARCH/qemu/$QEMU_BOARD/$QEMU_BOARD.elf \
             > qemu_output_$QEMU_BOARD.log  2>&1 &
@@ -118,6 +119,7 @@ jobs:
           elif [[ "${{ matrix.platform.QEMU_BOARD }}"  == "qemu-virt-riscv64" ]]; then
             make qemu-hello ARCH=$ARCH QEMU_BOARD=$QEMU_BOARD
             qemu-system-riscv64 -machine virt \
+            -bios none \
             -nographic -m 512M \
             -kernel ./build/$ARCH/qemu/$QEMU_BOARD/$QEMU_BOARD.elf \
             > qemu_output_$QEMU_BOARD.log  2>&1 &
