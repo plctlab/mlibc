@@ -131,7 +131,7 @@ jobs:
         if: ${{ inputs.upload_artifact }}
         uses: actions/upload-artifact@v4
         with:
-          name: toolchain-${{ inputs.arch }}-$(date +%Y%m%d-%H%M%S)
+          name: toolchain-${{ inputs.arch }}-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
             toolchain/${{ env.TARBALL_NAME }}
             toolchain/${{ env.TARBALL_NAME }}.sha256
