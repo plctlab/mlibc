@@ -1,0 +1,72 @@
+name: Release mlibc Source
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag (e.g., v1.0.0)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  create-source-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get version
+        id: get_version
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "version=${{ inputs.version }}" >> $GITHUB_OUTPUT
+          else
+            echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create source tarball
+        run: |
+          VERSION="${{ steps.get_version.outputs.version }}"
+          TARBALL_NAME="mlibc-${VERSION}-source.tar.gz"
+
+          # Create a clean export of the repository
+          git archive --format=tar.gz --prefix=mlibc-${VERSION}/ HEAD > ${TARBALL_NAME}
+
+          # Calculate checksum
+          sha256sum ${TARBALL_NAME} > ${TARBALL_NAME}.sha256
+
+          echo "TARBALL_NAME=${TARBALL_NAME}" >> $GITHUB_ENV
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.get_version.outputs.version }}
+          name: mlibc ${{ steps.get_version.outputs.version }}
+          draft: false
+          prerelease: false
+          files: |
+            mlibc-*.tar.gz
+            mlibc-*.tar.gz.sha256
+          body: |
+            ## mlibc ${{ steps.get_version.outputs.version }} Release
+
+            ### Source Code
+            This release includes the source code for mlibc version ${{ steps.get_version.outputs.version }}.
+
+            ### Downloads
+            - **Source tarball**: `mlibc-${{ steps.get_version.outputs.version }}-source.tar.gz`
+            - **SHA256 checksum**: `mlibc-${{ steps.get_version.outputs.version }}-source.tar.gz.sha256`
+
+            ### Toolchains
+            Pre-built GCC toolchains for various architectures can be downloaded from the [toolchain releases](https://github.com/${{ github.repository }}/releases).
+
+            ### Building
+            Please refer to the [README](https://github.com/${{ github.repository }}/blob/${{ steps.get_version.outputs.version }}/README.md) for build instructions.
