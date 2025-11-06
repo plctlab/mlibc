@@ -217,6 +217,49 @@ make crt0 ARCH=arm
 
 2. The generated file will be located in `mlibc/build/$(ARCH)/crtobj`, named `crt0.o`.
 
+## Pre-built GCC Toolchains
+
+For convenience, we provide pre-built GCC toolchains with mlibc for multiple architectures. These toolchains are automatically built and released using GitHub Actions.
+
+### Downloading Pre-built Toolchains
+
+Visit the [Releases page](https://github.com/plctlab/mlibc/releases) to download pre-built toolchains:
+
+- **ARM**: `arm-linux-eabi_for_x86_64-pc-linux-gnu-*.tar.gz`
+- **RISC-V 32-bit**: `riscv32-unknown-elf_for_x86_64-pc-linux-gnu-*.tar.gz`
+- **RISC-V 64-bit**: `riscv64-unknown-elf_for_x86_64-pc-linux-gnu-*.tar.gz`
+- **AArch64**: `aarch64-linux-gnu_for_x86_64-pc-linux-gnu-*.tar.gz`
+
+### Installation
+
+```bash
+# Download and extract
+tar -xzf <toolchain-tarball>.tar.gz
+
+# Add to PATH
+export PATH=/path/to/toolchain/bin:$PATH
+
+# Verify installation
+arm-linux-eabi-gcc --version
+```
+
+### Building Toolchains Yourself
+
+If you prefer to build the toolchains yourself:
+
+#### Using Docker (Recommended)
+
+See [toolchain/README.md](toolchain/README.md) for detailed instructions on building with Docker.
+
+#### Using GitHub Actions
+
+The repository includes GitHub Actions workflows for automated builds:
+
+- **Build all architectures**: Triggered automatically on version tags or manually via workflow dispatch
+- **Build single architecture**: Use the "Build Single Toolchain" workflow for testing
+
+For more information, see [.github/workflows/README.md](.github/workflows/README.md).
+
 # License Agreement
 
 mlibc is fully open-source, following the MIT license. It allows for commercial use and modifications without any concerns, provided that the MIT license is declared in the software, with no potential commercial risks.
