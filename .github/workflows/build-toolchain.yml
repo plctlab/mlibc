@@ -1,0 +1,243 @@
+name: Build GCC Toolchains
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag (e.g., v1.0.0)'
+        required: false
+        type: string
+      architectures:
+        description: 'Comma-separated list of architectures to build (arm,riscv32,riscv64,aarch64) or leave empty for all'
+        required: false
+        type: string
+        default: 'arm,riscv32,riscv64,aarch64'
+
+permissions:
+  contents: write
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.set_version.outputs.version }}
+      matrix: ${{ steps.set_matrix.outputs.matrix }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set version
+        id: set_version
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ] && [ -n "${{ inputs.version }}" ]; then
+            echo "version=${{ inputs.version }}" >> $GITHUB_OUTPUT
+          elif [ "${{ github.event_name }}" == "push" ]; then
+            echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          else
+            echo "version=$(date +%Y%m%d-%H%M%S)" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Set build matrix
+        id: set_matrix
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ] && [ -n "${{ inputs.architectures }}" ]; then
+            ARCHS="${{ inputs.architectures }}"
+          else
+            ARCHS="arm,riscv32,riscv64,aarch64"
+          fi
+
+          # Convert comma-separated string to JSON array for matrix
+          MATRIX_JSON=$(echo "$ARCHS" | jq -R -s -c 'split(",") | map(select(length > 0))')
+          echo "matrix={\"arch\":$MATRIX_JSON}" >> $GITHUB_OUTPUT
+          echo "Building for architectures: $ARCHS"
+          echo "Matrix JSON: $MATRIX_JSON"
+
+  build-toolchain:
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 480
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.prepare.outputs.matrix) }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Free disk space
+        run: |
+          echo "Disk space before cleanup:"
+          df -h
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /usr/local/share/boost
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+          echo "Disk space after cleanup:"
+          df -h
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            bison \
+            flex \
+            file \
+            texinfo \
+            wget \
+            chrpath \
+            cpio \
+            diffstat \
+            gawk \
+            zstd \
+            libncurses5 \
+            libz-dev \
+            python3 \
+            python3-pip
+
+      - name: Set architecture-specific variables
+        id: arch_vars
+        run: |
+          ARCH="${{ matrix.arch }}"
+
+          case "$ARCH" in
+            arm)
+              echo "target=arm-linux-eabi" >> $GITHUB_OUTPUT
+              echo "abi=linux-eabi" >> $GITHUB_OUTPUT
+              ;;
+            riscv32)
+              echo "target=riscv32-unknown-elf" >> $GITHUB_OUTPUT
+              echo "abi=unknown-elf" >> $GITHUB_OUTPUT
+              ;;
+            riscv64)
+              echo "target=riscv64-unknown-elf" >> $GITHUB_OUTPUT
+              echo "abi=unknown-elf" >> $GITHUB_OUTPUT
+              ;;
+            aarch64)
+              echo "target=aarch64-linux-gnu" >> $GITHUB_OUTPUT
+              echo "abi=linux-gnu" >> $GITHUB_OUTPUT
+              ;;
+            *)
+              echo "Unknown architecture: $ARCH"
+              exit 1
+              ;;
+          esac
+
+      - name: Build toolchain for ${{ matrix.arch }}
+        working-directory: toolchain
+        env:
+          CI_COMMIT_SHA: ${{ github.sha }}
+          CI_JOB_ID: ${{ github.run_id }}
+          CI_PIPELINE_ID: ${{ github.run_number }}
+        run: |
+          echo "Building toolchain for ${{ matrix.arch }}"
+          echo "Target: ${{ steps.arch_vars.outputs.target }}"
+
+          make arch=${{ matrix.arch }} abi=${{ steps.arch_vars.outputs.abi }} \
+            CI_COMMIT_SHA="${CI_COMMIT_SHA}" \
+            CI_JOB_ID="${CI_JOB_ID}" \
+            CI_PIPELINE_ID="${CI_PIPELINE_ID}"
+
+      - name: Create toolchain archive
+        working-directory: toolchain
+        run: |
+          TARGET="${{ steps.arch_vars.outputs.target }}_for_x86_64-pc-linux-gnu"
+          TARBALL_NAME="${TARGET}-${{ needs.prepare.outputs.version }}.tar.gz"
+
+          echo "Creating tarball: $TARBALL_NAME"
+          tar -czf "$TARBALL_NAME" "$TARGET"
+
+          # Calculate checksum
+          sha256sum "$TARBALL_NAME" > "$TARBALL_NAME.sha256"
+
+          echo "TARBALL_NAME=$TARBALL_NAME" >> $GITHUB_ENV
+          echo "TARGET=$TARGET" >> $GITHUB_ENV
+
+      - name: Test toolchain
+        working-directory: toolchain
+        run: |
+          TARGET="${{ steps.arch_vars.outputs.target }}_for_x86_64-pc-linux-gnu"
+          echo "Testing toolchain..."
+          ./${TARGET}/bin/${{ steps.arch_vars.outputs.target }}-gcc --version
+
+      - name: Upload toolchain artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: toolchain-${{ matrix.arch }}-${{ needs.prepare.outputs.version }}
+          path: |
+            toolchain/${{ env.TARGET }}-${{ needs.prepare.outputs.version }}.tar.gz
+            toolchain/${{ env.TARGET }}-${{ needs.prepare.outputs.version }}.tar.gz.sha256
+          retention-days: 30
+
+  release:
+    needs: [prepare, build-toolchain]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Prepare release files
+        run: |
+          mkdir -p release-files
+          find artifacts -type f \( -name "*.tar.gz" -o -name "*.sha256" \) -exec cp {} release-files/ \;
+          ls -lh release-files/
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ needs.prepare.outputs.version }}
+          name: GCC Toolchains ${{ needs.prepare.outputs.version }}
+          draft: false
+          prerelease: false
+          files: release-files/*
+          body: |
+            ## GCC Toolchains for mlibc ${{ needs.prepare.outputs.version }}
+
+            This release contains pre-built GCC toolchains with mlibc for the following architectures:
+
+            ### Supported Architectures
+            - **ARM**: `arm-linux-eabi`
+            - **RISC-V 32-bit**: `riscv32-unknown-elf`
+            - **RISC-V 64-bit**: `riscv64-unknown-elf`
+            - **AArch64**: `aarch64-linux-gnu`
+
+            ### GCC Version
+            - GCC 12.2.0
+            - Binutils 2.39
+            - mlibc version ${{ needs.prepare.outputs.version }}
+
+            ### Installation
+            1. Download the appropriate toolchain tarball for your target architecture
+            2. Extract: `tar -xzf <toolchain-tarball>.tar.gz`
+            3. Add to PATH: `export PATH=/path/to/toolchain/bin:$PATH`
+
+            ### Usage
+            ```bash
+            # For ARM
+            arm-linux-eabi-gcc --version
+
+            # For RISC-V 32-bit
+            riscv32-unknown-elf-gcc --version
+
+            # For RISC-V 64-bit
+            riscv64-unknown-elf-gcc --version
+
+            # For AArch64
+            aarch64-linux-gnu-gcc --version
+            ```
+
+            ### Checksums
+            SHA256 checksums are provided for each tarball to verify integrity.
+
+            ### Build Information
+            - Commit: ${{ github.sha }}
+            - Build: ${{ github.run_id }}
+            - Pipeline: ${{ github.run_number }}
