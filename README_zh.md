@@ -246,6 +246,49 @@ qemu.bat
 | qemu-virt-riscv32 | virt-riscv32   | make qemu-hello QEMU_BOARD=qemu-virt-riscv32 ARCH=riscv32 |
 | qemu-virt-riscv64 | virt-riscv64   | make qemu-hello QEMU_BOARD=qemu-virt-riscv64 ARCH=riscv64 |
 
+## 预编译的 GCC 工具链
+
+为了方便使用，我们提供了带有 mlibc 的多架构预编译 GCC 工具链。这些工具链通过 GitHub Actions 自动构建和发布。
+
+### 下载预编译工具链
+
+访问 [Releases 页面](https://github.com/plctlab/mlibc/releases) 下载预编译工具链：
+
+- **ARM**: `arm-linux-eabi_for_x86_64-pc-linux-gnu-*.tar.gz`
+- **RISC-V 32位**: `riscv32-unknown-elf_for_x86_64-pc-linux-gnu-*.tar.gz`
+- **RISC-V 64位**: `riscv64-unknown-elf_for_x86_64-pc-linux-gnu-*.tar.gz`
+- **AArch64**: `aarch64-linux-gnu_for_x86_64-pc-linux-gnu-*.tar.gz`
+
+### 安装
+
+```bash
+# 下载并解压
+tar -xzf <toolchain-tarball>.tar.gz
+
+# 添加到 PATH
+export PATH=/path/to/toolchain/bin:$PATH
+
+# 验证安装
+arm-linux-eabi-gcc --version
+```
+
+### 自行构建工具链
+
+如果您希望自行构建工具链：
+
+#### 使用 Docker（推荐）
+
+详细说明请参见 [toolchain/README.md](toolchain/README.md)。
+
+#### 使用 GitHub Actions
+
+仓库中包含用于自动构建的 GitHub Actions 工作流：
+
+- **构建所有架构**：在版本标签上自动触发或通过工作流手动触发
+- **构建单个架构**：使用 "Build Single Toolchain" 工作流进行测试
+
+更多信息，请参见 [.github/workflows/README.md](.github/workflows/README.md)。
+
 # 贡献代码
 
 + How to
