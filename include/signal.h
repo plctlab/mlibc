@@ -15,24 +15,48 @@
 #include <stdint.h>
 #include <time.h>
 
+#ifndef SIGHUP
 #define SIGHUP    1
+#endif
+#ifndef SIGINT
 #define SIGINT    2
+#endif
+#ifndef SIGQUIT
 #define SIGQUIT   3
+#endif
+#ifndef SIGBUS
 #define SIGBUS    7
+#endif
+#ifndef SIGFPE
 #define SIGFPE    8
+#endif
+#ifndef SIGKILL
 #define SIGKILL   9
+#endif
 #ifndef SIGUSR1
 #define SIGUSR1   10
 #endif
+#ifndef SIGSEGV
 #define SIGSEGV   11
+#endif
 #ifndef SIGUSR2
 #define SIGUSR2   12
 #endif
+#ifndef SIGPIPE
 #define SIGPIPE   13
+#endif
+#ifndef SIGALRM
 #define SIGALRM   14
+#endif
+#ifndef SIGTERM
 #define SIGTERM   15
+#endif
+#ifndef SIGSTKFLT
 #define SIGSTKFLT 16
+#endif
+#ifndef SIGCHLD
 #define SIGCHLD   17
+#endif
 #ifndef SIGCONT
 #define SIGCONT   18
 #endif
@@ -42,25 +66,45 @@
 #ifndef SIGTSTP
 #define SIGTSTP   20
 #endif
+#ifndef SIGTTIN
 #define SIGTTIN   21
+#endif
+#ifndef SIGTTOU
 #define SIGTTOU   22
+#endif
 #ifndef SIGURG
 #define SIGURG    23
 #endif
+#ifndef SIGXCPU
 #define SIGXCPU   24
+#endif
+#ifndef SIGXFSZ
 #define SIGXFSZ   25
+#endif
+#ifndef SIGVTALRM
 #define SIGVTALRM 26
+#endif
+#ifndef SIGPROF
 #define SIGPROF   27
+#endif
+#ifndef SIGWINCH
 #define SIGWINCH  28
+#endif
 #ifndef SIGIO
 #define SIGIO     29
 #endif
 #ifndef SIGPOLL
 #define SIGPOLL   29
 #endif
+#ifndef SIGPWR
 #define SIGPWR    30
+#endif
+#ifndef SIGSYS
 #define SIGSYS    31
+#endif
+#ifndef SIGUNUSED
 #define SIGUNUSED SIGSYS
+#endif
 
 #define SA_NOCLDSTOP    1
 #define SA_NOCLDWAIT    2
@@ -78,12 +122,25 @@
 #define SIG_BLOCK       1   /* set of signals to block */
 #define SIG_UNBLOCK     2   /* set of signals to, well, unblock */
 
+#ifndef _SIG_FUNC_PTR_DEFINED
 typedef void (*_sig_func_ptr)(int);
-typedef unsigned long sigset_t;
+#define _SIG_FUNC_PTR_DEFINED
+#endif
 
+#ifndef _SIGSET_T_DEFINED
+typedef unsigned long sigset_t;
+#define _SIGSET_T_DEFINED
+#endif
+
+#ifndef SIG_DFL
 #define SIG_DFL ((_sig_func_ptr)0)  /* Default action */
+#endif
+#ifndef SIG_IGN
 #define SIG_IGN ((_sig_func_ptr)1)  /* Ignore action */
+#endif
+#ifndef SIG_ERR
 #define SIG_ERR ((_sig_func_ptr)-1) /* Error return */
+#endif
 
 #define SI_USER         0x01    /* Signal sent by kill(). */
 #define SI_QUEUE        0x02    /* Signal sent by sigqueue(). */
@@ -106,19 +163,26 @@ typedef unsigned long sigset_t;
 #define SIGEV_THREAD    2
 #define SIGEV_THREAD_ID 4
 
+#ifndef _UNION_SIGVAL_DEFINED
 union sigval
 {
     int    sival_int;    /* Integer signal value */
     void  *sival_ptr;    /* Pointer signal value */
 };
+#define _UNION_SIGVAL_DEFINED
+#endif
 
+#ifndef _STRUCT_SIGACTION_DEFINED
 struct sigaction
 {
     _sig_func_ptr sa_handler;
     sigset_t sa_mask;
     int sa_flags;
 };
+#define _STRUCT_SIGACTION_DEFINED
+#endif
 
+#ifndef _STRUCT_SIGEVENT_DEFINED
 struct sigevent
 {
     union sigval sigev_value;
@@ -128,7 +192,10 @@ struct sigevent
                                              /* Notification function */
     void         *sigev_notify_attributes;   /* Notification Attributes, really pthread_attr_t */
 };
+#define _STRUCT_SIGEVENT_DEFINED
+#endif
 
+#ifndef _SIGINFO_T_DEFINED
 typedef struct {
     int si_signo, si_errno, si_code;
     union {
@@ -174,6 +241,8 @@ typedef struct {
         } __sigsys;
     } __si_fields;
 } siginfo_t;
+#define _SIGINFO_T_DEFINED
+#endif
 
 #define si_pid          __si_fields.__si_common.__first.__piduid.si_pid
 #define si_uid          __si_fields.__si_common.__first.__piduid.si_uid
@@ -199,7 +268,9 @@ typedef struct {
 #define sigismember(what,sig) (((*(what)) & (1<<(sig))) != 0)
 
 int sigprocmask(int how, const sigset_t *set, sigset_t *oset);
+#ifndef sigemptyset
 int sigemptyset(sigset_t *set);
+#endif
 int sigwait(const sigset_t *set, int *sig);
 int raise(int sig);
 
