@@ -113,7 +113,7 @@ jobs:
             qemu-system-riscv32 -machine virt \
             -bios none \
             -nographic -m 256M \
-            -kernel ./build/$ARCH/qemu/$QEMU_BOARD/$QEMU_BOARD.elf \
+            -device loader,file=./build/$ARCH/qemu/$QEMU_BOARD/$QEMU_BOARD.elf,addr=0x80200000 \
             > qemu_output_$QEMU_BOARD.log  2>&1 &
 
           elif [[ "${{ matrix.platform.QEMU_BOARD }}"  == "qemu-virt-riscv64" ]]; then
@@ -121,7 +121,7 @@ jobs:
             qemu-system-riscv64 -machine virt \
             -bios none \
             -nographic -m 512M \
-            -kernel ./build/$ARCH/qemu/$QEMU_BOARD/$QEMU_BOARD.elf \
+            -device loader,file=./build/$ARCH/qemu/$QEMU_BOARD/$QEMU_BOARD.elf,addr=0x80200000 \
             > qemu_output_$QEMU_BOARD.log  2>&1 &
           fi
 
