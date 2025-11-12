@@ -1,0 +1,155 @@
+name: Build Single Toolchain
+
+on:
+  workflow_dispatch:
+    inputs:
+      arch:
+        description: 'Architecture to build'
+        required: true
+        type: choice
+        options:
+          - arm
+          - riscv32
+          - riscv64
+          - aarch64
+      upload_artifact:
+        description: 'Upload as artifact (keep for 30 days)'
+        required: false
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 480
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Free disk space
+        run: |
+          echo "Disk space before cleanup:"
+          df -h
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /usr/local/share/boost
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+          echo "Disk space after cleanup:"
+          df -h
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            bison \
+            flex \
+            file \
+            texinfo \
+            wget \
+            chrpath \
+            cpio \
+            diffstat \
+            gawk \
+            zstd \
+            libncurses5 \
+            libz-dev \
+            python3 \
+            python3-pip
+
+      - name: Set architecture-specific variables
+        id: arch_vars
+        run: |
+          ARCH="${{ inputs.arch }}"
+
+          case "$ARCH" in
+            arm)
+              echo "target=arm-linux-eabi" >> $GITHUB_OUTPUT
+              echo "abi=linux-eabi" >> $GITHUB_OUTPUT
+              ;;
+            riscv32)
+              echo "target=riscv32-unknown-elf" >> $GITHUB_OUTPUT
+              echo "abi=unknown-elf" >> $GITHUB_OUTPUT
+              ;;
+            riscv64)
+              echo "target=riscv64-unknown-elf" >> $GITHUB_OUTPUT
+              echo "abi=unknown-elf" >> $GITHUB_OUTPUT
+              ;;
+            aarch64)
+              echo "target=aarch64-linux-gnu" >> $GITHUB_OUTPUT
+              echo "abi=linux-gnu" >> $GITHUB_OUTPUT
+              ;;
+            *)
+              echo "Unknown architecture: $ARCH"
+              exit 1
+              ;;
+          esac
+
+      - name: Build toolchain for ${{ inputs.arch }}
+        working-directory: toolchain
+        env:
+          CI_COMMIT_SHA: ${{ github.sha }}
+          CI_JOB_ID: ${{ github.run_id }}
+          CI_PIPELINE_ID: ${{ github.run_number }}
+        run: |
+          echo "Building toolchain for ${{ inputs.arch }}"
+          echo "Target: ${{ steps.arch_vars.outputs.target }}"
+
+          make arch=${{ inputs.arch }} abi=${{ steps.arch_vars.outputs.abi }} \
+            CI_COMMIT_SHA="${CI_COMMIT_SHA}" \
+            CI_JOB_ID="${CI_JOB_ID}" \
+            CI_PIPELINE_ID="${CI_PIPELINE_ID}"
+
+      - name: Create toolchain archive
+        if: ${{ inputs.upload_artifact }}
+        working-directory: toolchain
+        run: |
+          TARGET="${{ steps.arch_vars.outputs.target }}_for_x86_64-pc-linux-gnu"
+          VERSION="$(date +%Y%m%d-%H%M%S)"
+          TARBALL_NAME="${TARGET}-${VERSION}.tar.gz"
+
+          echo "Creating tarball: $TARBALL_NAME"
+          tar -czf "$TARBALL_NAME" "$TARGET"
+
+          # Calculate checksum
+          sha256sum "$TARBALL_NAME" > "$TARBALL_NAME.sha256"
+
+          echo "TARBALL_NAME=$TARBALL_NAME" >> $GITHUB_ENV
+          echo "TARGET=$TARGET" >> $GITHUB_ENV
+
+      - name: Test toolchain
+        working-directory: toolchain
+        run: |
+          TARGET="${{ steps.arch_vars.outputs.target }}_for_x86_64-pc-linux-gnu"
+          echo "Testing toolchain..."
+          ./${TARGET}/bin/${{ steps.arch_vars.outputs.target }}-gcc --version
+
+      - name: Upload toolchain artifact
+        if: ${{ inputs.upload_artifact }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: toolchain-${{ inputs.arch }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            toolchain/${{ env.TARBALL_NAME }}
+            toolchain/${{ env.TARBALL_NAME }}.sha256
+          retention-days: 30
+
+      - name: Build summary
+        run: |
+          echo "## Build Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Architecture:** ${{ inputs.arch }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Target:** ${{ steps.arch_vars.outputs.target }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Build ID:** ${{ github.run_id }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Toolchain Information" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          toolchain/${{ steps.arch_vars.outputs.target }}_for_x86_64-pc-linux-gnu/bin/${{ steps.arch_vars.outputs.target }}-gcc --version >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
