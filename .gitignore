@@ -12,6 +12,8 @@ toolchain/mpc-*
 toolchain/mpfr-*
 toolchain/log
 
+_codeql_detected_source_root
+
 # MacOS Cache
 .DS_Store
 

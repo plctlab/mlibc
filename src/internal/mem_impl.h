@@ -18,7 +18,7 @@
 extern tlsf_t tlsf;
 extern _LOCK_T heap_lock;
 
-#define POOL_SIZE   1728                          /* size of pool head*/
+#define POOL_SIZE   4096                          /* size of pool head*/
 
 #ifdef MLIBC_RETARGETABLE_LOCKING
 #define INIT_HEAP_LOCK __lock_init_recursive(heap_lock)

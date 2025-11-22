@@ -100,7 +100,7 @@ SECTIONS
         PROVIDE( _gp = . + 0x8000);
         *(.sdata .sdata.* .sdata2.*)
         *(.gnu.linkonce.s.*)
-    } >ram AT>flash :ram_init
+    } >ram AT>ram :ram
     PROVIDE(__data_start = ADDR(.data));
     PROVIDE(__data_source = LOADADDR(.data));
     PROVIDE(__data_end = .);
