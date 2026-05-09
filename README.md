@@ -1,60 +1,61 @@
-[中文](README_zh.md) | **English** 
+[中文](README_zh.md) | **English**
 
 # Embedded libc
 
-Embedded libc, a libc library adapted for embedded systems and bare metal environments.
+mlibc is a small C library for embedded systems, RTOS integration, and bare-metal programs. It focuses on simple code, low resource usage, and cross-compilation for ARM, AArch64, and RISC-V targets.
 
 ## Mlibc Features
 
-+ Low resource usage
-+ OpenSource
-+ Especially for RISC-V
-+ Clear and understandable code structure
-+ Scalable
-+ Highly portable
++ Lightweight libc for small systems
++ MIT licensed and open source
++ Supports ARM, AArch64, RISC-V 32-bit, and RISC-V 64-bit builds
++ Provides common C library headers and implementations such as `stdio`, `stdlib`, `string`, `ctype`, `time`, and small POSIX-style interfaces
++ Works with Make for standalone builds and SCons for RT-Thread package integration
++ Includes QEMU bare-metal hello-world examples, PSE51 testcases, and GCC toolchain build scripts
 
 ## File Structure
 
 [mlibc File Structure](ARCH.md)
 
 ```
-├───arch                -- Hardware-specific optimized implementations
-├───crt                 -- Hardware-specific startup code
-├───include             -- Header files
-│   └───sys             -- System-related header files, typically included as <sys/head.h>
-├───src                 -- Source files
-│   ├───internal        -- Internal header files
-│   ├───misc            -- Miscellaneous, contains modules that can be implemented in a single file
-│   ├───stdio           -- Standard IO module
-│   └───stdlib          -- Standard utility library module
-├───helloworld          -- Helloworld testcase
-│   └───qemu            -- qemu bare-metal config
-│     └───qemu-device	-- Specific to the QEMU virtual machine device, related scripts and header files
-├───mkconfigs           -- Scripts related to make
-    └───qemu            -- qemu configuration
+├── arch                 -- Architecture-specific SCons hook and optimized implementation area
+├── crt                  -- Startup code for ARM, AArch64, RISC-V 32/64, and common crt code
+├── include              -- Public headers
+│   └── sys              -- System and POSIX-style headers, usually included as <sys/name.h>
+├── src                  -- Library source files
+│   ├── dummy            -- Weak/stub platform hooks such as errno, lock, POSIX, and sbrk
+│   ├── internal         -- Internal headers used by mlibc
+│   ├── misc             -- Small modules such as string, assert, env, uname, setjmp, and inttypes
+│   ├── stdio            -- Standard I/O implementation
+│   ├── stdlib           -- Standard library, TLSF allocator, qsort, and process helpers
+│   └── time             -- Time functions
+├── helloworld           -- Bare-metal hello-world example
+│   └── qemu             -- QEMU board link scripts and UART headers
+├── mkconfigs            -- Make build fragments
+│   └── qemu             -- QEMU board build configuration
+├── testcases            -- PSE51/POSIX.13-oriented tests
+└── toolchain            -- GCC/Binutils build scripts, Docker files, and patches
 ```
 
 ## Background
 
 ### Our Expectations
 
-● mlibc can support multiple embedded toolchains, including gcc (arm/risc-v) and even LLVM compilers.
+● mlibc targets embedded systems that need a small, understandable libc instead of a full hosted libc.
 
-● Designed for low-resource systems, providing excellent support for embedded real-time operating systems (such as RT-Thread) and bare metal.
+● It can be used with bare-metal programs and RTOS environments such as RT-Thread.
 
-● Optimized for RISC-V 32/64, compatible with mainstream RISC-V MCUs.
+● The current build supports ARM, AArch64, RISC-V 32-bit, and RISC-V 64-bit. RISC-V remains an important target.
 
-● Uses make and scons for building.
-
-● Reserve
+● The repository keeps standalone Make builds, RT-Thread SCons integration, QEMU examples, tests, and toolchain scripts together.
 
 ## Our Plans
 
-● Use QEMU/RISC-V 32GC simulation to output the first "hello world" (completed).
+● QEMU bare-metal hello world is available for five boards.
 
-● Add the basic crt.s, string, and printf functions for the bare-metal version of mlibc (completed).
+● Basic crt, string, stdio, stdlib, time, and platform stub code is in place.
 
-● Improve mlibc based on this environment.
+● Ongoing work is to improve libc coverage, tighten PSE51 compatibility, and make more embedded tests pass on real QEMU targets.
 
 # Quick Start
 
@@ -62,196 +63,197 @@ Embedded libc, a libc library adapted for embedded systems and bare metal enviro
 
 ### Development Environment
 
-For simple C library compilation, the development environment is relatively straightforward; make and the appropriate toolchain are sufficient.
+For a standalone library build, you need `make` and a cross toolchain. `MLIBC_TOOLCHAIN` must be the compiler prefix, including the final dash.
 
-> make + toolchain
+Example:
+
+```bash
+export MLIBC_TOOLCHAIN=/path/to/arm-linux-eabi_for_x86_64-pc-linux-gnu/bin/arm-linux-eabi-
+```
+
+If `MLIBC_TOOLCHAIN` is not set, the Makefile defaults to `./toolchain/arm-linux-eabi_for_x86_64-pc-linux-gnu/bin/arm-linux-eabi-`.
 
 ### Compilation Steps
 
-1. Configure the environment variables corresponding to the toolchain
-(Please refer to the detailed steps in the "QEMU-Bare Metal Development" section below)
-
 **Compile the C library**
 
-1. Navigate to the `mlibc` folder, open the command line, and use make to compile the static library.
-
-```
-# Here, we use the ARM architecture static library as an example
+```bash
+# Build the default ARM library
 make mlibc ARCH=arm
+
+# Other supported values:
+# ARCH=aarch64
+# ARCH=riscv32
+# ARCH=riscv64
 ```
 
-2. A static library named `libmlibc.a` will be generated in the `mlibc/build/arm` directory. To integrate it with the toolchain, you can rename the file to `libc.a` for use.
+The static library is generated as `build/<ARCH>/libmlibc.a`. When installing it into a toolchain sysroot, it is normally copied or renamed to `libc.a`.
 
-**Compile crt0**
+**Compile crt objects**
 
-1. Navigate to the `mlibc` folder, open the command line, and use make to compile crt0.
-
-```
-# Here, we use the ARM architecture crt0 as an example
-make crt0 ARCH=arm
+```bash
+make crt ARCH=arm
 ```
 
-2. The generated file will be located in `mlibc/build/$(ARCH)/crtobj`, named `crt0.o`.
+The crt objects are generated in `build/<ARCH>/crtobj/`. For ARM and AArch64 this includes `crt0.o`, `crti.o`, and `crtn.o`; for RISC-V targets the current crt object is `crt0.o`.
+
+**Build both**
+
+```bash
+make ARCH=arm
+```
 
 ## Mlibc Development/Test Environment Setup
+
+### PSE51 Testcases
+
+The `testcases/` directory contains tests for common PSE51/POSIX.13 headers such as `assert.h`, `ctype.h`, `fcntl.h`, `locale.h`, `signal.h`, `stat.h`, `stdio.h`, `stdlib.h`, `string.h`, `time.h`, `unistd.h`, and `utsname.h`.
+
+```bash
+cd testcases
+
+# Build PC tests
+make pc-build
+
+# Run PC tests
+make pc-test
+
+# Use the helper scripts
+./build pc
+./test pc
+```
+
+Embedded test support is being prepared in the common Makefile, but the current per-test directories only provide PC test Makefiles. See [testcases/README.md](testcases/README.md) and [testcases/PSE51.md](testcases/PSE51.md) for details.
 
 ### Running RT-Thread on QEMU
 
 #### Development Environment
 
-Tutorial for setting up the environment on Windows:
+Follow the current RT-Thread documentation for the Env tool, packages, BSP setup, and QEMU usage:
 
-**Note**: The original RT-Thread documentation link is outdated. Please refer to the official RT-Thread website (https://www.rt-thread.org/) or repository (https://github.com/RT-Thread/rt-thread) for the latest documentation on setting up the development environment.
+- RT-Thread website: https://www.rt-thread.org/
+- RT-Thread repository: https://github.com/RT-Thread/rt-thread
 
-By following the official tutorials, you can run RT-Thread in a Windows environment.
+mlibc is integrated as an RT-Thread package through `SConscript` when `PKG_USING_MLIBC` is enabled.
 
 ### vexpress-a9 + RT-Thread
 
 #### Macro Configuration
 
-Navigate to the `rt-thread\bsp\qemu-vexpress-a9` folder, open **env**, and enter **menuconfig** in the command line to enter the configuration interface.
+In `rt-thread/bsp/qemu-vexpress-a9`, open Env and run `menuconfig`.
 
-**Switch DFS v2.0 to DFS v1.0:**
+Recommended configuration:
 
 - RT-Thread Components
   - DFS: device virtual file system
-    - The version of DFS (DFS v1.0)
+    - Select DFS v1.0 if your RT-Thread version still provides this option
 
-**Download the mlibc package:**
+Enable the mlibc package:
 
 - RT-Thread online packages
   - system packages
-    - Select the sixth option from the bottom: `mlibc: Embedded libc, especially for RISC-V`
+    - `mlibc: Embedded libc, especially for RISC-V`
 
-After finishing the menuconfig, you need to download the mlibc package before compiling:
+Then download packages and build:
 
 ```bash
-# Load the RT-Thread environment
 . ~/.env/env.sh
-
-# Update packages to download mlibc
 pkgs --update
+scons -j12
 ```
 
-This will download mlibc to `bsp/qemu-vexpress-a9/packages/mlibc-latest`.
-
-Then you can enter **scons -j12** in the command line to compile.
-
-**Note**: There are known compilation issues with vexpress-a9 + RT-Thread integration. This may be due to compatibility issues with the current RT-Thread version. Please refer to the RT-Thread repository for updates.
+RT-Thread package menus and BSP options may change over time. If a menu item is missing, use the current RT-Thread package documentation as the source of truth.
 
 ### Spark + RT-Thread
 
 #### Development Environment
 
-For those unsure where to download the source code, you can refer to the official RT-Thread documentation.
-
-Navigate to the `rt-thread\bsp\stm32\stm32f407-rt-spark` directory, then open **env** and enter **menuconfig** in the command line to enter the configuration interface.
+Use the RT-Thread `stm32/stm32f407-rt-spark` BSP and run `menuconfig` from Env.
 
 #### Macro Configuration
 
-**Enable the file system (optional):**
+Optional file system setup:
 
 - Hardware Drivers Config
   - Onboard Peripheral Drivers
     - Enable File System
 
-**Enable fatfs (optional):**
+Optional FatFs setup:
 
 - RT-Thread Components
   - DFS: device virtual file system
-    - Enable elm-chan fatfs
-      - elm-chan's FatFs, Generic FAT Filesystem Module
-      - Change Maximum sector size to be handled to 4096
+    - Enable elm-chan FatFs
+      - Set maximum sector size to 4096 when required by the board storage
 
-**Download the mlibc package:**
-
-- RT-Thread online packages
-  - system packages
-    - Select the sixth option from the bottom: mlibc: Embedded libc, especially for RISC-V
-
-After finishing the menuconfig, you need to download the mlibc package before compiling:
+Enable and download the mlibc package:
 
 ```bash
-# Load the RT-Thread environment
 . ~/.env/env.sh
-
-# Update packages to download mlibc
 pkgs --update
+scons -j12
 ```
-
-This will download mlibc to the packages directory.
 
 ### QEMU-Bare Metal Development
 
 #### Development Environment
 
-> make + qemu + toolchain
+> make + QEMU + cross toolchain
 
-Currently, five types of QEMU bare metal startup codes have been supported.
+The repository currently has QEMU bare-metal hello-world build support for five boards:
 
-| QEMU Device                       | Hardware Architecture | Toolchain               |
-| --------------------------------- | --------------------- | ----------------------- |
-| vexpress-a9                       | arm                   | arm-none-eabi-gcc       |
-| mps3-an536 (requires latest QEMU) | arm                   | arm-none-eabi-gcc       |
-| virt-aarch64                      | aarch64               | aarch64-unknown-elf-gcc |
-| virt-riscv32                      | riscv32               | riscv32-unknown-elf-gcc |
-| virt-riscv64                      | riscv64               | riscv64-unknown-elf-gcc |
+| QEMU Board | Hardware Architecture | Expected Toolchain Prefix |
+| ---------- | --------------------- | ------------------------- |
+| qemu-vexpress-a9 | ARM Cortex-A9 | `arm-linux-eabi-` |
+| qemu-mps3-an536 | ARM Cortex-R52 | `arm-linux-eabi-` |
+| qemu-virt-aarch64 | AArch64 Cortex-A53 | `aarch64-linux-gnu-` |
+| qemu-virt-riscv32 | RISC-V 32-bit | `riscv32-unknown-elf-` |
+| qemu-virt-riscv64 | RISC-V 64-bit | `riscv64-unknown-elf-` |
 
 #### Usage Steps
 
-1. Configure the environment variables corresponding to the toolchain
+1. Configure the toolchain prefix.
 
-**Linux：** Add the following environment variables to the `~/.bashrc` file through commands. Replace `YOUR_PATH_TO_TOOLCHAIN` with the corresponding path of your toolchain.
+Linux:
 
-Note: If your toolchain path is "/opt/gcc-arm-none-eabi-10-2020-q4-major/arm-none-eabi-gcc" , then `YOUR_PATH_TO_TOOLCHAIN` should be "/opt/gcc-arm-none-eabi-10-2020-q4-major/arm-none-eabi-".
-```
-echo "" >> ~/.bashrc    #Append a a line break to prevent content merging
-echo "export MLIBC_TOOLCHAIN='YOUR_PATH_TO_TOOLCHAIN'" >> ~/.bashrc
-source ~/.bashrc
+```bash
+export MLIBC_TOOLCHAIN=/path/to/toolchain/bin/arm-linux-eabi-
 ```
 
-**Windows：** Open PowerShell and replace `YOUR_PATH_TO_TOOLCHAIN` with the corresponding path of your toolchain.
-```
-[System.Environment]::SetEnvironmentVariable("MLIBC_TOOLCHAIN", "YOUR_PATH_TO_TOOLCHAIN", "User")
-```
-**\#**:After the configuration is completed, you need to restart the terminal for the changes to take effect.
+Windows PowerShell:
 
-2. Navigate to the `mlibc` root folder and open the command line.
-
+```powershell
+[System.Environment]::SetEnvironmentVariable("MLIBC_TOOLCHAIN", "C:\path\to\toolchain\bin\arm-linux-eabi-", "User")
 ```
-# Here, we use qemu-vexpress-a9 as an example
+
+Restart the terminal after changing the Windows user environment.
+
+2. Build the example from the repository root.
+
+```bash
 make qemu-hello QEMU_BOARD=qemu-vexpress-a9 ARCH=arm
 ```
 
-After executing the command, an executable file named qemu-vexpress-a9.elf will be generated in the `mlibc/build/arm/qemu/qemu-vexpress-a9` folder.
+The ELF is generated under `build/<ARCH>/qemu/<QEMU_BOARD>/<QEMU_BOARD>.elf`, for example `build/arm/qemu/qemu-vexpress-a9/qemu-vexpress-a9.elf`.
 
-3. Run the script `qemu.bat` in the corresponding folder under `mlibc/helloworld/qemu/{qemu-device}`.
+3. Run it with the matching `qemu-system-*` command for your board. The repository currently provides board link scripts and UART headers, but no checked-in QEMU run script.
 
-```
-# Navigate to the qemu device folder
-cd helloworld/qemu/qemu-vexpress-a9
+Board build commands:
 
-# Enter the following command in the command line
-qemu.bat
-```
-
-Information for each virtual environment is as follows:
-
-| Filename          | Virtual Device | Build Command                                       |
-| ----------------- | -------------- | --------------------------------------------------- |
-| qemu-vexpress-a9  | vexpress-a9    | make qemu-hello QEMU_BOARD=qemu-vexpress-a9 ARCH=arm      |
-| qemu-mps3-an536   | mps3-an536     | make qemu-hello QEMU_BOARD=qemu-mps3-an536 ARCH=arm       |
-| qemu-virt-aarch64 | virt-aarch64   | make qemu-hello QEMU_BOARD=qemu-virt-aarch64 ARCH=aarch64 |
-| qemu-virt-riscv32 | virt-riscv32   | make qemu-hello QEMU_BOARD=qemu-virt-riscv32 ARCH=riscv32 |
-| qemu-virt-riscv64 | virt-riscv64   | make qemu-hello QEMU_BOARD=qemu-virt-riscv64 ARCH=riscv64 |
+| QEMU Board | Virtual Device | Build Command |
+| ---------- | -------------- | ------------- |
+| qemu-vexpress-a9 | vexpress-a9 | `make qemu-hello QEMU_BOARD=qemu-vexpress-a9 ARCH=arm` |
+| qemu-mps3-an536 | mps3-an536 | `make qemu-hello QEMU_BOARD=qemu-mps3-an536 ARCH=arm` |
+| qemu-virt-aarch64 | virt-aarch64 | `make qemu-hello QEMU_BOARD=qemu-virt-aarch64 ARCH=aarch64` |
+| qemu-virt-riscv32 | virt-riscv32 | `make qemu-hello QEMU_BOARD=qemu-virt-riscv32 ARCH=riscv32` |
+| qemu-virt-riscv64 | virt-riscv64 | `make qemu-hello QEMU_BOARD=qemu-virt-riscv64 ARCH=riscv64` |
 
 ## Pre-built GCC Toolchains
 
-For convenience, we provide pre-built GCC toolchains with mlibc for multiple architectures. These toolchains are automatically built and released using GitHub Actions.
+Pre-built GCC toolchains with mlibc are published from GitHub Actions when release workflows are run.
 
 ### Downloading Pre-built Toolchains
 
-Visit the [Releases page](https://github.com/plctlab/mlibc/releases) to download pre-built toolchains:
+Visit the [Releases page](https://github.com/plctlab/mlibc/releases) and download the package for your target:
 
 - **ARM**: `arm-linux-eabi_for_x86_64-pc-linux-gnu-*.tar.gz`
 - **RISC-V 32-bit**: `riscv32-unknown-elf_for_x86_64-pc-linux-gnu-*.tar.gz`
@@ -261,47 +263,44 @@ Visit the [Releases page](https://github.com/plctlab/mlibc/releases) to download
 ### Installation
 
 ```bash
-# Download and extract
 tar -xzf <toolchain-tarball>.tar.gz
-
-# Add to PATH
 export PATH=/path/to/toolchain/bin:$PATH
 
-# Verify installation
+# Example
 arm-linux-eabi-gcc --version
 ```
 
 ### Building Toolchains Yourself
 
-If you prefer to build the toolchains yourself:
+The toolchain build uses GCC 12.2.0 and Binutils 2.39, with patches stored under `toolchain/patches/`.
 
 #### Using Docker (Recommended)
 
-See [toolchain/README.md](toolchain/README.md) for detailed instructions on building with Docker.
+See [toolchain/README.md](toolchain/README.md) for Docker-based local build steps.
 
 #### Using GitHub Actions
 
-The repository includes GitHub Actions workflows for automated builds:
+The repository includes workflows for source releases and toolchain builds:
 
-- **Build all architectures**: Triggered automatically on version tags or manually via workflow dispatch
-- **Build single architecture**: Use the "Build Single Toolchain" workflow for testing
+- `release.yml`: create a source archive release
+- `build-toolchain.yml`: build all or selected toolchains
+- `build-single-toolchain.yml`: build one toolchain for testing
 
 For more information, see [.github/workflows/README.md](.github/workflows/README.md).
 
 # License Agreement
 
-mlibc is fully open-source, following the MIT license. It allows for commercial use and modifications without any concerns, provided that the MIT license is declared in the software, with no potential commercial risks.
+mlibc is released under the MIT License. It can be used and modified in commercial or non-commercial projects as long as the MIT license notice is preserved.
 
 # Contribution
 
 + How to
 
   1. Fork the repository
-
-  1. Create Feat_xxx branch
-  1. Commit your code
-  1. Create Pull Request
+  1. Create a `Feat_xxx` branch
+  1. Commit your changes
+  1. Create a Pull Request
 
 # License
 
-mlibc follows the MIT License free software license. It's completely open-source, can be used in commercial applications for free, does not require the disclosure of code, and has no potential commercial risk.It is only necessary to declare that the MIT protocol is used in the software.
+mlibc follows the MIT License free software license. See [LICENSE](LICENSE) for the full license text.
